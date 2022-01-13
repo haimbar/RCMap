@@ -1,0 +1,79 @@
+
+.container img {
+    max-width: 700px;
+    height: auto;
+}
+
+#conditionedPanels { width:800px; float:left;}
+
+#sidebar { width:250px; float:left; }
+
+title {
+  color: #984B43;
+}
+
+h1 {
+    color: navy;
+    margin-left: 20px;
+}
+h2 {
+	margin-bottom: 0px;
+	margin-left: 20px;
+}
+h3 {
+  color: #0000CC;
+  margin-top: 20px;
+  margin-bottom: 0px;
+  margin-left: 40px;
+  }
+  h4 {
+  color: #3333FF;
+  font-style: italic;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 60px;
+  }
+  h5 {
+  color: #3333FF;
+  font-style: italic;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 70px;
+  }
+p {
+ margin-left:0px;
+ margin-top:5px;
+ font-size:14px;
+ width:700px;
+ text-align: justify;
+}
+ul {
+ margin-left:0px;
+ font-size:14px;
+ width:700px;
+ text-align: justify;
+}
+
+.infobox {
+  padding: 1em 1em 1em 4em;
+  margin-bottom: 10px;
+  border: 2px solid orange;
+  border-radius: 10px;
+  background: #f5f5f5 5px center/3em no-repeat;
+}
+
+.inputbox {
+  padding: 0.2em 0.1em 0.1em 2em;
+  border: 1px solid blue;
+  border-radius: 2px;
+  background: #e8f4f8;
+  max-width: 650px;
+}
+
+.outputbox {
+  padding: 0.2em 0.1em 0.1em 2em;
+  border: 1px solid red;
+  border-radius: 2px;
+  background: #ffe4e1;
+  max-width: 650px;
+}
