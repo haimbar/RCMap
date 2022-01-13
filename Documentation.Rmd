@@ -101,7 +101,7 @@ RCMap requires the following packages:
 - crayon - for terminal colors [@crayon].
 - ape - for drawing a phylogenic tree [@ape].
 
-Follow the installation instruction of R, and start R (version > 0.1.x no longer requires RStudio - any integrated development environment, or IDE, will do.) From the R console install the RCMap library. It will install the required libraries.
+Follow the installation instruction of R, and start R (version > 0.1.x no longer requires RStudio - any integrated development environment, or IDE, will do.) From the R console install the RCMap library. It will install the required libraries. You can do it by cloning the GitHub repo and building the package on your computer, or by using the install_github function (for which you will have to install the devtools package, first.)
 
 ```{.inputbox}
 devtools::install_github("haimbar/RCMap")
