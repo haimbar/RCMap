@@ -1127,6 +1127,7 @@ choose_dir <- function(){
   os <- getOS()
   if(os == "windows"){
     directory <- utils::choose.dir()
+    directory <- paste0(directory,"\\")
   }
   if(os == "Linux"){
     directory <- system("zenity --file-selection --directory", intern = TRUE)
