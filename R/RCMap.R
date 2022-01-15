@@ -18,7 +18,7 @@
 #' @return A list of n SxS 0/1-matrices - one for each sorter.
 #' @export
 getAdjMatrices <- function(piledat, showWarnings=TRUE) {
-  sorters <- sort(unique(piledat[[1]]))
+  sorters <- sort(as.numeric(unique(piledat[[1]])))
   nCards <- length(na.exclude(unique(stack(piledat[,3:ncol(piledat)])[,1])))
   issues <- ""
   mat.list <- list()
@@ -33,6 +33,10 @@ getAdjMatrices <- function(piledat, showWarnings=TRUE) {
       vct[cards] <- 1
       adj.mat <- adj.mat + vct%*%t(vct)
     }
+    rsum <- rowSums(adj.mat)
+    if(any(rsum == 0) & showWarnings)
+      issues <- issues %+% yellow("Sorter ",i, " did not sort card(s) ",
+                                  +                                   which((rsum == 0)), "\n")
     diag(adj.mat) <- 0
     if ((sum(adj.mat) == nCards^2) & showWarnings)
       issues <- issues %+% red("Sorter ",i, ": All cards in one pile!\n")
@@ -40,9 +44,9 @@ getAdjMatrices <- function(piledat, showWarnings=TRUE) {
       issues <- issues %+% red("Sorter ",i, " put more than a third of the cards in one pile.\n")
     if ((sum(adj.mat) == nCards) & showWarnings)
       issues <- issues %+% red("Sorter ",i, ": Each card in its own pile!\n")
-    notused <- which(apply(adj.mat, 1, max) == 0)
-    if ((length(notused) > 0) & showWarnings)
-      issues <- issues %+% yellow("Sorter ",i, " did not sort card(s) ", notused, "\n")
+    # notused <- which(apply(adj.mat, 1, max) == 0)
+    # if ((length(notused) > 0) & showWarnings)
+    #   issues <- issues %+% yellow("Sorter ",i, " did not sort card(s) ", notused, "\n")
     gt1 <- which(apply(adj.mat, 1, max) > 1)
     if (length(gt1) > 0) # this should not be allowed:
       issues <- issues %+% red("Sorter ",i, " put cards ", gt1, "in multiple piles\n")
@@ -881,17 +885,17 @@ RCMapMenu <- function() {
                   cmapdat$dataDir, cmapdat$n.indiv, length(cmapdat$cardNames),cmapdat$issues))
       if(length(cmapdat$splhalf) == 2) {
         cat(blue("Mean correlation between split halves:",
-            bold(sprintf("%1.2f",mean(cmapdat$splhalf$cors))),
-            "(using 20 random splits, distance=", cmapdat$splhalf$distmetric,
-            #, func=",cmapdat$splhalf$func,
-            ")\n"))
+                 bold(sprintf("%1.2f",mean(cmapdat$splhalf$cors))),
+                 "(using 20 random splits, distance=", cmapdat$splhalf$distmetric,
+                 #, func=",cmapdat$splhalf$func,
+                 ")\n"))
       }
       summMenu <- menu(c("Perform split-half analysis",
                          bold(magenta("Main menu"))))
       if(summMenu == 1) {
         cmapdat$splhalf <<- splitHalf(cmapdat$adj.mat, B=20,
-                                     disttype = cmapdat$distmetric,
-                                     plotit=TRUE, seed=23456)
+                                      disttype = cmapdat$distmetric,
+                                      plotit=TRUE, seed=23456)
       }
       menuLevel <- 1
       if(summMenu %in% c(0,2))
@@ -917,16 +921,16 @@ RCMapMenu <- function() {
       if(settingmenu == 1) {
         topLine()
         dtype <- rcmenu(toText("distance"),
-                      title=bold("  Distance function"),
-                      slctd=which(toText("distance") == cmapdat$distmetric))
+                        title=bold("  Distance function"),
+                        slctd=which(toText("distance") == cmapdat$distmetric))
         if(dtype > 0)
           cmapdat$distmetric <<- toText("distance", dtype)
       }
       if(settingmenu == 2) {
         topLine()
         cmeth <- rcmenu(toText("clusteringMethod"),
-                      title=bold("  Clustering method"),
-                      slctd=which(toText("clusteringMethod") == cmapdat$clustMethod))
+                        title=bold("  Clustering method"),
+                        slctd=which(toText("clusteringMethod") == cmapdat$clustMethod))
         if(cmeth > 0)
           cmapdat$clustMethod <<- toText("clusteringMethod", cmeth)
       }
@@ -983,7 +987,7 @@ RCMapMenu <- function() {
           showDendrogram()
           curNC <- cmapdat$nclust
           tmpnclust <- rcmenu(1:floor(length(cmapdat$cardNames)/3),
-                            title = bold("Set the number of clusters"), slctd = curNC)
+                              title = bold("Set the number of clusters"), slctd = curNC)
           if(tmpnclust > 0)
             cmapdat$nclust <<- tmpnclust
           #cmapdat$clusMember <- cutree(fit.Clust, k=cmapdat$nclust)
@@ -993,7 +997,7 @@ RCMapMenu <- function() {
       if(settingmenu == 5) { ## the cluster names
         topLine()
         clusterNum <- menu(clusterNames(),
-                             title = bold("  Select cluster number (or 0 to return to the main menu)"))
+                           title = bold("  Select cluster number (or 0 to return to the main menu)"))
         if (clusterNum == 0) {
           settingmenu = 1
           next
@@ -1021,8 +1025,8 @@ RCMapMenu <- function() {
       if(settingmenu == 6) {
         topLine()
         clrs <- rcmenu(toText("colorScheme"),
-                        title=bold("  Color scheme"),
-                        slctd=which(toText("colorScheme") == cmapdat$clrscm))
+                       title=bold("  Color scheme"),
+                       slctd=which(toText("colorScheme") == cmapdat$clrscm))
         if(clrs > 0)
           cmapdat$clrscm <<- toText("colorScheme", clrs)
       }
