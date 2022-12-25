@@ -1,0 +1,12 @@
+Analysis of Variance: Response= Feasibility 
+             Df Sum Sq Mean Sq F value Pr(>F)    
+Cluster       9  146.6  16.294   12.17 <2e-16 ***
+Residuals   790 1057.5   1.339                   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+________________________________________________________________________________ 
+Analysis of Variance: Response= Importance 
+             Df Sum Sq Mean Sq F value Pr(>F)
+Cluster       9      8  0.8887   0.589  0.807
+Residuals   790   1192  1.5082               
+________________________________________________________________________________ 

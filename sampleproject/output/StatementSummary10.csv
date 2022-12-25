@@ -1,0 +1,91 @@
+"Statement","CardNo","ClusterNo","Feasibility_N","Feasibility_Mean","Feasibility_SD","Feasibility_Min","Feasibility_Max","Importance_N","Importance_Mean","Importance_SD","Importance_Min","Importance_Max"
+"advertise the organization's image rather than just specific programs","1",1,10,2.3,0.948683298050514,1,4,10,3,1.4142135623731,1,4
+"conduct program effectiveness analysis for all major current programs","10",1,10,2.9,1.10050493461461,2,5,10,2.7,1.33749350984926,1,4
+"improve the quality of our program advertising","17",1,10,2.4,0.516397779494322,2,3,10,2.6,1.34989711542111,1,5
+"improve program information and materials","22",1,10,2.2,0.788810637746616,1,3,10,3.3,1.41813649241218,1,5
+"sponsor local arts and cultural events to improve organization's image","25",1,10,2,1.33333333333333,1,5,10,3.3,1.25166555703457,1,5
+"develop new procedures/models for projecting program improvement","30",1,10,2.9,1.10050493461461,1,5,10,3,1.05409255338946,2,5
+"rewrite program documentation/instructions to improve clarity and readability","33",1,10,3.1,1.3703203194063,1,5,10,2.8,0.788810637746616,2,4
+"improve organization's image in the LOCAL community","34",1,10,2.5,0.97182531580755,1,4,10,3.2,1.31656117720877,1,5
+"improve targeting of messages to appropriate clients","37",1,10,3.1,0.737864787372622,2,4,10,3.6,1.64654520469713,1,5
+"develop a unified program logo and look","45",1,10,2.3,1.15950180872841,1,5,10,3.5,1.43372087784044,1,5
+"pick a visible community-level organization we can become the publicly-recognized sponsor for","62",1,10,2,1.05409255338946,1,4,10,2.6,1.07496769977314,1,4
+"develop a stronger external marketing campaign","75",1,10,2.8,1.3984117975602,1,5,10,3.4,0.699205898780101,3,5
+"find ways to make our programs more appealing to the key client groups","76",1,10,2.8,0.788810637746616,2,4,10,3,1.15470053837925,1,5
+"","",1,10,2.56153846153846,1.07114259181381,1,5,10,3.07692307692308,1.23649532619876,1,5
+"establish a 'quality circle' team approach for program employees","2",2,10,3.8,0.788810637746616,3,5,10,3.5,1.08012344973464,1,5
+"devise a team-based productivity incentive system for program teams","65",2,10,3.7,0.674948557710553,3,5,10,3.2,1.54919333848297,1,5
+"focus on only the most effective programs","69",2,10,3.5,0.849836585598797,2,5,10,2.9,1.28668393770792,1,5
+"outsource program support wherever possible","72",2,10,2.8,1.75119007154183,1,5,10,2.9,1.10050493461461,2,5
+"look for ways to reduce fees in order to increase program attendance","80",2,10,3.7,0.674948557710553,3,5,10,3.2,1.13529242439509,2,5
+"","",2,10,3.5,1.0546302185881,1,5,10,3.14,1.21235140053012,1,5
+"improve employee medical benefits","3",3,10,3.9,1.19721899973786,2,5,10,3.6,1.17378779077727,2,5
+"allow employees flex-time options","9",3,10,4.1,1.10050493461461,2,5,10,2.9,1.10050493461461,2,5
+"develop employee incentive program","19",3,10,3.8,1.13529242439509,2,5,10,3.2,1.22927259430572,1,5
+"provide employee-sponsored childcare subsidy","21",3,10,3.3,1.49443411809733,1,5,10,3.3,1.25166555703457,1,5
+"improve employee benefits package","24",3,10,3.5,1.26929551764398,2,5,10,2.9,1.19721899973786,1,5
+"improve new employee orientation and training","31",3,10,3.7,0.823272602348565,2,5,10,2.8,1.03279555898864,1,4
+"improve and expand in-house inservice training opportunities","35",3,10,3.7,0.948683298050514,2,5,10,3.6,1.34989711542111,1,5
+"change policy to encourage ongoing training of all employees","57",3,10,4,1.15470053837925,2,5,10,3.2,1.47572957474524,1,5
+"develop a merit bonus program","60",3,10,3.9,0.994428926011753,2,5,10,2.1,0.567646212197547,1,3
+"examine managed care health plans as an alternative to current health insurance","63",3,10,2.8,0.918936583472681,1,4,10,3.1,1.19721899973786,1,5
+"develop strategies to enable employees to work at home as much as possible","77",3,10,3.5,1.43372087784044,1,5,10,3.7,1.15950180872841,2,5
+"","",3,10,3.65454545454545,1.15286928559054,1,5,10,3.12727272727273,1.20479996367048,1,5
+"improve communication among employees","4",4,10,3.8,0.918936583472681,2,5,10,2.6,0.843274042711568,1,4
+"reduce unnecessary reports, memos, meetings","6",4,10,4.5,0.52704627669473,4,5,10,3.5,1.64991582276861,1,5
+"initiate labor management relations group","12",4,10,3.2,1.75119007154183,1,5,10,2.9,1.52388392675499,1,5
+"start an in-house newsletter to improve employee awareness","27",4,10,2.9,1.28668393770792,1,5,10,3.4,1.34989711542111,2,5
+"improve management/labor negotiation process","48",4,10,4,1.05409255338946,2,5,10,3.7,1.05934990547138,2,5
+"encourage more teamwork","54",4,10,4.9,0.316227766016838,4,5,10,2.4,1.26491106406735,1,5
+"develop better processes for involving people across departments/functions","56",4,10,4,0.942809041582063,2,5,10,2.8,1.03279555898864,1,4
+"open the budgeting process to more than just managers","59",4,10,3.5,1.43372087784044,1,5,10,3.2,1.31656117720877,1,5
+"spell out personnel policies in language everyone can understand","64",4,10,4.5,1.08012344973464,2,5,10,3,1.05409255338946,2,5
+"","",4,10,3.92222222222222,1.22912024606053,1,5,10,3.05555555555556,1.26634137356678,1,5
+"friendlier program managers","5",5,10,3.1,0.994428926011753,2,5,10,3.5,1.43372087784044,1,5
+"improve cleanliness of offices and program locations","7",5,10,3.1,0.875595035770913,1,4,10,3.5,0.849836585598797,2,5
+"improve client satisfaction","32",5,10,4.6,0.516397779494322,4,5,10,3.7,1.05934990547138,2,5
+"perform regular client satisfaction surveys","36",5,10,3,0.942809041582063,1,4,10,3.2,1.03279555898864,2,5
+"establish a client satisfaction/complaints telephone hotline","40",5,10,2.9,1.10050493461461,1,4,10,3.5,1.08012344973464,2,5
+"change the layout/style of facilities","43",5,10,2.7,1.25166555703457,1,5,10,3.4,0.966091783079296,2,5
+"coordinate the facilities' color schemes","44",5,10,2.4,1.34989711542111,1,5,10,3,1.05409255338946,2,5
+"reduce the clutter of reading material and program information in the public areas of the main facility","46",5,10,2.9,1.19721899973786,1,5,10,3,1.49071198499986,1,5
+"expand the number of program facilities by 25% in next five years","49",5,10,2.7,1.15950180872841,1,5,10,3.4,1.17378779077727,2,5
+"conduct ongoing client focus groups to assure continuous feedback","61",5,10,3,0.816496580927726,2,5,10,2.7,1.15950180872841,1,4
+"take a ""total quality service"" approach to working with the client","66",5,10,4,0.816496580927726,3,5,10,2.4,1.50554530541816,1,5
+"find better ways to manage high-traffic (peak) periods in the facilities","68",5,10,3.1,0.994428926011753,1,4,10,2.2,0.918936583472681,1,4
+"close facilities that are too old or are underutilized","70",5,10,3.5,1.43372087784044,1,5,10,2.3,1.15950180872841,1,4
+"","",5,10,3.15384615384615,1.15779487319471,1,5,10,3.06153846153846,1.21204450345447,1,5
+"computerize communication mailing lists","8",6,10,3.2,1.3984117975602,1,5,10,3.7,1.25166555703457,2,5
+"develop in-house computer network for management staff","15",6,10,3.4,0.966091783079296,2,5,10,2.9,1.19721899973786,1,5
+"computerize all phases of the program management system","20",6,10,3,0.816496580927726,2,4,10,2.9,1.28668393770792,1,5
+"improve information systems","50",6,10,3.1,1.52388392675499,1,5,10,2.5,1.17851130197758,1,4
+"have an organization-wide information system (rather than by department/division)","51",6,10,3.9,1.28668393770792,1,5,10,2.8,1.03279555898864,2,5
+"improve the speed and reliability of computer network services","52",6,10,3.4,1.17378779077727,1,5,10,2.7,0.948683298050514,2,5
+"develop a consistent user interface for all computer databases","53",6,10,3.6,1.26491106406735,1,5,10,3.8,1.13529242439509,2,5
+"improve the payment for service process to take advantage of newest technologies","67",6,10,2.7,1.15950180872841,1,5,10,2.7,1.15950180872841,1,5
+"","",6,10,3.2875,1.21377901352383,1,5,10,3,1.19068111557517,1,5
+"develop better strategy for determining annual salary increases","11",7,10,3.8,0.918936583472681,2,5,10,3.1,1.3703203194063,1,5
+"start a program to reduce employee absenteeism and turnover","14",7,10,3.7,0.674948557710553,3,5,10,3.5,1.17851130197758,1,5
+"develop an employee evaluation process for all levels of staff","39",7,10,4,0.816496580927726,3,5,10,2.7,1.05934990547138,1,4
+"move toward becoming a ""learning organization""","42",7,10,3.9,0.875595035770913,3,5,10,2.8,0.788810637746616,2,4
+"do program-wide comparative salary analysis","47",7,10,4,0.942809041582063,2,5,10,3.3,1.25166555703457,1,5
+"","",7,10,3.88,0.82412600582034,2,5,10,3.08,1.13999641961486,1,5
+"explore options for program facilities and office expansion","13",8,10,3.2,1.61932770686548,1,5,10,3,1.33333333333333,1,5
+"investigate potential safety issues in the workplace","16",8,10,2.6,1.64654520469713,1,5,10,2.9,1.3703203194063,1,5
+"decrease client waiting time","18",8,10,3.2,0.918936583472681,1,4,10,2.6,0.966091783079296,1,4
+"purchase more state-of-the-art equipment","23",8,10,3.2,1.22927259430572,1,5,10,2.8,1.54919333848297,1,5
+"purchase more vans to enable efficient access to programs","26",8,10,3.2,0.788810637746616,2,4,10,2.9,1.59513148186739,1,5
+"improve the technology to allow high quality in house publications","28",8,10,3.3,1.15950180872841,1,5,10,3.5,1.43372087784044,1,5
+"increase the automation of the production process wherever possible","38",8,10,3.2,1.22927259430572,1,5,10,2.3,1.15950180872841,1,4
+"","",8,10,3.12857142857143,1.22677175713308,1,5,10,2.85714285714286,1.34364542300948,1,5
+"hold weekly brainstorming sessions with program management teams","29",9,10,4.2,1.03279555898864,2,5,10,3.5,0.849836585598797,2,5
+"train management in not-for-profit management methods","41",9,10,3.3,1.41813649241218,1,5,10,3,1.4142135623731,1,5
+"reduce middle management -- make organizational structure more horizontal","55",9,10,3.6,1.71269767715535,1,5,10,3.5,1.08012344973464,2,5
+"manage internal resources more efficiently","58",9,10,4.3,0.823272602348565,3,5,10,2.8,0.918936583472681,2,5
+"hire outside support to do routine administrative tasks wherever possible","74",9,10,2.5,1.43372087784044,1,5,10,2.9,1.10050493461461,1,4
+"","",9,10,3.58,1.42985656480584,1,5,10,3.14,1.0881551510024,1,5
+"develop better strategies to learn what other programs are doing","71",10,10,3.3,1.15950180872841,2,5,10,2.9,1.44913767461894,1,5
+"investigate emerging partnership or new program opportunities","73",10,10,3.6,1.07496769977314,2,5,10,2.8,1.3984117975602,1,5
+"look for small organizations we might partner with","78",10,10,2.9,1.28668393770792,2,5,10,2.8,1.61932770686548,1,5
+"find out what our other similar programs are planning to do in our area","79",10,10,3.6,0.966091783079296,2,5,10,2.5,1.17851130197758,1,5
+"","",10,10,3.35,1.12204026620009,2,5,10,2.75,1.37281294596729,1,5
