@@ -17,7 +17,7 @@
 #'  (default=TRUE).
 #' @return A list of n SxS 0/1-matrices - one for each sorter.
 #' @export
-getAdjMatrices <- function(piledat, showWarnings=TRUE) {
+getAdjMatrices <- function(piledat, cardNames, showWarnings=TRUE) {
   sorters <- sort(as.numeric(unique(piledat[[1]])))
   nCards <- length(na.exclude(unique(stack(piledat[,3:ncol(piledat)])[,1])))
   issues <- ""
@@ -30,13 +30,13 @@ getAdjMatrices <- function(piledat, showWarnings=TRUE) {
       cards <- sorter.dat[j, which(!is.na(sorter.dat[j,]))]
       cards <- as.numeric(sort(unlist(cards[-(1:2)])))
       vct   <- rep(0, nCards)
-      vct[cards] <- 1
+      vct[which(cardNames[,1] %in% cards)] <- 1
       adj.mat <- adj.mat + vct%*%t(vct)
     }
     rsum <- rowSums(adj.mat)
     if(any(rsum == 0) & showWarnings)
       issues <- issues %+% yellow("Sorter ",i, " did not sort card(s) ",
-                                  +                                   which((rsum == 0)), "\n")
+                                  +                                   cardNames[which(rsum == 0),1], "\n")
     diag(adj.mat) <- 0
     if ((sum(adj.mat) == nCards^2) & showWarnings)
       issues <- issues %+% red("Sorter ",i, ": All cards in one pile!\n")
@@ -214,7 +214,7 @@ initCMap <- function(dataDir) {
     pileLabels <- rbind(pileLabels, data.frame(pileLabel, cardNum=cardNum))
   }
   cardDat[,1] <- gsub("\\D","",cardDat[,1])
-  tmp <- getAdjMatrices(cardDat)
+  tmp <- getAdjMatrices(cardDat, cardNames)
   adj.mat <- tmp[[1]]
   issues <- tmp[[2]]
   n.indiv <- length(adj.mat)
