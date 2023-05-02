@@ -220,13 +220,14 @@ initCMap <- function(dataDir) {
   n.indiv <- length(adj.mat)
   # multidimensional scaling, and clustering:
   DS <- distanceMatrix(adj.mat)
+  rownames(DS) <- cardNames[,1]
   fit.MDS <- mds(DS)
   x <- fit.MDS$conf[,1]
   y <- fit.MDS$conf[,2]
   stress <- fit.MDS$stress
   D2e <- as.matrix(dist(fit.MDS$conf))
   D2h <- diskDist(D2e)
-  rownames(DS) <- rownames(D2e) <- rownames(D2h) <- cardNames[,1]
+  rownames(D2e) <- rownames(D2h) <- cardNames[,1]
   cardNames <- cardNames[,2]
 
   if(!file.exists(raitingsFile))
@@ -346,7 +347,8 @@ showMDSPlot <- function(cols="blue", metric=NULL) {
        ylab="", xlim=c(min(cmapdat$x)-0.25,max(cmapdat$x)*1.2),
        ylim=c(min(cmapdat$y),max(cmapdat$y)*1.2),axes=F, cex.main=1)
   text( cmapdat$x, cmapdat$y, pos=3, cex=0.8,
-        labels=seq(1,length(cmapdat$cardNames),1))
+        labels=names(cmapdat$x))
+#          seq(1,length(cmapdat$cardNames),1))
   if(length(sz) > 1) {
     rect(min(cmapdat$x)-0.3, 0.2*max(cmapdat$y),
          min(cmapdat$x)-0.1, 1.3*max(cmapdat$y), col="whitesmoke", border="white")
@@ -432,7 +434,8 @@ showClusterPlot <- function(type="rays", metric=NULL) {
       points(x.cent[i], y.cent[i],pch=18,col="orange", cex=sz[i])
     }
     for (i in 1:length(cardNames)) {
-      text(x[i], y[i], cex=0.7, groups[i]+2, labels=i, pos=3)
+      text(x[i], y[i], cex=0.7, groups[i]+2, labels=names(cmapdat$x)[i],
+           pos=3)
     }
     if(!is.null(metric)) {
       rect(min(x)-0.3, 0.2*max(y),
