@@ -24,7 +24,7 @@ getAdjMatrices <- function(piledat, cardNames, showWarnings=TRUE) {
   mat.list <- list()
   # Making a matrix for each individual and storing them in a list
   for (i in 1:length(sorters)) {
-    sorter.dat <- piledat[piledat[,1] == sorters[i],]
+    sorter.dat <- piledat[which(piledat[,1] == sorters[i]),]
     adj.mat <- matrix(0, nrow=nCards, ncol=nCards)
     for (j in 1:nrow(sorter.dat)) {
       cards <- sorter.dat[j, which(!is.na(sorter.dat[j,]))]
@@ -34,22 +34,25 @@ getAdjMatrices <- function(piledat, cardNames, showWarnings=TRUE) {
       adj.mat <- adj.mat + vct%*%t(vct)
     }
     rsum <- rowSums(adj.mat)
-    if(any(rsum == 0) & showWarnings)
-      issues <- issues %+% yellow("Sorter ",i, " did not sort card(s) ",
-                                  +                                   cardNames[which(rsum == 0),1], "\n")
+    if(any(rsum == 0) & showWarnings) {
+      didnotsort <- paste(cardNames[which(rsum == 0),1], collapse=",")
+      issues <- issues %+% yellow(sprintf("Sorter  %d did not sort card(s) %s\n",
+                                          sorters[i], didnotsort))
+    }
     diag(adj.mat) <- 0
     if ((sum(adj.mat) == nCards^2) & showWarnings)
-      issues <- issues %+% red("Sorter ",i, ": All cards in one pile!\n")
+      issues <- issues %+% red("Sorter ",sorters[i], ": All cards in one pile!\n")
     if ((max(rowSums(adj.mat)) >= nCards/3) & showWarnings)
-      issues <- issues %+% red("Sorter ",i, " put more than a third of the cards in one pile.\n")
+      issues <- issues %+% red("Sorter ",sorters[i], " put more than a third of the cards in one pile.\n")
     if ((sum(adj.mat) == nCards) & showWarnings)
-      issues <- issues %+% red("Sorter ",i, ": Each card in its own pile!\n")
+      issues <- issues %+% red("Sorter ",sorters[i], ": Each card in its own pile!\n")
     # notused <- which(apply(adj.mat, 1, max) == 0)
     # if ((length(notused) > 0) & showWarnings)
     #   issues <- issues %+% yellow("Sorter ",i, " did not sort card(s) ", notused, "\n")
     gt1 <- which(apply(adj.mat, 1, max) > 1)
+    if(length(gt1) > 0) { cat(sorters[i], "\n", gt1,"\n\n") }
     if (length(gt1) > 0) # this should not be allowed:
-      issues <- issues %+% red("Sorter ",i, " put cards ", gt1, "in multiple piles\n")
+      issues <- issues %+% red("Sorter ",sorters[i], " put cards ", gt1, "in multiple piles\n")
     mat.list[[i]] <- adj.mat
   }
   cat(issues)
@@ -210,6 +213,7 @@ initCMap <- function(dataDir) {
     if (length(cardsInPile) == 0)
       next
     cardNum <- as.numeric(cardsInPile[1,])
+    cat(i, cardNum,"\n")
     pileLabel <- rep(pileLabel, length(cardsInPile))
     pileLabels <- rbind(pileLabels, data.frame(pileLabel, cardNum=cardNum))
   }
@@ -348,7 +352,6 @@ showMDSPlot <- function(cols="blue", metric=NULL) {
        ylim=c(min(cmapdat$y),max(cmapdat$y)*1.2),axes=F, cex.main=1)
   text( cmapdat$x, cmapdat$y, pos=3, cex=0.8,
         labels=names(cmapdat$x))
-#          seq(1,length(cmapdat$cardNames),1))
   if(length(sz) > 1) {
     rect(min(cmapdat$x)-0.3, 0.2*max(cmapdat$y),
          min(cmapdat$x)-0.1, 1.3*max(cmapdat$y), col="whitesmoke", border="white")
@@ -715,7 +718,8 @@ statementReport <- function() {
       cNames <- c(cardNames[which(groups == i)],"")
       cardsInCluster <- which(ratings$StatementID %in% cardsInCluster)
       rtgsmm <- ratingSummary(ratings[cardsInCluster,])
-      rtgsmm <- data.frame(cNames, c(which(groups == i),""), rep(i,nrow(rtgsmm)), rtgsmm)
+      rtgsmm <- data.frame(cNames, c(names(cmapdat$x)[which(groups == i)],""),
+                           rep(i,nrow(rtgsmm)), rtgsmm)
       colnames(rtgsmm)[1:3] <- c("Statement", "CardNo", "ClusterNo")
       rownames(rtgsmm) <- c(rownames(DS)[which(groups == i)], paste0("total_",i))
       retdf[(1+k):(k+nrow(rtgsmm)),] <- rtgsmm
