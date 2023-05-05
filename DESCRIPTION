@@ -1,13 +1,13 @@
 Package: RCMap
 Type: Package
 Title: Group Concept Mapping
-Version: 0.1.7
+Version: 0.1.8
 Author: Haim Bar
 Maintainer: Haim Bar <haim.bar@uconn.edu>
 Description: The RCMap package is used to analyze concept mapping data. The RCMapMenu() function is the entry point to the other functions through hierarchical menus.
 License: GPL-2
 Encoding: UTF-8
-Date: 2023-05-02
+Date: 2023-05-05
 LazyData: true
 Suggests: knitr, rmarkdown
 RoxygenNote: 7.1.2

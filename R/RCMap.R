@@ -36,7 +36,7 @@ getAdjMatrices <- function(piledat, cardNames, showWarnings=TRUE) {
     rsum <- rowSums(adj.mat)
     if(any(rsum == 0) & showWarnings)
       issues <- issues %+% yellow("Sorter ",i, " did not sort card(s) ",
-                                  +                                   cardNames[which(rsum == 0),1], "\n")
+                                  + cardNames[which(rsum == 0),1], "\n")
     diag(adj.mat) <- 0
     if ((sum(adj.mat) == nCards^2) & showWarnings)
       issues <- issues %+% red("Sorter ",i, ": All cards in one pile!\n")
@@ -348,7 +348,6 @@ showMDSPlot <- function(cols="blue", metric=NULL) {
        ylim=c(min(cmapdat$y),max(cmapdat$y)*1.2),axes=F, cex.main=1)
   text( cmapdat$x, cmapdat$y, pos=3, cex=0.8,
         labels=names(cmapdat$x))
-#          seq(1,length(cmapdat$cardNames),1))
   if(length(sz) > 1) {
     rect(min(cmapdat$x)-0.3, 0.2*max(cmapdat$y),
          min(cmapdat$x)-0.1, 1.3*max(cmapdat$y), col="whitesmoke", border="white")
@@ -715,7 +714,8 @@ statementReport <- function() {
       cNames <- c(cardNames[which(groups == i)],"")
       cardsInCluster <- which(ratings$StatementID %in% cardsInCluster)
       rtgsmm <- ratingSummary(ratings[cardsInCluster,])
-      rtgsmm <- data.frame(cNames, c(which(groups == i),""), rep(i,nrow(rtgsmm)), rtgsmm)
+      rtgsmm <- data.frame(cNames, c(names(cmapdat$x)[which(groups == i)],""),
+                           rep(i,nrow(rtgsmm)), rtgsmm)
       colnames(rtgsmm)[1:3] <- c("Statement", "CardNo", "ClusterNo")
       rownames(rtgsmm) <- c(rownames(DS)[which(groups == i)], paste0("total_",i))
       retdf[(1+k):(k+nrow(rtgsmm)),] <- rtgsmm
