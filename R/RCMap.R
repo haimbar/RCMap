@@ -205,8 +205,9 @@ initCMap <- function(dataDir) {
   if(!file.exists(cardDatFile))
     stop("Card sortsing File:", cardDatFile, "Doesn't exist" )
   cardNames <- read.csv(cardNamesFile, header=TRUE)
-  cardDat <- read.csv(cardDatFile, header=FALSE, encoding = "UTF-8",
-                      colClasses = rep("character", 2+nrow(cardNames)))
+  cardDat <- suppressWarnings(read.csv(cardDatFile, header=FALSE,
+                                       encoding = "UTF-8",
+                                       colClasses = rep("character", 2+nrow(cardNames))))
   pileLabels <- data.frame(pileLabel=character(), cardNum=integer())
   for (i in 1:nrow(cardDat)) {
     cardDat[i,] <- gsub("\\s+$", "", cardDat[i,])
