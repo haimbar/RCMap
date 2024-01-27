@@ -18,8 +18,10 @@
 #' @return A list of n SxS 0/1-matrices - one for each sorter.
 #' @export
 getAdjMatrices <- function(piledat, cardNames, showWarnings=TRUE) {
-  sorters <- sort(as.numeric(unique(piledat[[1]])))
-  nCards <- length(na.exclude(unique(stack(piledat[,3:ncol(piledat)])[,1])))
+  sorters <- sort(as.numeric(unique(piledat[,1])))
+  cardsused <- na.exclude(unique(stack(piledat[,3:ncol(piledat)])[,1]))
+  cardsused <- sort(as.numeric(setdiff(cardsused, "")))
+  nCards <- length(cardsused)
   issues <- ""
   mat.list <- list()
   # Making a matrix for each individual and storing them in a list
@@ -50,7 +52,7 @@ getAdjMatrices <- function(piledat, cardNames, showWarnings=TRUE) {
     # if ((length(notused) > 0) & showWarnings)
     #   issues <- issues %+% yellow("Sorter ",i, " did not sort card(s) ", notused, "\n")
     gt1 <- which(apply(adj.mat, 1, max) > 1)
-    if(length(gt1) > 0) { cat(sorters[i], "\n", gt1,"\n\n") }
+    if(length(gt1) > 0) { cat(sorters[i], "\n", gt1,"\n\n", issues,"\n") }
     if (length(gt1) > 0) # this should not be allowed:
       issues <- issues %+% red("Sorter ",sorters[i], " put cards ", gt1, "in multiple piles\n")
     mat.list[[i]] <- adj.mat
@@ -64,7 +66,6 @@ getAdjMatrices <- function(piledat, cardNames, showWarnings=TRUE) {
 #'
 #' n SxS adjacency matrices are added to create a similarity matrix, which is
 #' then converted into a distance matrix in the S-dimensional Euclidean space.
-#' @param adjMats a list of n SxS adjacency matrices, created by getAdjMatrices.
 #' @return An SxS distance matrix.
 #' @export
 distanceMatrix <- function(adjMats) {
@@ -193,10 +194,10 @@ splitHalf <- function(adjMat, B=10, disttype="Hyperbolic",
 #' @importFrom smacof mds
 #' @export
 initCMap <- function(dataDir) {
-  cardNamesFile <- paste0(dataDir, "Statements.csv")
-  cardDatFile <- paste0(dataDir, "SortedCards.csv")
-  raitingsFile <- paste0(dataDir, "Ratings.csv")
-  demographicsFile <- paste0(dataDir, "Demographics.csv")
+  cardNamesFile <- paste0(dataDir, "/Statements.csv")
+  cardDatFile <- paste0(dataDir, "/SortedCards.csv")
+  raitingsFile <- paste0(dataDir, "/Ratings.csv")
+  demographicsFile <- paste0(dataDir, "/Demographics.csv")
   # if any is missing, show an error message, hit any key to go back, return
 
   if(!file.exists(cardNamesFile))
@@ -204,16 +205,17 @@ initCMap <- function(dataDir) {
   if(!file.exists(cardDatFile))
     stop("Card sortsing File:", cardDatFile, "Doesn't exist" )
   cardNames <- read.csv(cardNamesFile, header=TRUE)
-  cardDat <- read.csv(cardDatFile, header=FALSE, encoding = "")
+  cardDat <- read.csv(cardDatFile, header=FALSE, encoding = "UTF-8",
+                      colClasses = rep("character", 2+nrow(cardNames)))
   pileLabels <- data.frame(pileLabel=character(), cardNum=integer())
   for (i in 1:nrow(cardDat)) {
-    pileLabel <- cardDat[i,2]
-    cardsInPile <- cardDat[i,-c(1,2)]
-    cardsInPile <- cardsInPile[which(!is.na(cardsInPile))]
+    cardDat[i,] <- gsub("\\s+$", "", cardDat[i,])
+    pile <- cardDat[i,]
+    pileLabel <- cardDat[i, 2]
+    cardsInPile <- na.omit(as.numeric(cardDat[i, -c(1,2)]))
     if (length(cardsInPile) == 0)
       next
-    cardNum <- as.numeric(cardsInPile[1,])
-    cat(i, cardNum,"\n")
+    cardNum <- as.numeric(cardsInPile)
     pileLabel <- rep(pileLabel, length(cardsInPile))
     pileLabels <- rbind(pileLabels, data.frame(pileLabel, cardNum=cardNum))
   }
@@ -1124,7 +1126,7 @@ RCMapMenu <- function() {
 #' Load the input files for a concept mapping project.
 loadRCMapData <- function() {
   topLine()
-  dataDir <- choose_dir()
+  dataDir <- paste0(choose_directory(),"/")
   cat(bold(crayon::green("Opening project folder:" %+% dataDir %+% "...\n\n")))
   cmapdat <<- initCMap(dataDir)
 }
@@ -1134,6 +1136,14 @@ loadRCMapData <- function() {
 #' From the easycsv package.
 #' @return The user's selected directory.
 #' @export
+choose_directory = function(caption = 'Select data directory') {
+  if (exists('utils::choose.dir')) {
+    choose.dir(caption = caption)
+  } else {
+    tk_choose.dir(caption = caption)
+  }
+}
+
 choose_dir <- function(){
   os <- getOS()
   if(os == "windows"){
