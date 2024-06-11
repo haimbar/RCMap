@@ -52,7 +52,7 @@ getAdjMatrices <- function(piledat, cardNames, showWarnings=TRUE) {
     # if ((length(notused) > 0) & showWarnings)
     #   issues <- issues %+% yellow("Sorter ",i, " did not sort card(s) ", notused, "\n")
     gt1 <- which(apply(adj.mat, 1, max) > 1)
-    if(length(gt1) > 0) { cat(sorters[i], "\n", gt1,"\n\n", issues,"\n") }
+    #if(length(gt1) > 0) { cat(sorters[i], "\n", gt1,"\n\n", issues,"\n") }
     if (length(gt1) > 0) # this should not be allowed:
       issues <- issues %+% red("Sorter ",sorters[i], " put cards ", gt1, "in multiple piles\n")
     mat.list[[i]] <- adj.mat
@@ -221,6 +221,12 @@ initCMap <- function(dataDir) {
     pileLabels <- rbind(pileLabels, data.frame(pileLabel, cardNum=cardNum))
   }
   cardDat[,1] <- gsub("\\D","",cardDat[,1])
+  sorters <- unique(cardDat[,1])
+  tmpids <- rep(-1, length(sorters))
+  for (i in 1:length(sorters)) {
+    tmpids[which(cardDat[,1] == sorters[i])] <- i
+  }
+  cardDat[,1] <- tmpids
   tmp <- getAdjMatrices(cardDat, cardNames)
   adj.mat <- tmp[[1]]
   issues <- tmp[[2]]
@@ -307,7 +313,8 @@ ratingSummary <- function(ratingsDat) {
                                 min(ratingsDat[,colnum+2], na.rm = TRUE))
     summ[,(colnum-1)*5+ 5] <- c(as.numeric(by(ratingsDat[,colnum+2], ratingsDat[,"StatementID"], max, na.rm=TRUE)),
                                 max(ratingsDat[,colnum+2], na.rm = TRUE))
-    cnames[(colnum-1)*5 + 1:5] <- paste(colnames(ratingsDat)[colnum+2], c("N","Mean","SD","Min", "Max"), sep="_")
+    cnames[(colnum-1)*5 + 1:5] <- paste(colnames(ratingsDat)[colnum+2],
+                                        c("N","Mean","SD","Min", "Max"), sep="_")
   }
   colnames(summ) <- cnames
   summ
@@ -631,6 +638,7 @@ showParallelCoordinates <- function() {
 
 #' A Go-Zone plot.
 #'
+#' @param refline Show reference line at the mean (default) or median.
 #' @export
 showGoZone <- function() {
   #  with(cmapdat,{
@@ -666,6 +674,18 @@ showGoZone <- function() {
        col=cols[groups], font=2)
   axis(1, at = 1:5); axis(2)
   grid()
+  rect(xleft = 1, ybottom = 1, xright = MN[nrow(rtgsmm),1],
+       ytop = MN[nrow(rtgsmm),2], col=rgb(0.5, 0, 0.5, .1),
+       border = "white")
+  rect(xleft = 1, ybottom = MN[nrow(rtgsmm),2], xright = MN[nrow(rtgsmm),1],
+       ytop = 5, col=rgb(0.5, 0.5, 0, .1),
+       border = "white")
+  rect(xleft = MN[nrow(rtgsmm),1], ybottom = 1, xright = 5,
+       ytop = MN[nrow(rtgsmm),2], col=rgb(0.5, 0, 0, .1),
+       border = "white")
+  rect(xleft = MN[nrow(rtgsmm),1], ybottom = MN[nrow(rtgsmm),2], xright = 5,
+       ytop = 5, col=rgb(0, 0.5, 0.5, .1),
+       border = "white")
   abline(v=MN[nrow(rtgsmm),1], col="grey", lwd=2)
   abline(h=MN[nrow(rtgsmm),2], col="grey", lwd=2)
   cnms <- clusterNames()
@@ -687,7 +707,7 @@ sorterReport <- function() {
       cardsSorted <- length(cardsInPiles)
       adjM <- adj.mat[[i]][cardsInPiles, cardsInPiles]
       diag(adjM) <- 1
-      noPiles <- length(unique(apply(adjM,1,paste0, collapse="")))
+      noPiles <- length(unique(apply(adjM, 1, paste0, collapse="")))
       cat(paste0("Sorter ", i, " sorted ", cardsSorted, " cards into ", noPiles," piles\n"))
     }
   })
