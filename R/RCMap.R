@@ -186,6 +186,60 @@ splitHalf <- function(adjMat, B=10, disttype="Hyperbolic",
   list(cors=cors, distmetric=distmetric)
 }
 
+#' Do a leave-one-out analysis on the sorters.
+#'
+#' Takes a list of 0/1 matrices as input and perform leave-one-out analysis, to detect whether any of them has a large impact on the MDS map.
+#' @param adjMatList A list of adjacency matrix from all the sorters.
+#' @param disttype Hyperbolic or Euclidean.
+#' @return A vector on length n=number of sorters, with a score for each one. Large values may point to influential sorters.
+#' @export
+LeaveOneOut <- function(adjMatList,  disttype="Hyperbolic") {
+  nsorters <- length(adjMatList)
+  D0 <- distanceMatrix(adjMatList)
+  fit.MDS0 <- mds(D0)
+  d0 <- as.matrix(dist(fit.MDS0$conf))
+  if (disttype == "Hyperbolic") {
+    d0 <- diskDist(d0)
+  }
+  madd.diff <- rep(0, nsorters)
+  for (i in 1:nsorters) {
+    D1 <- distanceMatrix(adjMatList[-i])
+    fit.MDS1 <- mds(D1)
+    d1 <- as.matrix(dist(fit.MDS1$conf))
+    if (disttype == "Hyperbolic") {
+      d1 <- diskDist(d1)
+    }
+    madd.diff[i] <- mean(abs(d1/max(d1)-d0/max(d0)))
+  }
+  return(madd.diff)
+}
+
+
+#' Perform a leave-one-out analysis on the sorters and plot the MADD values (mean absolute distance distortion) in a dotchart.
+#'
+#' Takes a list of 0/1 matrices as input and perform leave-one-out analysis, to detect whether any of them has a large impact on the MDS map.
+#' @param adjMatList A list of adjacency matrix from all the sorters.
+#' @param disttype Hyperbolic or Euclidean.
+#' @return A vector on length n=number of sorters, with a score for each one. Large values may point to influential sorters.
+#' @export
+plotmadd <- function(adj.mat, disttype = "Hyperbolic") {
+  madd <- LeaveOneOut(adj.mat, disttype)
+  bp <- boxplot(madd, plot=FALSE)
+  cols <- (madd > bp$stats[5]) + 1
+  cols <- cols[order(madd)]
+  dotchart(sort(madd), labels = order(madd), xlim=c(0, max(madd)), pch=19,
+           cex=0.7, col=cols%%2, frame.plot = FALSE, xlab="MADD", ylab="Sorter")
+  bxp(bp, horizontal = TRUE, add=TRUE, at = length(madd)+0.5,
+      border="grey50", boxfill="grey80", ann = FALSE, pars = list(axes=FALSE))
+  lines(c(0, 0), c(0, length(madd)+0.5))
+  if (length(which(cols == 2)) > 0) {
+    text(sort(madd)[cols==2], order(cols)[cols==2], order(madd)[cols==2], col=2,
+         cex=0.7)
+  }
+  madd
+}
+
+
 #' Read the card-sorting data files and generate the MDS data.
 #'
 #' Takes two input file names.
@@ -921,11 +975,16 @@ RCMapMenu <- function() {
                  ")\n"))
       }
       summMenu <- menu(c("Perform split-half analysis",
+                         "Perform leave-one-out analysis",
                          bold(magenta("Main menu"))))
       if(summMenu == 1) {
         cmapdat$splhalf <<- splitHalf(cmapdat$adj.mat, B=20,
                                       disttype = cmapdat$distmetric,
                                       plotit=TRUE, seed=23456)
+      }
+      if(summMenu == 2) {
+        cmapdat$madd <<- plotmadd(cmapdat$adj.mat,
+                                  disttype = cmapdat$distmetric)
       }
       menuLevel <- 1
       if(summMenu %in% c(0,2))
