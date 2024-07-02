@@ -224,17 +224,22 @@ LeaveOneOut <- function(adjMatList,  disttype="Hyperbolic") {
 #' @export
 plotmadd <- function(adj.mat, disttype = "Hyperbolic") {
   madd <- LeaveOneOut(adj.mat, disttype)
+  smadd <- sort(madd)
   bp <- boxplot(madd, plot=FALSE)
   cols <- (madd > bp$stats[5]) + 1
   cols <- cols[order(madd)]
-  dotchart(sort(madd), labels = order(madd), xlim=c(0, max(madd)), pch=19,
-           cex=0.7, col=cols%%2, frame.plot = FALSE, xlab="MADD", ylab="Sorter")
+  dotchart(smadd, labels = order(madd), xlim=c(0, max(madd)), pch=19,
+           cex=0.7, col=cols%%2, frame.plot = FALSE, xlab="MADD",
+           ylab="Sorter", lcolor="white")
   bxp(bp, horizontal = TRUE, add=TRUE, at = length(madd)+0.5,
       border="grey50", boxfill="grey80", ann = FALSE, pars = list(axes=FALSE))
   lines(c(0, 0), c(0, length(madd)+0.5))
   if (length(which(cols == 2)) > 0) {
-    text(sort(madd)[cols==2], order(cols)[cols==2], order(madd)[cols==2], col=2,
+    text(smadd[cols==2], order(cols)[cols==2], order(madd)[cols==2], col=2,
          cex=0.7)
+  }
+  for (i in 1:length(smadd)) {
+    lines(c(0, smadd[i]), c(i, i), lty=3, col="grey80")
   }
   madd
 }
