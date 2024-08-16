@@ -611,6 +611,11 @@ showDotPlot <- function(metric=NULL) {
 showBarPlot <- function(metric=NULL) {
   if(metric == 0)
     return(NULL)
+  barord <- menu(c("Alphabetical", "Height",
+                     bold(magenta("Plot menu"))))
+  if (barord == 3) {
+    return(NULL)
+  }
   with(cmapdat,{
     distM <- D2e
     if(distmetric == "Hyperbolic")
@@ -633,11 +638,23 @@ showBarPlot <- function(metric=NULL) {
         SD[i] <- rtgsmm[nrow(rtgsmm),which(colnames(rtgsmm) == paste0(colnames(ratings)[metric+2],"_SD"))]
         SS[i] <- rtgsmm[nrow(rtgsmm),which(colnames(rtgsmm) == paste0(colnames(ratings)[metric+2],"_N"))]
       }
+      cname <- clusterNames()
+      if (barord == 1) {
+        ord <- order(clusterNames())
+      }
+      if (barord == 2) {
+        ord <- order(MN)
+      }
+      MN <- MN[ord]
+      SD <- SD[ord]
+      SS <- SS[ord]
+      cname <- cname[ord]
+      barcols <- cols[ord]
     }
     SEM <- SD/sqrt(SS)
     Yl = ceiling(max(MN+SEM+0.5, na.rm = TRUE))
-    bp <- barplot(MN, main=ttl,col=cols,ylim=c(0,Yl),
-                  names.arg=clusterNames(),cex.names=0.8,las=3,
+    bp <- barplot(MN, main=ttl,col=barcols,ylim=c(0,Yl),
+                  names.arg=cname,cex.names=0.8,las=3,
                   width=rep(0.8,nclust),space=0.2)
     segments(bp, MN - SEM, bp, MN + SEM, lwd=2, col="grey66")
     segments(bp - 0.1, MN - SEM, bp + 0.1, MN - SEM, lwd=2, col="grey66")
