@@ -742,9 +742,12 @@ showGoZone <- function() {
     MN[, jj] <- rtgsmm[,which(colnames(rtgsmm) ==
                                 paste0(colnames(cmapdat$ratings)[metric],"_Mean"))]
   }
+  kendall <- cor.test(MN[-nrow(rtgsmm),1], MN[-nrow(rtgsmm),2], method = "kendall")
+  Kendall <- paste0("Kendall's tau=", format(kendall$estimate, digits=2),
+                    " (p=", format(kendall$p.value, digits=3),")")
   plot( MN[-nrow(rtgsmm),1], MN[-nrow(rtgsmm),2], ylim=c(1,5), xlim=c(1,5.9),
-        main="", col=0, axes=F, xlab=cmapdat$pcoordChoice[1],
-        ylab=cmapdat$pcoordChoice[2], pch=19, cex=0.6)
+        main=Kendall, col=0, axes=F, xlab=cmapdat$pcoordChoice[1],
+        ylab=cmapdat$pcoordChoice[2], pch=19, cex=0.6, cex.main=1)
   text(MN[-nrow(rtgsmm),1], MN[-nrow(rtgsmm),2],
        rownames(cmapdat$DS), cex=0.7,
        col=cols[groups], font=2)
