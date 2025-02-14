@@ -19,7 +19,7 @@
 #' @export
 getAdjMatrices <- function(piledat, cardNames, showWarnings=TRUE) {
   sorters <- sort(as.numeric(unique(piledat[,1])))
-  cardsused <- na.exclude(unique(stack(piledat[,3:ncol(piledat)])[,1]))
+  cardsused <- na.exclude(unique(as.numeric(stack(piledat[,3:ncol(piledat)])[,1])))
   cardsused <- sort(as.numeric(setdiff(cardsused, "")))
   nCards <- length(cardsused)
   issues <- ""
@@ -263,12 +263,13 @@ initCMap <- function(dataDir) {
     stop("Card name File:", cardNamesFile, "Doesn't exist" )
   if(!file.exists(cardDatFile))
     stop("Card sortsing File:", cardDatFile, "Doesn't exist" )
-  cardNames <- read.csv(cardNamesFile, header=TRUE)
+  cardNames <- read.csv(cardNamesFile, header=TRUE, encoding = "UTF-8")
   cardDat <- suppressWarnings(read.csv(cardDatFile, header=FALSE,
                                        encoding = "UTF-8",
                                        colClasses = rep("character", 2+nrow(cardNames))))
   pileLabels <- data.frame(pileLabel=character(), cardNum=integer())
   for (i in 1:nrow(cardDat)) {
+    cardDat[i,] <- iconv(cardDat[i,], from = "ISO-8859-1", to = "UTF-8")
     cardDat[i,] <- gsub("\\s+$", "", cardDat[i,])
     pile <- cardDat[i,]
     pileLabel <- cardDat[i, 2]
