@@ -17,28 +17,39 @@
 #'  (default=TRUE).
 #' @return A list of n SxS 0/1-matrices - one for each sorter.
 #' @export
-getAdjMatrices <- function(piledat, cardNames, showWarnings=TRUE) {
-  sorters <- sort(as.numeric(unique(piledat[,1])))
-  cardsused <- na.exclude(unique(as.numeric(stack(piledat[,3:ncol(piledat)])[,1])))
+getAdjMatrices <- function(piledat, cardNames, sorters_dict, showWarnings=TRUE) {
+  issues <- ""
+  if (ncol(piledat) < 3)
+    issues <- issues %+% red("Pile sorting file must have at least 3 columns!\n")
+  sorters <- unique(piledat[ ,1])
+  cardsused <- na.exclude(unique(as.numeric(stack(
+    piledat[ ,3:ncol(piledat)])[ ,1])))
   cardsused <- sort(as.numeric(setdiff(cardsused, "")))
   nCards <- length(cardsused)
-  issues <- ""
   mat.list <- list()
+  #cat(sorters_dict$orig_ID,"\n")
   # Making a matrix for each individual and storing them in a list
   for (i in 1:length(sorters)) {
-    sorter.dat <- piledat[which(piledat[,1] == sorters[i]),]
+    sorterID <- which(sorters_dict$seq_ID == i)
+    #cat(i, sorterID, sorters_dict$orig_ID[sorterID], "\n")
+    #sorters_dict <- data.frame(orig_ID=sorters, seq_ID=unique(tmpids))
+    sorter.dat <- piledat[which(piledat[ ,1] == sorters_dict$orig_ID[sorterID]), ]
+    #                                sorters[i]), ]
+    #cat(dim(sorter.dat),"\n")
     adj.mat <- matrix(0, nrow=nCards, ncol=nCards)
     for (j in 1:nrow(sorter.dat)) {
-      cards <- sorter.dat[j, which(!is.na(sorter.dat[j,]))]
-      cards <- as.numeric(sort(unlist(cards[-(1:2)])))
+      cards <- sorter.dat[j, which(!is.na(sorter.dat[j, ]))]
+      cards <- na.omit(as.numeric(sort(unlist(cards[-(1:2)]))))
+      if (length(cards) == 0)
+        next
       vct   <- rep(0, nCards)
-      vct[which(cardNames[,1] %in% cards)] <- 1
+      vct[which(cardNames[ ,1] %in% cards)] <- 1
       adj.mat <- adj.mat + vct%*%t(vct)
     }
     rsum <- rowSums(adj.mat)
     if(any(rsum == 0) & showWarnings) {
       didnotsort <- paste(cardNames[which(rsum == 0),1], collapse=",")
-      issues <- issues %+% yellow(sprintf("Sorter  %d did not sort card(s) %s\n",
+      issues <- issues %+% yellow(sprintf("Sorter  %s did not sort card(s) %s\n",
                                           sorters[i], didnotsort))
     }
     diag(adj.mat) <- 0
@@ -101,14 +112,50 @@ sumsq <- function(x) {
 diskDist <- function(x) {
   sqnorms <- apply(x, 1, sumsq)
   P <- nrow(x)
-  dd <- matrix(0, P,P)
+  dd <- matrix(0, P, P)
   for (i in 1:P) {
     for (j in 1:P) {
-      dd[i,j] <- dd[j,i] <- acosh(1+2*(sumsq(x[i,]-x[j,]))/
-                                    ((1-sqnorms[i])*(1-sqnorms[j])))
+      dd[i, j] <- dd[j, i] <- acosh(1 + 2*(sumsq(x[i, ] - x[j, ]))/
+                                      ((1 - sqnorms[i]) * (1 - sqnorms[j])))
     }
   }
   return(dd)
+}
+
+get_cmat <- function(dists, M, disttype, max_nc, clustMethod="ward.D2") {
+  groups <- Cmat <- list()
+  for (k in 2:max_nc) {
+    fit.Clust <- hclust(as.dist(dists), method=clustMethod)
+    Cmat[[k-1]] <- matrix(0, M, M)
+
+    groups[[k-1]] <- cutree(fit.Clust, k=k)
+    for (i in 1:k) {
+      jj <- which(groups[[k-1]] == i)
+      Cmat[[k-1]][jj, jj] <- 1
+    }
+    diag(Cmat[[k-1]]) <- 0
+  }
+  return(Cmat)
+}
+
+clusterings <- function(adjmat, j=0, max_nc=3, clustMethod="ward.D2") {
+  if (j > length(adjmat)) {
+    #cat("Parameter (j) is greater the the length of list (adjmat). Using 0\n")
+    j <- 0
+  }
+  A <- adjmat
+  if (j > 0) {
+    A <- adjmat[-j]
+  }
+  D1 <- distanceMatrix(A)
+  M <- nrow(D1)
+  fit.MDS1 <- mds(D1)
+  d1 <- as.matrix(dist(fit.MDS1$conf))
+  d2 <- diskDist(d1)
+
+  CmatE <- get_cmat(d1, M, "Euclidean", max_nc, clustMethod)
+  CmatH <- get_cmat(d2, M, "Hyperbolic", max_nc, clustMethod)
+  list(CmatE=CmatE, CmatH=CmatH) # lists of adjacency matrices, for different numbers of clusters
 }
 
 
@@ -130,9 +177,9 @@ diskDist <- function(x) {
 MPindex <- function(D, d, cst=1, func=median, ...) {
   d <- d/max(d)
   D <- D/max(D)
-  M0 <- (abs(D-d))^(1+cst*pmin(d,D))
-  M <- matrix(0,nrow=nrow(M0), ncol=ncol(M0)-1)
-  for (i in 1:nrow(M)) { M[i,] <- M0[i,-i] }
+  M0 <- (abs(D - d))^(1 + cst*pmin(d, D))
+  M <- matrix(0, nrow = nrow(M0), ncol = ncol(M0)-1)
+  for (i in 1:nrow(M)) { M[i, ] <- M0[i, -i] }
   return(apply(M, 1, func, ...))
 }
 
@@ -155,9 +202,9 @@ MPindex <- function(D, d, cst=1, func=median, ...) {
 splitHalf <- function(adjMat, B=10, disttype="Hyperbolic",
                       seed=968421, plotit=FALSE) {
   n <- length(adjMat)
-  cors <- rep(0,B)
+  cors <- rep(0, B)
   for (i in 1:B) {
-    set.seed(seed+i)
+    set.seed(seed + i)
     grp1 <- sort(sample(n)[1:round(n/2)])
     grp2 <- setdiff(1:n, grp1)
     adjMattmp1 <- adjMat[grp1]
@@ -181,151 +228,217 @@ splitHalf <- function(adjMat, B=10, disttype="Hyperbolic",
     plot(cors, cex=0.6, col="blue", main="Split-half correlations", pch=19,
          xlab="Split #", ylab="Correlation between halves", ylim=c(-1,1),
          axes=F)
-    axis(1);axis(2); abline(h=0, col="grey", lwd=2); grid()
+    axis(1); axis(2); abline(h=0, col="grey", lwd=2); grid()
   }
   list(cors=cors, distmetric=distmetric)
-}
-
-#' Do a leave-one-out analysis on the sorters.
-#'
-#' Takes a list of 0/1 matrices as input and perform leave-one-out analysis, to detect whether any of them has a large impact on the MDS map.
-#' @param adjMatList A list of adjacency matrix from all the sorters.
-#' @param disttype Hyperbolic or Euclidean.
-#' @return A vector on length n=number of sorters, with a score for each one. Large values may point to influential sorters.
-#' @export
-LeaveOneOut <- function(adjMatList,  disttype="Hyperbolic") {
-  nsorters <- length(adjMatList)
-  D0 <- distanceMatrix(adjMatList)
-  fit.MDS0 <- mds(D0)
-  d0 <- as.matrix(dist(fit.MDS0$conf))
-  if (disttype == "Hyperbolic") {
-    d0 <- diskDist(d0)
-  }
-  madd.diff <- rep(0, nsorters)
-  for (i in 1:nsorters) {
-    D1 <- distanceMatrix(adjMatList[-i])
-    fit.MDS1 <- mds(D1)
-    d1 <- as.matrix(dist(fit.MDS1$conf))
-    if (disttype == "Hyperbolic") {
-      d1 <- diskDist(d1)
-    }
-    madd.diff[i] <- mean(abs(d1/max(d1)-d0/max(d0)))
-  }
-  return(madd.diff)
 }
 
 
 #' Perform a leave-one-out analysis on the sorters and plot the MADD values (mean absolute distance distortion) in a dotchart.
 #'
-#' Takes a list of 0/1 matrices as input and perform leave-one-out analysis, to detect whether any of them has a large impact on the MDS map.
-#' @param adjMatList A list of adjacency matrix from all the sorters.
-#' @param disttype Hyperbolic or Euclidean.
-#' @return A vector on length n=number of sorters, with a score for each one. Large values may point to influential sorters.
+#' Takes a list of Jaccard-index matrices as input creates an interaction plot, showing the scores for all the statements, as well as the median, and the 25th and 75th percentiles.
+#' @param eta_ij A list of adjacency matrix from all the sorters.
 #' @export
-plotmadd <- function(adj.mat, disttype = "Hyperbolic") {
-  madd <- LeaveOneOut(adj.mat, disttype)
-  smadd <- sort(madd)
-  bp <- boxplot(madd, plot=FALSE)
-  cols <- (madd > bp$stats[5]) + 1
-  cols <- cols[order(madd)]
-  dotchart(smadd, labels = order(madd), xlim=c(0, max(madd)), pch=19,
-           cex=0.7, col=cols%%2, frame.plot = FALSE, xlab="MADD",
-           ylab="Sorter", lcolor="white")
-  bxp(bp, horizontal = TRUE, add=TRUE, at = length(madd)+0.5,
-      border="grey50", boxfill="grey80", ann = FALSE, pars = list(axes=FALSE))
-  lines(c(0, 0), c(0, length(madd)+0.5))
-  if (length(which(cols == 2)) > 0) {
-    text(smadd[cols==2], order(cols)[cols==2], order(madd)[cols==2], col=2,
-         cex=0.7)
+plotjaccard <- function(eta_ij) {
+  M <- matrix(0, nrow=length(eta_ij), ncol=ncol(eta_ij[[1]]))
+  M2 <- matrix(0, nrow=0, ncol=3)
+  for (i in 1:length(eta_ij)) {
+    M[i, ] <- colMeans(eta_ij[[i]] < 0.3)
+    M2 <- rbind(M2, cbind(rep(i+1, length(colMeans(eta_ij[[i]]))),
+                          1:ncol(eta_ij[[1]]), colMeans(eta_ij[[i]])))
   }
-  for (i in 1:length(smadd)) {
-    lines(c(0, smadd[i]), c(i, i), lty=3, col="grey80")
-  }
-  madd
+  M2 <- as.data.frame(M2)
+  colnames(M2) <- c("clusters", "statement", "eta")
+  #interaction.plot(M2$statement, M2$clusters, M2$eta, legend=F, lwd=0.2)
+  interaction.plot(M2$clusters, M2$statement, M2$eta, legend=F, lwd=0.2,
+                   xlab="No. clusters", ylab="Jaccard", col="grey66",
+                   axes=FALSE, main="")
+  clusterstats <- by(M2$eta, M2$clusters, quantile, probs=c(0.25, 0.5, 0.75))
+  clusterstats <- array2DF(clusterstats, simplify = TRUE)
+  lines(unique(M2$clusters)-1, clusterstats$`25%`, col="blue", lwd=2)
+  lines(unique(M2$clusters)-1, clusterstats$`50%`, col="navyblue", lwd=3)
+  lines(unique(M2$clusters)-1, clusterstats$`75%`, col="blue", lwd=2)
+  axis(1, at=seq(1, max(M2$clusters)-1), labels=seq(2, max(M2$clusters)))
+  axis(2, at=seq(0.1, 1, by=0.1))
 }
 
 
-#' Read the card-sorting data files and generate the MDS data.
-#'
-#' Takes two input file names.
-#' @param dataDir The project's directory.
-#' @return A list with 9 elements n.indiv=number of sorters, cardNames=the statements on the cards, adj.mat=the adjacency matrix, DS=the pairwise distances matrix in the original high-dimensional space, D2e=the Euclidean distance matrix in the 2-D space, D2h=the hyperbolic distance matrix in the 2-D space, x=the x coordinates in the MDS plot, y=the y coordinates, stress=the stress of the MDS plot.
-#' @importFrom smacof mds
-#' @export
-initCMap <- function(dataDir) {
-  cardNamesFile <- paste0(dataDir, "/Statements.csv")
-  cardDatFile <- paste0(dataDir, "/SortedCards.csv")
-  raitingsFile <- paste0(dataDir, "/Ratings.csv")
-  demographicsFile <- paste0(dataDir, "/Demographics.csv")
-  # if any is missing, show an error message, hit any key to go back, return
+# Check that the file containing the statements is loaded properly:
+read_statements <- function(filename, enc = "UTF-8", sep=",") {
+  if(!file.exists(filename))
+    return(list(issues=paste("read_statements: File", filename,
+                             "doesn't exist.\n", troubleshooting["cardfilename"]),
+                cardNames = NULL))
+  cardNames <- read.csv(filename, header=TRUE,  encoding = enc, sep=sep)
+  # The file must have exactly two columns: ID and statement text:
+  if (ncol(cardNames) != 2)
+    return(list(issues=paste("read_statements:", filename,
+                             "must have exactly two columns.\n",
+                             troubleshooting["cardfilesep"]),
+                cardNames = NULL))
+  # The file must have some data (we're only checking if it has at least 3 rows)
+  if (nrow(cardNames) < 3)
+    return(list(issues=paste("read_statements:", filename,
+                             "must have some statements."),
+                cardNames = NULL))
+  # File structure appears to be correct (encoding is left for the user to set.)
+  # Card numbers should be consecutive in the input file, but we're going to
+  # assume that it may not be the case, and create a column called SeqID:
+  colnames(cardNames) <- c("StatementID", "Statement")
+  cardNames$SeqID <- 1:nrow(cardNames)
+  cardNames$LC <- tolower(iconv(cardNames$Statement, from = "ISO-8859-1",
+                                to = "UTF-8"))
+  cardNames$LC <- gsub("^\\s+(.+)\\s+$", "\\1", cardNames$LC)
+  return(list(issues=NULL, cardNames=cardNames))
+}
 
-  if(!file.exists(cardNamesFile))
-    stop("Card name File:", cardNamesFile, "Doesn't exist" )
-  if(!file.exists(cardDatFile))
-    stop("Card sortsing File:", cardDatFile, "Doesn't exist" )
-  cardNames <- read.csv(cardNamesFile, header=TRUE, encoding = "UTF-8")
-  cardDat <- suppressWarnings(read.csv(cardDatFile, header=FALSE,
-                                       encoding = "UTF-8",
-                                       colClasses = rep("character", 2+nrow(cardNames))))
+
+# Check that the file containing the pile-sorting data is loaded properly:
+read_piles <- function(filename, ncards, enc = "UTF-8", sep=",") {
+  if(!file.exists(filename))
+    return(list(issues=paste("read_piles: File", filename,
+                             "doesn't exist.\n", troubleshooting["pilesfilename"]),
+                cardDat = NULL))
+
+  cardDat <- suppressWarnings(read.csv(filename, header = FALSE,
+                                       encoding = enc, sep = sep,
+                                       colClasses = rep("character", 2+ncards)))
+  if (ncol(cardDat) <= 3)
+    return(list(issues=paste("read_piles:", filename,
+                             "must have at least three columns.\n",
+                             troubleshooting["pilesfilesep"]),
+                cardDat = NULL))
+
+  cardDat <- cardDat[ ,which(colnames(cardDat) != "")]
   pileLabels <- data.frame(pileLabel=character(), cardNum=integer())
   for (i in 1:nrow(cardDat)) {
     cardDat[i,] <- iconv(cardDat[i,], from = "ISO-8859-1", to = "UTF-8")
     cardDat[i,] <- gsub("\\s+$", "", cardDat[i,])
-    pile <- cardDat[i,]
+    pile <- cardDat[i, ]
     pileLabel <- cardDat[i, 2]
+    if(length(grep("\\D", cardDat[i, -c(1,2)])) > 0)
+      return(list(issues=paste("read_piles:", filename, "Line ", i,
+                               troubleshooting["non-numeric"]),
+                  cardDat = NULL))
     cardsInPile <- na.omit(as.numeric(cardDat[i, -c(1,2)]))
     if (length(cardsInPile) == 0)
       next
-    cardNum <- as.numeric(cardsInPile)
+    cardNum <- unique(sort(as.numeric(cardsInPile)))
     pileLabel <- rep(pileLabel, length(cardsInPile))
     pileLabels <- rbind(pileLabels, data.frame(pileLabel, cardNum=cardNum))
   }
-  cardDat[,1] <- gsub("\\D","",cardDat[,1])
-  sorters <- unique(cardDat[,1])
-  tmpids <- rep(-1, length(sorters))
-  for (i in 1:length(sorters)) {
-    tmpids[which(cardDat[,1] == sorters[i])] <- i
-  }
-  cardDat[,1] <- tmpids
-  tmp <- getAdjMatrices(cardDat, cardNames)
-  adj.mat <- tmp[[1]]
-  issues <- tmp[[2]]
-  n.indiv <- length(adj.mat)
-  # multidimensional scaling, and clustering:
-  DS <- distanceMatrix(adj.mat)
-  rownames(DS) <- cardNames[,1]
-  fit.MDS <- mds(DS)
-  x <- fit.MDS$conf[,1]
-  y <- fit.MDS$conf[,2]
-  stress <- fit.MDS$stress
-  D2e <- as.matrix(dist(fit.MDS$conf))
-  D2h <- diskDist(D2e)
-  rownames(D2e) <- rownames(D2h) <- cardNames[,1]
-  cardNames <- cardNames[,2]
+  #  cardDat[ ,1] <- gsub("\\D", "", cardDat[ ,1])
+  pileLabelsLC <- tolower(iconv(pileLabels[ ,1], from = "ISO-8859-1",
+                                to = "UTF-8"))
+  pileLabelsLC <- gsub("^\\s+(.+)\\s+$", "\\1", pileLabelsLC)
+  return(list(issues=NULL, cardDat=cardDat, pileLabels=pileLabels,
+              pileLabelsLC=pileLabelsLC))
+}
 
-  if(!file.exists(raitingsFile))
-    stop("Ratings File:", raitingsFile, "Doesn't exist" )
-  ratings <- read.csv(raitingsFile, header=TRUE)
+
+# Check that the file containing the rating data is loaded properly:
+read_ratings <- function(filename, statements, enc = "UTF-8", sep=",") {
+  if(!file.exists(filename))
+    return(list(issues=paste("read_ratings: File", filename,
+                             "doesn't exist.\n", troubleshooting["ratingsfilename"]),
+                cardDat = NULL))
+  ratings <- read.csv(filename, header=TRUE)
+  if (ncol(ratings) <= 2)
+    return(list(issues=paste("read_ratings:", filename,
+                             "must have at least three columns.\n",
+                             troubleshooting["ratingsfilesep"]),
+                ratings = NULL))
+  notinstatements <- which(ratings[,2] %in% statements == FALSE)
+  if (length(notinstatements) > 0)
+    return(list(issues=paste("read_ratings:", filename,
+                             "Some rated statements are not in the Statements.csv file:\n",
+                             notinstatements),
+                ratings = NULL))
+  if (!(colnames(ratings)[1] %in% c("RaterID", "UserID", "SorterID")))
+    return(list(issues=paste("read_ratings:", filename,
+                             "The first column name must be RaterID\n"),
+                ratings = NULL))
+  colnames(ratings)[1] <- "RaterID"
+  if (colnames(ratings)[2] != "StatementID")
+    return(list(issues=paste("read_ratings:", filename,
+                             "The second column names must be StatementID\n"),
+                ratings = NULL))
+
+  tmpmat <- as.matrix(ratings[ ,3:ncol(ratings)], nrow=nrow(ratings))
+  nonlikert <- cbind(rowSums(tmpmat < 1), rowSums(tmpmat > 5))
+  nonlikert <- colSums(nonlikert, na.rm = TRUE)
+  if (max(nonlikert) > 0)
+    return(list(issues=paste("read_ratings:", filename,
+                             "The rating values must be between 1 and 5\n",
+                             "Columns [", colnames(ratings)[2+which(nonlikert > 0)],
+                             "] have invalid values.\n"),
+                ratings = NULL))
   ratings[,2] <- as.factor(ratings[,2])
+  return(list(issues=NULL, ratings=ratings))
+}
 
-  if(!file.exists(demographicsFile))
-    stop("Demographics File:", demographicsFile, "Doesn't exist" )
-  demographics.dat <- read.csv(demographicsFile, stringsAsFactors = TRUE)
-  dframe <- data.frame(matrix(0,ncol=ncol(demographics.dat)-1, nrow=nrow(ratings)))
+# Check that the file containing the demographic data is loaded properly:
+read_demographics <- function(filename, ratings, enc = "UTF-8", sep=",") {
+  if(!file.exists(filename))
+    return(list(issues=paste("read_demographics: File", filename,
+                             "doesn't exist.\n", troubleshooting["demographicsfilename"]),
+                demographics.dat = NULL))
+  demographics.dat <- read.csv(filename, stringsAsFactors = TRUE,
+                               header=TRUE)
+  if (ncol(demographics.dat) < 2)
+    return(list(issues=paste("read_demographics:", filename,
+                             "must have at least two columns.\n",
+                             troubleshooting["demographicsfilesep"]),
+                demographics.dat = NULL))
+  if (!(colnames(demographics.dat)[1] %in% c("RaterID", "UserID", "SorterID")))
+    return(list(issues=paste("read_demographics:", filename,
+                             "The first column name must be RaterID\n"),
+                ratings = NULL))
+  colnames(demographics.dat)[1] <- "RaterID"
+  dframe <- data.frame(matrix(0, ncol=ncol(demographics.dat)-1, nrow=nrow(ratings)))
   cohorts <- data.frame("allRaters"=matrix(1, nrow=nrow(ratings), ncol=1))
+  skipcols <- c()
   for(colnum in 2:ncol(demographics.dat)) {
+    if(length(unique(demographics.dat[,colnum])) == 1) { # no variation in the column
+      skipcols <- c(skipcols, colnum)
+      next
+    }
     if (class(demographics.dat[,colnum]) == "factor") {
+      if(length(unique(demographics.dat[,colnum])) == nrow(demographics.dat)) { # all distinct
+        skipcols <- c(skipcols, colnum)
+        next
+      }
       dframe[,colnum-1] <- factor(rep("", nrow(ratings)),
                                   levels=levels(demographics.dat[,colnum]))
     } else {
       dframe[,colnum-1] <- rep(0, nrow(ratings))
     }
     for (i in 1:nrow(ratings)) {
+      matched <- which(demographics.dat$RaterID == ratings$RaterID[i])
+      if (length(matched) > 1)
+        return(list(issues=paste("read_demographics:", filename,
+                                 "Rater ", ratings$RaterID[i],
+                                 "appears more than once.\n"),
+                    demographics.dat = NULL))
+      if (length(matched) == 0)
+        return(list(issues=paste("read_demographics:", filename,
+                                 "Rater ", ratings$RaterID[i],
+                                 "has no demographic data.\n"),
+                    demographics.dat = NULL))
+
       dframe[i,colnum-1] <- demographics.dat[,colnum][which(demographics.dat$RaterID ==
                                                               ratings$RaterID[i])]
     }
   }
-  colnames(dframe) <- colnames(demographics.dat)[-1]
+  if (length(skipcols) == ncol(dframe)) {
+    return(list(issues=paste("read_demographics: File", filename,
+                             "Invalid demographic data.\n", troubleshooting["demographicsnodata"]),
+                demographics.dat = NULL))
+  }
+  if (length(skipcols) > 0) {
+    dframe <- as.data.frame(dframe[, setdiff(1:ncol(dframe), skipcols-1)])
+    colnames(dframe) <- colnames(demographics.dat)[-c(1,skipcols)]
+  }
   for (colnum in 1:ncol(dframe)) {
     if(class(dframe[,colnum]) == "factor") {
       tmp <- model.matrix( ~ dframe[,colnum] - 1)
@@ -338,16 +451,140 @@ initCMap <- function(dataDir) {
       cohorts <- data.frame(cohorts, tmp)
     }
   }
+  return(list(issues=NULL, demographics.dat=demographics.dat,
+              dframe=dframe, cohorts=cohorts))
+}
+
+#' Read the card-sorting data files and generate the MDS data.
+#'
+#' Takes a data directory as input. This directory must contain the four project files.
+#' @param dataDir The project's directory.
+#' @param enc Encoding (default is UTF-8).
+#' @param sep Separator for read.csv (default is comma).
+#' @return A list with 9 elements n.indiv=number of sorters, cardNames=the statements on the cards, adj.mat=the adjacency matrix, DS=the pairwise distances matrix in the original high-dimensional space, D2e=the Euclidean distance matrix in the 2-D space, D2h=the hyperbolic distance matrix in the 2-D space, x=the x coordinates in the MDS plot, y=the y coordinates, stress=the stress of the MDS plot.
+#' @importFrom smacof mds
+#' @export
+initCMap <- function(dataDir, enc="UTF-8", sep=",") {
+  # Check that the four input files are all there, and are formatted correctly:
+
+  clustMethod <<- "ward.D2"
+  savedfile <- paste0(dataDir,"/CMapSession.RData")
+  if (file.exists(savedfile)) {
+    cat(green("A previous project file was found.\n"))
+    prmpt <- "Hit Enter to use saved project, or enter L to load the project from raw files: "
+    usefile <- readline(prompt = prmpt)
+    if (toupper(usefile) == "") {
+      load(savedfile)
+      return(cmapdat)
+    }
+  }
+  cat(green("Loading project files. Please wait.\n\n"))
+  cmapdat <<- list()
+  # Statements:
+  cardNames <- read_statements(paste0(dataDir, "/Statements.csv"), enc, sep)
+  if(length(cardNames$issues) > 0)
+    stop(cardNames$issues)
+  # If no issues - keep only the data frame
+  cardNames <- cardNames$cardNames
+  card_name_dict <- cardNames
+
+  # Piles:
+  cardDat <- read_piles(paste0(dataDir, "/SortedCards.csv"), nrow(cardNames),
+                        enc, sep)
+  if(length(cardDat$issues) > 0)
+    stop(cardDat$issues)
+  # If no issues - keep only the data frame
+  label_dict <- data.frame(pileLabels=cardDat$pileLabels[,1],
+                           lcpilelabels=cardDat$pileLabelsLC)
+  pileLabels <- cardDat$pileLabelsLC
+  cardDat <- cardDat$cardDat
+
+  sorters <- unique(cardDat[ ,1])
+  tmpids <- rep(-1, length(sorters))
+  for (i in 1:length(sorters)) {
+    tmpids[which(cardDat[ ,1] == sorters[i])] <- i
+  }
+  sorters_dict <- data.frame(orig_ID=sorters, seq_ID=unique(tmpids))
+  #cardDat[ ,1] <- tmpids
+
+  # Create the statement adjacency matrix from the piles:
+  tmp <- getAdjMatrices(cardDat, cardNames, sorters_dict)
+  adj.mat <- tmp[[1]]
+  issues <- tmp[[2]]
+  n.indiv <- length(adj.mat)
+  # multidimensional scaling, and clustering:
+  DS <- distanceMatrix(adj.mat)
+  rownames(DS) <- cardNames$StatementID
+  fit.MDS <- mds(DS)
+  x <- fit.MDS$conf[,1]
+  y <- fit.MDS$conf[,2]
+  stress <- fit.MDS$stress
+  D2e <- as.matrix(dist(fit.MDS$conf))
+  D2h <- diskDist(D2e)
+  rownames(D2e) <- rownames(D2h) <- cardNames[ ,1]
+  #cardNames <- cardNames$Statement
+
+  # Ratings:
+  ratings <- read_ratings(paste0(dataDir, "/Ratings.csv"),
+                          cardNames$StatementID, enc, sep)
+  if(length(ratings$issues) > 0)
+    stop(ratings$issues)
+  ratings <- ratings$ratings
+  # Demographic data:
+  demographics.dat <- read_demographics(paste0(dataDir, "/Demographics.csv"),
+                                        ratings, enc, sep)
+  if(length(demographics.dat$issues) > 0)
+    stop(demographics.dat$issues)
+  dframe <- demographics.dat$dframe
+  cohorts <- demographics.dat$cohorts
+  demographics.dat <- demographics.dat$demographics.dat
+
   if (!dir.exists(paste0(dataDir,"/output")))
     dir.create(paste0(dataDir,"/output"))
-  list(n.indiv=n.indiv, cardNames=cardNames, adj.mat=adj.mat, DS=DS,
-       D2e=D2e, D2h=D2h, x=x, y=y, stress=stress, ratings=ratings,
-       clustname=list(), pileLabels=pileLabels, issues=issues,
-       demographics=demographics.dat, ratingDemographics=dframe,
-       clustMethod="ward.D2", distmetric="Hyperbolic",cohortCol=1,
-       MPfunc="median", nclust=3, splhalf=list(), cohorts=cohorts,
-       pcoordChoice=c(1,2), clusMember=rep(1,length(cardNames)),
-       clrscm="rcmap", dataDir=dataDir)
+
+  M <- nrow(adj.mat[[1]]) # number of statements
+  N <- length(adj.mat)    # number of sorters
+  max_nc <- round(M/4)
+
+  cat("\nNumber of sorters:", N, "\n")
+  cat("Number of statements:", M, "\n")
+  cat("Calculating the Jaccard index with number of clusters from 2 to", max_nc, "...\n\n")
+  C0 <- clusterings(adj.mat, max_nc = max_nc, clustMethod)
+  eta_ijk_e <- eta_ijk_h <- Cj <- list()
+  for (m in 1:(max_nc-1)) {
+    eta_ijk_e[[m]] <- eta_ijk_h[[m]] <- matrix(0, N, M)
+  }
+  for (j in 1:N) {
+    Cj <- clusterings(adj.mat, j=j, max_nc = max_nc, clustMethod)
+    c0tmp <- C0[[1]][[m]]
+    cjtmp <- Cj[[1]][[m]]
+    eta_tmp <- colSums(pmin(c0tmp, cjtmp))/colSums(pmax(c0tmp, cjtmp))
+    eta_tmp[is.nan(eta_tmp)] <- 0
+    for (m in 1:(max_nc-1)) {
+      eta_ijk_e[[m]][j, ] <- eta_tmp
+      c0tmp <- C0[[2]][[m]]
+      cjtmp <- Cj[[2]][[m]]
+      eta_tmp <- colSums(pmin(c0tmp, cjtmp))/colSums(pmax(c0tmp, cjtmp))
+      eta_tmp[is.nan(eta_tmp)] <- 0
+      eta_ijk_h[[m]][j, ] <- eta_tmp
+    }
+  }
+
+  save(card_name_dict, sorters_dict, label_dict,
+       file=paste0(dataDir,"/dictionaries.RData"))
+  cmapdat <- list(n.indiv=n.indiv, cardNames=cardNames$Statement,
+                  adj.mat=adj.mat, DS=DS,
+                  D2e=D2e, D2h=D2h, x=x, y=y, stress=stress, ratings=ratings,
+                  clustname=list(), pileLabels=pileLabels, issues=issues,
+                  demographics=demographics.dat, ratingDemographics=dframe,
+                  clustMethod=clustMethod,
+                  distmetric="Euclidean", cohortCol=1,
+                  nclust=3, splhalf=list(), cohorts=cohorts,
+                  pcoordChoice=c(1, 2), clusMember=cmapdat$clusMember, #rep(1 ,length(cardNames$Statement)),
+                  clrscm="rcmap", eta_ijk_e=eta_ijk_e, eta_ijk_h=eta_ijk_h,
+                  dataDir=dataDir)
+  save(cmapdat, file=paste0(dataDir,"/CMapSession.RData"))
+  return(cmapdat)
 }
 
 
@@ -384,25 +621,27 @@ ratingSummary <- function(ratingsDat) {
 #' Plot the 2-D representation of the pile-sorting data
 #'
 #' @param cols The colors of the data (default= all blue.)
-#' @param metric The metric to be used (Euclidean or hyperbolic.)
+#' @param metric The type of plot to show (NULL, the default is for the simple map.)
+#' @param tau The threshold for the Jaccard index (0.3)
 #' @export
-showMDSPlot <- function(cols="blue", metric=NULL) {
+showMDSPlot <- function(metric=NULL, tau=0.3) {
+  ter.cols <- rev(c("#440154D0","#472D7BD0","#3B528BD0","#2C728ED0",
+                    "#21908CD0","#27AD81B0","#5DC863D0","#AADC32F0","#FDE725F0"))
   if(!is.null(metric))
     if(metric == 0)
       return(NULL)
   if(is.null(metric)) {
-    sz <- 0.7
+    sz <- 0.25
+    cols <- "blue"
     ttl <- ""
-  } else{
+  } else {
     if (metric == "MPindex") {
       ttl <- "Misplacement index"
-      distM <- cmapdat$D2e
       if(cmapdat$distmetric == "Hyperbolic")
-        distM <- cmapdat$D2h
-      sz <- MPindex(cmapdat$DS, distM, func=cmapdat$MPfunc)
-      sz <- round(sz, digits = 1) + 0.3 # to be between 0.3 (for 0) and 1.3 (for 1)
-      lgd <- seq(0.3, 1.3, by=0.2)
-      lgdkey <- lgd-0.3
+        sz <- colMeans(cmapdat$eta_ijk_h[[cmapdat$nclust-1]] < tau)
+      if(cmapdat$distmetric == "Euclidean")
+        sz <- colMeans(cmapdat$eta_ijk_e[[cmapdat$nclust-1]] < tau)
+      lgdkey <- seq(0, 1, length=length(ter.cols))
     } else {
       ttl <- paste(colnames(cmapdat$ratings)[metric+2],
                    colnames(cmapdat$cohorts)[cmapdat$cohortCol])
@@ -412,25 +651,44 @@ showMDSPlot <- function(cols="blue", metric=NULL) {
       sz <- rtgsmm[-nrow(rtgsmm),
                    which(colnames(rtgsmm) ==
                            paste0(colnames(cmapdat$ratings)[metric+2],"_Mean"))]
-      sz <- round((sz-1)/4, digits = 1) + 0.3 # to be between 0.3 (for 1) and 1.3 (for 5)
-      lgd <- seq(0.3, 1.1, by=0.2)
-      lgdkey <- 1+(lgd-0.3)*5
+      sz <- (sz-1)/4
+      lgd <- seq(0, 1, length=length(ter.cols))
+      lgdkey <- lgd*4 + 1
+    }
+    if (!is.null(metric)) {
+      cols <- ter.cols[cut(sz, breaks = seq(0, 1, length=length(ter.cols)),
+                           include.lowest = TRUE)]
+      lgd <- seq(0, 1, length=length(ter.cols))
     }
   }
-  plot(cmapdat$x, cmapdat$y,pch=19,col=cols, cex=sz, main=ttl,xlab="",
+  plot(cmapdat$x, cmapdat$y, pch=19, col=cols,
+       cex=sz+0.4, main=ttl, xlab="",
        ylab="", xlim=c(min(cmapdat$x)-0.25,max(cmapdat$x)*1.2),
-       ylim=c(min(cmapdat$y),max(cmapdat$y)*1.2),axes=F, cex.main=1)
-  text( cmapdat$x, cmapdat$y, pos=3, cex=0.8,
-        labels=names(cmapdat$x))
+       ylim=c(min(cmapdat$y),max(cmapdat$y)*1.2), axes=F, cex.main=1)
+  text(cmapdat$x, cmapdat$y, pos=3, cex=0.8, labels=names(cmapdat$x))
   if(length(sz) > 1) {
     rect(min(cmapdat$x)-0.3, 0.2*max(cmapdat$y),
          min(cmapdat$x)-0.1, 1.3*max(cmapdat$y), col="whitesmoke", border="white")
     points(rep(min(cmapdat$x)-0.15, length(lgd)),
            seq(0.3*max(cmapdat$y), 1.2*max(cmapdat$y),length=length(lgd)),
-           col=cols, cex = lgd, pch=19)
+           col=ter.cols, cex = lgd+0.4, pch=19)
     text(rep(min(cmapdat$x)-0.25, length(lgd)),
-         seq(0.3*max(cmapdat$y), 1.2*max(cmapdat$y),length=length(lgd)),
-         lgdkey,cex=0.6)
+         seq(0.3*max(cmapdat$y), 1.2*max(cmapdat$y), length=length(lgd)),
+         lgdkey, cex=0.6)
+    if (metric == "MPindex") {
+      x.cent <- rep(0, cmapdat$nclust)
+      y.cent <- rep(0, cmapdat$nclust)
+      for (i in 1:cmapdat$nclust)  {
+        x.cent[i] <- mean(cmapdat$x[cmapdat$clusMember==i])
+        y.cent[i] <- mean(cmapdat$y[cmapdat$clusMember==i])
+        x.groups <- cmapdat$x[cmapdat$clusMember==i]
+        y.groups <- cmapdat$y[cmapdat$clusMember==i]
+        for (j in 1:length(x.groups)) {
+          lines(c(x.cent[i], x.groups[j]), c(y.cent[i], y.groups[j]),
+                lty=3, lwd=1, col="grey66")
+        }
+      }
+    }
   }
 }
 
@@ -527,6 +785,19 @@ showClusterPlot <- function(type="rays", metric=NULL) {
 }
 
 
+update_clusters <- function() {
+  with(cmapdat,{
+    distM <- D2e
+    if(distmetric == "Hyperbolic")
+      distM <- D2h
+    cols <- clusterCols(nclust, clrscm)
+    fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+    clus <- cutree(fit.Clust, nclust)
+    cmapdat$clusMember <<- clus
+    cat(cmapdat$clusMember,"\n")
+  })
+}
+
 #' Plot the clusters as a dendrogram or a phylogenic tree plot.
 #'
 #' @param phylo Whether to show a dendrogram (a default) or a phylogenic tree.
@@ -613,7 +884,7 @@ showBarPlot <- function(metric=NULL) {
   if(metric == 0)
     return(NULL)
   barord <- menu(c("Alphabetical", "Height",
-                     bold(magenta("Plot menu"))))
+                   bold(magenta("Plot menu"))))
   if (barord == 3) {
     return(NULL)
   }
@@ -726,7 +997,7 @@ showGoZone <- function() {
     distM <- cmapdat$D2h
   ttl <- ""
   cols <- clusterCols(cmapdat$nclust, cmapdat$clrscm)
-  fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
+  fit.Clust <- hclust(as.dist(distM), method=clustMethod)
   groups <- cutree(fit.Clust, k=cmapdat$nclust)
   MN <- matrix(0, nrow=1+nrow(distM), ncol=length(cmapdat$pcoordChoice))
   for (jj in 1:2) {
@@ -810,20 +1081,25 @@ raterReport <- function() {
 statementReport <- function() {
   with(cmapdat, {
     distM <- D2e
-    if(distmetric == "Hyperbolic")
+    eta_ij <- eta_ijk_e[[nclust+1]]
+    if(distmetric == "Hyperbolic") {
       distM <- D2h
+      eta_ij <- eta_ijk_h[[nclust+1]]
+    }
     fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+    jidx <- colMeans(eta_ij)
     groups <- cutree(fit.Clust, k=nclust)
-    retdf <- as.data.frame(matrix(0, ncol=3+5*(ncol(ratings)-2), nrow=nclust+nrow(DS)))
+    retdf <- as.data.frame(matrix(0, ncol=4+5*(ncol(ratings)-2), nrow=nclust+nrow(DS)))
     k <- 0
     for (i in 1:nclust) {
       cardsInCluster <- names(which(groups == i))
+      jidx_i <- c(jidx[which(groups == i)], mean(jidx[which(groups == i)]))
       cNames <- c(cardNames[which(groups == i)],"")
       cardsInCluster <- which(ratings$StatementID %in% cardsInCluster)
       rtgsmm <- ratingSummary(ratings[cardsInCluster,])
       rtgsmm <- data.frame(cNames, c(names(cmapdat$x)[which(groups == i)],""),
-                           rep(i,nrow(rtgsmm)), rtgsmm)
-      colnames(rtgsmm)[1:3] <- c("Statement", "CardNo", "ClusterNo")
+                           rep(i, nrow(rtgsmm)), jidx_i, rtgsmm)
+      colnames(rtgsmm)[1:4] <- c("Statement", "CardNo", "ClusterNo", "JI")
       rownames(rtgsmm) <- c(rownames(DS)[which(groups == i)], paste0("total_",i))
       retdf[(1+k):(k+nrow(rtgsmm)),] <- rtgsmm
       k <- k + nrow(rtgsmm)
@@ -923,8 +1199,9 @@ topLine <- function() {
 #' @param choice The number of the selected menu item
 toText <- function(varType, choice) {
   if (varType == "clusteringMethod") {
-    strs <- c("ward.D", "ward.D2", "single","complete", "average","mcquitty",
-              "median", "centroid")
+    #    strs <- c("ward.D", "ward.D2", "single","complete", "average","mcquitty",
+    #              "median", "centroid")
+    strs <- "ward.D2"
   }
   if (varType == "distance") {
     strs <- c("Euclidean", "Hyperbolic")
@@ -960,28 +1237,33 @@ colLab <- function(dn) {
 #' @importFrom graphics abline axis grid points rect text
 #' @importFrom stats as.dendrogram as.dist cor.test cutree dendrapply dist hclust is.leaf median model.matrix na.exclude sd
 #' @importFrom factoextra fviz_nbclust
+#'
+#' @param enc Encoding (default=UTF-8).
+#' @param sep Column separator for csv files (default=,).
 #' @export
 #' @examples
 #' \donttest{
 #' #RCMapMenu()
 #' }
-RCMapMenu <- function() {
+RCMapMenu <- function(enc = "UTF-8", sep=",") {
   menuLevel <- 0
   while(menuLevel >= 0) {
     topLine()
     ## Main menu
     if(menuLevel == 0) {
-      rcmapmenu <- menu(c(ifelse(exists("cmapdat"),"Choose the data folder",bold("Choose the data folder")),
-                          ifelse(exists("cmapdat"),"Summary",silver("summary")),
-                          ifelse(exists("cmapdat"),"Settings",silver("Settings")),
-                          ifelse(exists("cmapdat"),"Plots",silver("Plots")),
-                          ifelse(exists("cmapdat"),"Reports",silver("Reports")),
-                          ifelse(exists("cmapdat"),"Analysis",silver("Analysis")),
+      show_all <- ifelse(!exists("cmapdat"), FALSE,
+                         ifelse(is.null(cmapdat$x), FALSE, TRUE))
+      rcmapmenu <- menu(c(ifelse(show_all,"Choose the data folder",bold("Choose the data folder")),
+                          ifelse(show_all,"Summary",silver("summary")),
+                          ifelse(show_all,"Settings",silver("Settings")),
+                          ifelse(show_all,"Plots",silver("Plots")),
+                          ifelse(show_all,"Reports",silver("Reports")),
+                          ifelse(show_all,"Analysis",silver("Analysis")),
                           bold(magenta("R prompt"))), title=bold("  Main menu"))
       if (rcmapmenu %in% c(0,7))
         menuLevel <- -1 ## get the R prompt back
       if (rcmapmenu == 1) {
-        loadRCMapData()
+        loadRCMapData(enc)
         menuLevel <- 0
       }
       if(!exists("cmapdat"))
@@ -1001,7 +1283,7 @@ RCMapMenu <- function() {
                  ")\n"))
       }
       summMenu <- menu(c("Perform split-half analysis",
-                         "Perform leave-one-out analysis",
+                         "Perform leave-one-out analysis", # (Jaccard Index)",
                          bold(magenta("Main menu"))))
       if(summMenu == 1) {
         cmapdat$splhalf <<- splitHalf(cmapdat$adj.mat, B=20,
@@ -1009,29 +1291,35 @@ RCMapMenu <- function() {
                                       plotit=TRUE, seed=23456)
       }
       if(summMenu == 2) {
-        cmapdat$madd <<- plotmadd(cmapdat$adj.mat,
-                                  disttype = cmapdat$distmetric)
+        if (cmapdat$distmetric == "Euclidean")
+          plotjaccard(cmapdat$eta_ijk_e)
+        else
+          plotjaccard(cmapdat$eta_ijk_h)
       }
       menuLevel <- 1
-      if(summMenu %in% c(0,2))
+      if(summMenu %in% c(3))
         menuLevel <- 0
+      if(summMenu %in% c(0))
+        menuLevel <- -1
     }
     ## settings
     if(rcmapmenu == 3) {
       topLine()
       showSettingMenu <- TRUE
       if(exists("settingmenu"))
-        if(settingmenu == 5)
+        if(settingmenu == 6)
           showSettingMenu <- FALSE
       if(showSettingMenu)  {
         settingmenu <- menu(c("Choose the distance metric",
-                              "Choose the clustering method",
-                              "Choose the misplacement index options",
+                              #"Choose the clustering method",
+                              #"Choose the misplacement index options",
                               "Choose the number of clusters",
                               "Set cluster names",
                               "Choose color scheme",
                               bold(magenta("Main menu"))), title=bold("  Settings"))
-        menuLevel <- ifelse(settingmenu %in% c(0,7), 0, 1)
+        menuLevel <- 1
+        if(settingmenu == 5) { menuLevel <- 0 }
+        if(settingmenu == 0) { menuLevel <- -1 }
       }
       if(settingmenu == 1) {
         topLine()
@@ -1041,23 +1329,23 @@ RCMapMenu <- function() {
         if(dtype > 0)
           cmapdat$distmetric <<- toText("distance", dtype)
       }
-      if(settingmenu == 2) {
-        topLine()
-        cmeth <- rcmenu(toText("clusteringMethod"),
-                        title=bold("  Clustering method"),
-                        slctd=which(toText("clusteringMethod") == cmapdat$clustMethod))
-        if(cmeth > 0)
-          cmapdat$clustMethod <<- toText("clusteringMethod", cmeth)
-      }
-      if(settingmenu == 3) { ## misplacement index
-        topLine()
-        mpfunc <- rcmenu(toText("MPparam"),
-                         title=bold("  Misplacement index parameters"),
-                         slctd=which(toText("MPparam") == cmapdat$MPfunc))
-        if(mpfunc > 0)
-          cmapdat$MPfunc <<- toText("MPparam", mpfunc)
-      }
-      if(settingmenu == 4) { ## the number of clusters
+      # if(settingmenu == 2) {
+      #   topLine()
+      #   cmeth <- rcmenu(toText("clusteringMethod"),
+      #                   title=bold("  Clustering method"),
+      #                   slctd=which(toText("clusteringMethod") == cmapdat$clustMethod))
+      #   if(cmeth > 0)
+      #     cmapdat$clustMethod <<- toText("clusteringMethod", cmeth)
+      # }
+      # if(settingmenu == 3) { ## misplacement index
+      #   topLine()
+      #   mpfunc <- rcmenu(toText("MPparam"),
+      #                    title=bold("  Misplacement index parameters"),
+      #                    slctd=which(toText("MPparam") == cmapdat$MPfunc))
+      #   if(mpfunc > 0)
+      #     cmapdat$MPfunc <<- toText("MPparam", mpfunc)
+      # }
+      if(settingmenu == 2) { ## the number of clusters
         topLine()
         distM <- cmapdat$D2e
         if(cmapdat$distmetric == "Hyperbolic")
@@ -1085,6 +1373,7 @@ RCMapMenu <- function() {
           } else {
             cmapdat$nclust <<- min(which(difflogs < 0.1))
           }
+          update_clusters()
           points(cmapdat$nclust, nbcwss$data$y[cmapdat$nclust], cex=1.5, pch=18,
                  col="navyblue")
         }
@@ -1095,9 +1384,10 @@ RCMapMenu <- function() {
                                  k.max = length(cmapdat$cardNames)/3)
           plot(nbcsil)
           cmapdat$nclust <<- which.max(nbcsil$data$y)
+          update_clusters()
         }
         if(clustNo == 3) {
-          fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
+          fit.Clust <- hclust(as.dist(distM), method=clustMethod)
           #cmapdat$clusMember <- cutree(fit.Clust, k=cmapdat$nclust)
           showDendrogram()
           curNC <- cmapdat$nclust
@@ -1105,11 +1395,12 @@ RCMapMenu <- function() {
                               title = bold("Set the number of clusters"), slctd = curNC)
           if(tmpnclust > 0)
             cmapdat$nclust <<- tmpnclust
+          update_clusters()
           #cmapdat$clusMember <- cutree(fit.Clust, k=cmapdat$nclust)
           showDendrogram()
         }
       }
-      if(settingmenu == 5) { ## the cluster names
+      if(settingmenu == 3) { ## the cluster names
         topLine()
         clusterNum <- menu(clusterNames(),
                            title = bold("  Select cluster number (or 0 to return to the main menu)"))
@@ -1130,14 +1421,14 @@ RCMapMenu <- function() {
           cat(green(names(tmplbl[1:toShow])),sep="\n")
         }
         clNames <- clusterNames()
-        cat("\nEnter a name [",clNames[clusterNum],"]\n")
+        cat("\nEnter a name [", clNames[clusterNum],"]\n")
         clName <- scan("",quiet = TRUE, what = "chr", n=1, sep = "\n")
         if (length(clName) == 0)
           clName <- clNames[clusterNum]
         key <- sprintf("clust_%02d_%02d", length(clNames), clusterNum)
         cmapdat$clustname[[key]] <<- clName
       }
-      if(settingmenu == 6) {
+      if(settingmenu == 4) {
         topLine()
         clrs <- rcmenu(toText("colorScheme"),
                        title=bold("  Color scheme"),
@@ -1163,13 +1454,14 @@ RCMapMenu <- function() {
                          cyan("Parallel Coordinates"),
                          cyan("GoZone"),
                          bold(magenta("Main menu"))), title=bold("  Plots"))
-      menuLevel <- ifelse(plotmenu %in% c(0,13), 0, 1)
+      if(plotmenu  == 13) { menuLevel <- 0 }
+      if(plotmenu  == 0) { menuLevel <- -1 }
       if(plotmenu %in% 7:10) {
         cmapdat$cohortCol <<- menu(colnames(cmapdat$cohorts))
         if (cmapdat$cohortCol == 0)
           next
       }
-      if(plotmenu %in% c("11","12")) {
+      if(plotmenu %in% c("11", "12")) {
         ormore <- ""
         if(plotmenu == "11")
           ormore <- " or more "
@@ -1206,7 +1498,8 @@ RCMapMenu <- function() {
       menuLevel <- 1
       reportsmenu <- menu(c("Sorters", "Raters" ,"Statements",
                             bold(magenta("Main menu"))), title=bold("  Report"))
-      menuLevel <- ifelse(reportsmenu %in% c(0,4), 0, 1)
+      if(reportsmenu == 0) { menuLevel <- -1 }
+      if(reportsmenu == 4) { menuLevel <- 0 }
       switch (reportsmenu,
               "1" = sorterReport(),
               "2" = raterReport(),
@@ -1218,23 +1511,27 @@ RCMapMenu <- function() {
       menuLevel <- 1
       analysismenu <- menu(c("Between-cluster ANOVA", "Tukey - all cluster pairs",
                              bold(magenta("Main menu"))), title=bold("  Analysis"))
-      menuLevel <- ifelse(analysismenu%in% c(0,3), 0, 1)
-      if(analysismenu < 3)
+      menuLevel <- 1
+      if(analysismenu == 3) { menuLevel <- 0 }
+      if(analysismenu == 0) { menuLevel <- -1 }
+      if(analysismenu %in% c(1, 2))
         switch (analysismenu,
                 "1" = clusterANOVA(),
                 "2" = clusterTUKEY(),
         )
     }
   }
+  save(cmapdat, file=paste0(cmapdat$dataDir,"/CMapSession.RData"))
 }
 
 
 #' Load the input files for a concept mapping project.
-loadRCMapData <- function() {
+loadRCMapData <- function(enc = "UTF-8", sep=",") {
   topLine()
   dataDir <- paste0(choose_directory(),"/")
   cat(bold(crayon::green("Opening project folder:" %+% dataDir %+% "...\n\n")))
-  cmapdat <<- initCMap(dataDir)
+  cmapdat <<- initCMap(dataDir, enc, sep)
+  update_clusters()
 }
 
 #' Choose the project's directory.
@@ -1285,7 +1582,7 @@ clusterConfig <- function() {
   distM <- cmapdat$D2e
   if(cmapdat$distmetric == "Hyperbolic")
     distM <- cmapdat$D2h
-  fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
+  fit.Clust <- hclust(as.dist(distM), method=clustMethod)
   cutree(fit.Clust, k=cmapdat$nclust)
 }
 
@@ -1355,3 +1652,16 @@ rcmenu <- function (choices, graphics = FALSE, title = NULL, slctd=NULL) {
   }
 }
 
+
+troubleshooting <- c(
+  "cardfilename" = "Make sure the file is spelled correctly (Statements.csv, case-sesitive), and that the data folder contains all the input files.",
+  "cardfilesep" = "Make sure you use the correct column separator. If your statements contain commas, use tab as a column separator, and invoke the program with RCMapMenu(sep='\t')",
+  "pilesfilename" = "Make sure the file is spelled correctly (SortedCards.csv, case-sesitive), and that the data folder contains all the input files.",
+  "pilesfilesep" = "Make sure you use the correct column separator. The first column in SortedCards.csv must contain the sorter IDs, the second column has to contain pile labels (text), and columns 3,4,... contain the cards in each pile.",
+  "ratingsfilename" = "Make sure the file is spelled correctly (Ratings.csv, case-sesitive), and that the data folder contains all the input files.",
+  "ratingsfilesep" = "The first two columns must be named RaterID	and StatementID (case-sensitive) and StatementID must match the values in the Statements.csv file",
+  "demographicsfilename" = "Make sure the file is spelled correctly (Demographics.csv, case-sesitive), and that the data folder contains all the input files.",
+  "demographicsfilesep" = "The first column must be named RaterID (case-sensitive) and must match the values in the Ratings.csv file",
+  "demographicsnodata" = "Either no columns in the file, or all columns contain categorical data with distinct values, or all values in each column are identical.",
+  "non-numeric" = "has a non-numeric value where a card number is expected"
+)
