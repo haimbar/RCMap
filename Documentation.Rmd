@@ -40,7 +40,7 @@ knitr::opts_chunk$set(echo = TRUE)
 What's New
 ---------------
 
-- Version 0.1.x is available as an R package, available through GitHub (https://github.com/haimbar/RCMap).
+- Version 0.2.x is available as an R package, available through GitHub (https://github.com/haimbar/RCMap).
 - The group of sorters is no longer required to be the same as the group of raters.
 - The input data is now expected as four plain-text CSV files (see details below).
 - The user-interface is implemented as command line hierarchical menus.
@@ -83,8 +83,8 @@ and to cite the latest version of the package with BibTeX, use citation("RCMap")
 @Manual{,
     title = {RCMap: Group Concept Mapping},
     author = {Haim Bar},
-    year = {2022},
-    note = {R package version 0.1.4},
+    year = {2025},
+    note = {R package version 0.2.0},
 }
 ```
 
@@ -100,8 +100,9 @@ RCMap requires the following packages:
 - factoextra - for obtaining a recommended number of clusters [@factoextra].
 - crayon - for terminal colors [@crayon].
 - ape - for drawing a phylogenic tree [@ape].
+- tcltk - for the function tk_choose.dir, used when choosing a project folder
 
-Follow the installation instruction of R, and start R (version > 0.1.x no longer requires RStudio - any integrated development environment, or IDE, will do.) From the R console install the RCMap library. It will install the required libraries. You can do it by cloning the GitHub repo and building the package on your computer, or by using the install_github function (for which you will have to install the devtools package, first.)
+Follow the installation instruction of R, and start R (version > 0.1.x no longer requires RStudio - any integrated development environment, or IDE, or even a simple command line shell will do.) From the R console install the RCMap library. It will install the required libraries. You can do it by cloning the GitHub repo and building the package on your computer, or by using the install_github function (for which you will have to install the devtools package, first.)
 
 ```{.inputbox}
 devtools::install_github("haimbar/RCMap")
@@ -158,7 +159,21 @@ RCMap Menu Options
 <a name="choosingFolder"></a>
 <H3>Choose the data folder</H3>
 
-Choosing this item in the <a href="#mainmenu">main menu</a> will open a file manager program, with which the user will select the folder where the four project's input files are found. RCMap will attempt to read the files and create the RCMap dataset. If any errors are encountered, RCMap will show an error message in the console. It will also print any issues concerning the pile sorting data. The possible warnings are
+Choosing this item in the <a href="#mainmenu">main menu</a> will open a file manager program, with which the user will select the folder where the four project's input files are found. 
+
+The first time the project directory is selected, RCMap will take a few moments to read the data and preprocess it. If the project in the selected directory has already been opened, you should see the following:
+
+```{.outputbox}
+RCMap command-line interface.
+Opening project folder:XXXX/...
+
+A previous project file was found.
+Hit Enter to use saved project, or enter L to load the project from raw files: 
+```
+
+RCMap saves your selections (such as the number of clusters, cluster names, etc.) so if you want to pick up where you left off, hit Enter. If you want to reload the data from the original files (for example, if you made updates to the data files), then you should enter **L**.
+
+RCMap will attempt to read the files and create the RCMap dataset. If any errors are encountered, RCMap will show an error message in the console. It will also print any issues concerning the pile sorting data. The possible warnings are
 
 - Sorter x: All cards in one pile!
 - Sorter x put more than a third of the cards in one pile
@@ -167,6 +182,7 @@ Choosing this item in the <a href="#mainmenu">main menu</a> will open a file man
 - Sorter x put cards y,z in multiple piles
 
 These issues can also be seen via the Summary menu item.
+See more in the Troubleshooting section.
 
 <a name="summary"></a>
 <H3>Summary</H3>
@@ -192,12 +208,15 @@ Sorter  10  did not sort card(s)  30
 
 
 1: Perform split-half analysis
-2: Main menu
+2: Perform leave-one-out analysis
+3: Main menu
 
 Selection: 
 ```
 
-The Summary top-menu item has two submenu options. By choosing 1, the user can perform a split-half analysis (see below), and choosing 2 (or 0) will take the user back to the top menu.
+The Summary top-menu item has three submenu options. By choosing 1, the user can perform a split-half analysis (see below).
+Option 2 gives a leave-one out analysus (see details below).
+Choosing 3 (or 0) takes the user back to the top menu.
 
 <H4>Perform split-half analysis</H4>
 In order to draw conclusions about stakeholder sorting from the 2-D map we must have an estimate of how reliable or consistent the map is. This is done by checking how much the map varies when we use random subsamples from the set of sorters. 
@@ -219,30 +238,53 @@ knitr::include_graphics("Figures/splithalf.jpg")
 ```
 <center><B>Split-half reliability with B=20 random splits.</B></center><BR>
 
+<H4>Perform leave-one-out analysis</H4>
+The clustering is performed on the two-dimensional map obtained from the multidimensional scaling. When high-dimensional data are projcted to a lower dimension, the (scaled) distances between pairs of points may be quite different than they are in the original space. The important question with regard to clustering is whether the multidimensional scaling process affects the clustering. One global measure that is often used is the *stress*. However, it does not tell us what the impact on the clustering is, or which clusters are affected.
+
+Furthermore, it may be that some sorters have a large impact on the final MDS map. The stress measure, or the half-split analysis do not tell us whether such sorters exist, or what impact individual sorters have on the final map.
+
+To provide an answer to these questions, we perform a leave-one-out analysis. If there are M sorters, we perform the MDS step M+1 times: once with all the sorters, and then M more times, each time leaving on sorter out. For each of these M+1 MDS plots, we obtain the clustering for k=2,...,N/4 clusters, where N is the total number of statements.
+Then, we calculate the [Jaccard index](https://en.wikipedia.org/wiki/Jaccard_index) for each k, and for each of the M leave-one-out clusterings. The Jaccard index is defined as
+$$J=\frac{TP}{TP + FP + FN},$$
+where TP is the number of pairs of points that are placed in the same cluster when using all the data, as well as when leaving one sorter out. FP is the number of pairs that are placed in the same cluster when leaving one out but in different clusters when using all the data. Similarly, FN is the number of pairs that are placed in the same cluster when using all the sorters but in different clusters when leaving one sorter out.
+
+The Jaccard index takes values between 0 (no agreement between two clusterings) and 1 (the same clusters were obtained by the two methods.)
+The following plot shows an example of such leave-one-out analysis:
+
+```{r jaccard, echo=FALSE, fig.align='center', cap.align='center', out.width='70%', fig.cap=''}
+knitr::include_graphics("Figures/leaveoneout.jpeg")
+```
+<center><B>Leave-one-out analysis.</B></center><BR>
+
+The grey lines in this plot are the Jaccard index values (vertical axis) for each statement, for each number of clusters (horizontal axis.)
+The dark black line is the median Jaccard index, and the two blue lines are the first and third quartiles.
+
+What we can see in this example is that the median is maximized when 9 clusters are used. The upper and lower quartiles are also close to their maximum value for k=9, which suggests that nine clusters may give us the most reliable clusters. We can also see that some statements become almost perfectly placed once we get to k=8, but after k=18 the Jaccard index drops.
+We also see that some statements get consistent low scores, suggesting that there was at least one sorter who sorted these statements very differently than the consensus.
+
+We say more about this later.
+
+
 <a name="settings"></a>
 <H3>Settings</H3>
 <p>
-This menu option has seven choices:
+This menu option has five choices:
 
 ```{.outputbox}
 RCMap command-line interface.
   Settings 
 
 1: Choose the distance metric
-2: Choose the clustering method
-3: Choose the misplacement index options
-4: Choose the number of clusters
-5: Set cluster names
-6: Choose color scheme
-7: Main menu
+2: Choose the number of clusters
+3: Set cluster names
+4: Choose color scheme
+5: Main menu
 
 Selection:
 ```
 
 <ul>
 <li>**Choose the distance metric** The user can choose one of two methods to measure distances between points in the two-dimensional (MDS) plot: Euclidean or hyperbolic (more on the differences between the two will appear separately). 
-<li>**Choose the clustering method** The use can choose any clustering method offered by the hclust function in R (ward.D, ward.D2, single, complete, average, mcquitty, median, centroid). In the previous version of RCMap, only the ward.D2 method was available.
-<li>**Choose the misplacement index options** The <a href="#mpi">index</a> for each point is calculated by obtaining the difference between the distance to each of the other points in the original high-dimensional space and in the two-dimensional space. If there are S statements, for each one we get S-1 values (the differenece between the distances in the two spaces). The index is a function of these S-1 values, and this function can be the median, the mean, or the maximum (the strictest criterion.)
 <li>**Choose the number of clusters**: There are two methods to choose the number of clusters automatically - one based on minimizing the within-cluster sums of squares and the other based on the average silhouette, both are obtained from the function factoextra::fviz_nbclust. Each of the methods also produces a plot which helps to visualize the selection criterion. The third choice is to set the number of clusters manually.
 <li>**Set cluster names**: When choosing this option, the user gets a submenu consisting of the current cluster names (dafult values are 1,2,...,k where k is the selected number of clusters.) The use then selects a cluster number and RCMap shows the card names in the selected cluster, as well as the most common labels associated with statements in this clusters (as `suggested names'). See the example below, in a configuration with 17 clusters. The user can then type a cluster name, which will be used in subsequent plots and analyses.
 <li>**Choose color scheme**: The user can choose between the RCMap color scheme (for up to 21 clusters) or the rainbow function in R.
