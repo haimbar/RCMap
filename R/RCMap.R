@@ -271,11 +271,12 @@ read_statements <- function(filename, enc = "UTF-8", sep=",") {
                 cardNames = NULL))
   cardNames <- read.csv(filename, header=TRUE,  encoding = enc, sep=sep)
   # The file must have exactly two columns: ID and statement text:
-  if (ncol(cardNames) != 2)
+  if (ncol(cardNames) != 2) {
     return(list(issues=paste("read_statements:", filename,
                              "must have exactly two columns.\n",
                              troubleshooting["cardfilesep"]),
                 cardNames = NULL))
+  }
   # The file must have some data (we're only checking if it has at least 3 rows)
   if (nrow(cardNames) < 3)
     return(list(issues=paste("read_statements:", filename,
@@ -469,12 +470,14 @@ initCMap <- function(dataDir, enc="UTF-8", sep=",") {
 
   clustMethod <<- "ward.D2"
   savedfile <- paste0(dataDir,"/CMapSession.RData")
+  dictfile <- paste0(dataDir,"/dictionaries.RData")
   if (file.exists(savedfile)) {
     cat(green("A previous project file was found.\n"))
     prmpt <- "Hit Enter to use saved project, or enter L to load the project from raw files: "
     usefile <- readline(prompt = prmpt)
     if (toupper(usefile) == "") {
       load(savedfile)
+      load(dictfile)
       return(cmapdat)
     }
   }
@@ -496,7 +499,7 @@ initCMap <- function(dataDir, enc="UTF-8", sep=",") {
   # If no issues - keep only the data frame
   label_dict <- data.frame(pileLabels=cardDat$pileLabels[,1],
                            lcpilelabels=cardDat$pileLabelsLC)
-  pileLabels <- cardDat$pileLabelsLC
+  pileLabels <- cardDat$pileLabels
   cardDat <- cardDat$cardDat
 
   sorters <- unique(cardDat[ ,1])
@@ -572,7 +575,7 @@ initCMap <- function(dataDir, enc="UTF-8", sep=",") {
 
   save(card_name_dict, sorters_dict, label_dict,
        file=paste0(dataDir,"/dictionaries.RData"))
-  cmapdat <- list(n.indiv=n.indiv, cardNames=cardNames$Statement,
+  cmapdat <- list(n.indiv=n.indiv, cardNames=cardNames,
                   adj.mat=adj.mat, DS=DS,
                   D2e=D2e, D2h=D2h, x=x, y=y, stress=stress, ratings=ratings,
                   clustname=list(), pileLabels=pileLabels, issues=issues,
@@ -764,7 +767,7 @@ showClusterPlot <- function(type="rays", metric=NULL) {
     for (i in 1:nclust)  {
       points(x.cent[i], y.cent[i],pch=18,col="orange", cex=sz[i])
     }
-    for (i in 1:length(cardNames)) {
+    for (i in 1:length(cardNames[,1])) {
       text(x[i], y[i], cex=0.7, groups[i]+2, labels=names(cmapdat$x)[i],
            pos=3)
     }
@@ -821,13 +824,13 @@ showDendrogram <- function(phylo=FALSE) {
       plot(X,type='fan',
            tip.color=cols[clus],edge.color=cols[edge.clus],
            label.offset=0,no.margin=FALSE, cex=0.70)
-      text(rep(0.6,length(cardNames)), max(fit.Clust$height)*
+      text(rep(0.6,length(cardNames[,1])), max(fit.Clust$height)*
              seq(-0.5, 0.5, length=length(clusterNames())), clusterNames(),
            pos=4, col=cols, cex=0.8, font=2)
     } else {
       clusDendro <- dendrapply(as.dendrogram(fit.Clust), colLab)
       plot(clusDendro, main = "")
-      text(rep(2,length(cardNames)),  max(fit.Clust$height)*
+      text(rep(2,length(cardNames[,1])),  max(fit.Clust$height)*
              seq(0.3, 1, length=length(clusterNames())), clusterNames(),
            pos=4, col=cols, cex=0.8, font=2)
     }
@@ -870,7 +873,7 @@ showDotPlot <- function(metric=NULL) {
       text((1:5), rep(max(gpos)+1, 5), 1:5, cex=0.8, font=2)
       rect(5.05,0,7,max(gpos)+2, col = "white", border="white")
       rect(0,0,0.95,max(gpos)+2, col = "white", border="white")
-      text(rep(5.2, length(cardNames)), gpos, clusterNames(), cex=0.8,
+      text(rep(5.2, length(cardNames[,1])), gpos, clusterNames(), cex=0.8,
            col=cols, font=2, pos = 4)
     }
   })
@@ -1094,7 +1097,7 @@ statementReport <- function() {
     for (i in 1:nclust) {
       cardsInCluster <- names(which(groups == i))
       jidx_i <- c(jidx[which(groups == i)], mean(jidx[which(groups == i)]))
-      cNames <- c(cardNames[which(groups == i)],"")
+      cNames <- c(cardNames[which(groups == i), "Statement"],"")
       cardsInCluster <- which(ratings$StatementID %in% cardsInCluster)
       rtgsmm <- ratingSummary(ratings[cardsInCluster,])
       rtgsmm <- data.frame(cNames, c(names(cmapdat$x)[which(groups == i)],""),
@@ -1263,7 +1266,7 @@ RCMapMenu <- function(enc = "UTF-8", sep=",") {
       if (rcmapmenu %in% c(0,7))
         menuLevel <- -1 ## get the R prompt back
       if (rcmapmenu == 1) {
-        loadRCMapData(enc)
+        loadRCMapData(enc, sep)
         menuLevel <- 0
       }
       if(!exists("cmapdat"))
@@ -1274,7 +1277,7 @@ RCMapMenu <- function(enc = "UTF-8", sep=",") {
       topLine()
       # Rating variables
       cat(sprintf("Data folder: %s\nNumber of sorters: %d\nNumber of statements: %d\nIssues:\n%s\n",
-                  cmapdat$dataDir, cmapdat$n.indiv, length(cmapdat$cardNames),cmapdat$issues))
+                  cmapdat$dataDir, cmapdat$n.indiv, length(cmapdat$cardNames[,1]),cmapdat$issues))
       if(length(cmapdat$splhalf) == 2) {
         cat(blue("Mean correlation between split halves:",
                  bold(sprintf("%1.2f",mean(cmapdat$splhalf$cors))),
@@ -1360,7 +1363,7 @@ RCMapMenu <- function(enc = "UTF-8", sep=",") {
           nbcwss <- fviz_nbclust(cbind(cmapdat$x, cmapdat$y),
                                  factoextra::hcut,
                                  method = c("wss"), diss=distM,
-                                 k.max = length(cmapdat$cardNames)/3)
+                                 k.max = length(cmapdat$cardNames[,1])/3)
           difflogs <- -diff(log(nbcwss$data$y))
           plot(nbcwss$data$y, pch=19, col=4, cex=0.6,
                ylim=c(0,1.05*max(nbcwss$data$y)),
@@ -1381,7 +1384,7 @@ RCMapMenu <- function(enc = "UTF-8", sep=",") {
           nbcsil <- fviz_nbclust(cbind(cmapdat$x, cmapdat$y),
                                  factoextra::hcut,
                                  method = c("sil"), diss=distM,
-                                 k.max = length(cmapdat$cardNames)/3)
+                                 k.max = length(cmapdat$cardNames[,1])/4)
           plot(nbcsil)
           cmapdat$nclust <<- which.max(nbcsil$data$y)
           update_clusters()
@@ -1391,7 +1394,7 @@ RCMapMenu <- function(enc = "UTF-8", sep=",") {
           #cmapdat$clusMember <- cutree(fit.Clust, k=cmapdat$nclust)
           showDendrogram()
           curNC <- cmapdat$nclust
-          tmpnclust <- rcmenu(1:floor(length(cmapdat$cardNames)/3),
+          tmpnclust <- rcmenu(1:floor(length(cmapdat$cardNames[,1])/4),
                               title = bold("Set the number of clusters"), slctd = curNC)
           if(tmpnclust > 0)
             cmapdat$nclust <<- tmpnclust
@@ -1408,17 +1411,17 @@ RCMapMenu <- function(enc = "UTF-8", sep=",") {
           settingmenu = 1
           next
         }
-        cat(clusterNum, "[",clusterNames()[clusterNum],"]\n")
+        cat(clusterNum, "[", clusterNames()[clusterNum], "]\n")
         groups <- clusterConfig()
-        cat(bold("Statements in the cluster"),"\n")
+        cat(bold("Statements in the cluster"), "\n")
         cardsInCluster <- which(groups == clusterNum)
-        cat(blue(cmapdat$cardNames[cardsInCluster]),sep="\n")
+        cat(blue(cmapdat$cardNames[cardsInCluster, "Statement"]), sep="\n")
         tmplbl <- cmapdat$pileLabels[which(cmapdat$pileLabels$cardNum %in% cardsInCluster),]
         if(nrow(tmplbl) > 0) {
           tmplbl <- sort(table(tmplbl[,1]), decreasing = TRUE)
           toShow <- min(5, nrow(tmplbl))
-          cat(bold("Suggested names"),"\n")
-          cat(green(names(tmplbl[1:toShow])),sep="\n")
+          cat(bold("Suggested names"), "\n")
+          cat(green(names(tmplbl[1:toShow])), sep="\n")
         }
         clNames <- clusterNames()
         cat("\nEnter a name [", clNames[clusterNum],"]\n")
@@ -1655,7 +1658,7 @@ rcmenu <- function (choices, graphics = FALSE, title = NULL, slctd=NULL) {
 
 troubleshooting <- c(
   "cardfilename" = "Make sure the file is spelled correctly (Statements.csv, case-sesitive), and that the data folder contains all the input files.",
-  "cardfilesep" = "Make sure you use the correct column separator. If your statements contain commas, use tab as a column separator, and invoke the program with RCMapMenu(sep='\t')",
+  "cardfilesep" = "Make sure you use the correct column separator. If your statements contain commas, use tab as a column separator, and invoke the program with RCMapMenu(sep='\\t')",
   "pilesfilename" = "Make sure the file is spelled correctly (SortedCards.csv, case-sesitive), and that the data folder contains all the input files.",
   "pilesfilesep" = "Make sure you use the correct column separator. The first column in SortedCards.csv must contain the sorter IDs, the second column has to contain pile labels (text), and columns 3,4,... contain the cards in each pile.",
   "ratingsfilename" = "Make sure the file is spelled correctly (Ratings.csv, case-sesitive), and that the data folder contains all the input files.",
