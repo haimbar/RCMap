@@ -338,7 +338,7 @@ read_piles <- function(filename, ncards, enc = "UTF-8", sep=",") {
 
 
 # Check that the file containing the rating data is loaded properly:
-read_ratings <- function(filename, statements, enc = "UTF-8", sep=",") {
+read_ratings <- function(filename, statements, ratingscale=5, enc = "UTF-8", sep=",") {
   if(!file.exists(filename))
     return(list(issues=paste("read_ratings: File", filename,
                              "doesn't exist.\n", troubleshooting["ratingsfilename"]),
@@ -364,13 +364,12 @@ read_ratings <- function(filename, statements, enc = "UTF-8", sep=",") {
     return(list(issues=paste("read_ratings:", filename,
                              "The second column names must be StatementID\n"),
                 ratings = NULL))
-
   tmpmat <- as.matrix(ratings[ ,3:ncol(ratings)], nrow=nrow(ratings))
-  nonlikert <- cbind(rowSums(tmpmat < 1), rowSums(tmpmat > 5))
+  nonlikert <- cbind(rowSums(tmpmat < 1), rowSums(tmpmat > ratingscale))
   nonlikert <- colSums(nonlikert, na.rm = TRUE)
   if (max(nonlikert) > 0)
     return(list(issues=paste("read_ratings:", filename,
-                             "The rating values must be between 1 and 5\n",
+                             "The rating values must be between 1 and ", ratingscale,"\n",
                              "Columns [", colnames(ratings)[2+which(nonlikert > 0)],
                              "] have invalid values.\n"),
                 ratings = NULL))
@@ -481,8 +480,22 @@ initCMap <- function(dataDir, enc="UTF-8", sep=",") {
       return(cmapdat)
     }
   }
+  ratingscale <- 5
   cat(green("Loading project files. Please wait.\n\n"))
   cmapdat <<- list()
+  conffile <- paste0(dataDir,"/config.txt")
+  if (file.exists(conffile)) {
+    dat <- readLines(conffile)
+    for (i in 1:length(dat)) {
+      if(startsWith(dat[i], "#")) {
+        next
+      }
+      if (grep("ratingscale=", dat[i]) > 0) {
+        ratingscale <- as.numeric(gsub("ratingscale=", "", dat[i]))
+      }
+    }
+  }
+
   # Statements:
   cardNames <- read_statements(paste0(dataDir, "/Statements.csv"), enc, sep)
   if(length(cardNames$issues) > 0)
@@ -510,11 +523,21 @@ initCMap <- function(dataDir, enc="UTF-8", sep=",") {
   sorters_dict <- data.frame(orig_ID=sorters, seq_ID=unique(tmpids))
   #cardDat[ ,1] <- tmpids
 
+
   # Create the statement adjacency matrix from the piles:
   tmp <- getAdjMatrices(cardDat, cardNames, sorters_dict)
   adj.mat <- tmp[[1]]
   issues <- tmp[[2]]
   n.indiv <- length(adj.mat)
+  wgts <- rep(1, n.indiv)
+  wgtfile <- paste0(dataDir,"/Weights.csv")
+  if (file.exists(wgtfile)) {
+    wgtdat <- read.csv(wgtfile)
+    wgts <- n.indiv*wgtdat$Weight/sum(wgtdat$Weight)
+  }
+  for (i in 1:n.indiv) {
+    adj.mat[[i]] <- adj.mat[[i]]*wgts[i]
+  }
   # multidimensional scaling, and clustering:
   DS <- distanceMatrix(adj.mat)
   rownames(DS) <- cardNames$StatementID
@@ -529,10 +552,14 @@ initCMap <- function(dataDir, enc="UTF-8", sep=",") {
 
   # Ratings:
   ratings <- read_ratings(paste0(dataDir, "/Ratings.csv"),
-                          cardNames$StatementID, enc, sep)
+                          cardNames$StatementID, ratingscale, enc, sep)
   if(length(ratings$issues) > 0)
     stop(ratings$issues)
   ratings <- ratings$ratings
+  for (i in 1:n.indiv) {
+    rownums <- which(ratings$RaterID == i)
+    ratings[rownums, -c(1,2)] <- ratings[rownums, -c(1,2)]*wgts[i]
+  }
   # Demographic data:
   demographics.dat <- read_demographics(paste0(dataDir, "/Demographics.csv"),
                                         ratings, enc, sep)
@@ -585,7 +612,7 @@ initCMap <- function(dataDir, enc="UTF-8", sep=",") {
                   nclust=3, splhalf=list(), cohorts=cohorts,
                   pcoordChoice=c(1, 2), clusMember=cmapdat$clusMember, #rep(1 ,length(cardNames$Statement)),
                   clrscm="rcmap", eta_ijk_e=eta_ijk_e, eta_ijk_h=eta_ijk_h,
-                  dataDir=dataDir)
+                  ratingscale=ratingscale, dataDir=dataDir)
   save(cmapdat, file=paste0(dataDir,"/CMapSession.RData"))
   return(cmapdat)
 }
@@ -654,9 +681,9 @@ showMDSPlot <- function(metric=NULL, tau=0.3) {
       sz <- rtgsmm[-nrow(rtgsmm),
                    which(colnames(rtgsmm) ==
                            paste0(colnames(cmapdat$ratings)[metric+2],"_Mean"))]
-      sz <- (sz-1)/4
+      sz <- (sz-1)/(ratingscale-1)
       lgd <- seq(0, 1, length=length(ter.cols))
-      lgdkey <- lgd*4 + 1
+      lgdkey <- lgd*4*(ratingscale/5) + 1
     }
     if (!is.null(metric)) {
       cols <- ter.cols[cut(sz, breaks = seq(0, 1, length=length(ter.cols)),
@@ -723,12 +750,17 @@ showClusterPlot <- function(type="rays", metric=NULL) {
         cardsInCluster <- which(ratingstmp$StatementID %in% cardsInCluster)
         rtgsmm <- ratingSummary(ratingstmp[cardsInCluster,])
         rownames(rtgsmm) <- c(rownames(DS)[which(groups == i)], "total")
-        sz[i] <- rtgsmm[nrow(rtgsmm),which(colnames(rtgsmm) == paste0(colnames(ratings)[metric+2],"_Mean"))]
+        sz[i] <- rtgsmm[nrow(rtgsmm),
+                        which(colnames(rtgsmm) ==
+                                paste0(colnames(ratings)[metric+2],"_Mean"))]
       }
-      sz <- 1+2*(sz-1)/4
-      sz <- round(sz, digits = 1) # to be between 1 (for 1) and 2 (for 5)
-      lgd <- seq(1, 3, by=0.5)
-      lgdkey <- (lgd-1)*2+1
+      #sz <- 1+2*(sz-1)/(ratingscale-1) # 1+2*(sz-1)/4
+      #sz <- round(sz, digits = 1) # to be between 1 (for 1) and 2 (for 5)
+      sz <- 3*round(sz/ratingscale, digits = 1)
+      #lgd <- seq(1, 3, by=0.5)
+      #lgdkey <- (lgd-1)*(ratingscale/5)+1
+      lgd <- 3*seq(0, 4/5, length=5)
+      lgdkey <- lgd*ratingscale/2
     }
 
     colpoints <- cols[groups]
@@ -867,13 +899,15 @@ showDotPlot <- function(metric=NULL) {
       dotchart(sort(y, decreasing = FALSE),
                labels = row.names(rtgsmm[order(y, decreasing = FALSE)]),
                groups = groups[order(y, decreasing = FALSE)], gcolor = cols,
-               color = cols[groups[order(y, decreasing = FALSE)]], xlim = c(1,6),
-               cex = 0.6,  pch = 19, xlab = ttl, frame.plot = FALSE, xaxt = "n")
-      abline(v=1:4, lwd=2, lty=2, col="gray66")
-      text((1:5), rep(max(gpos)+1, 5), 1:5, cex=0.8, font=2)
-      rect(5.05,0,7,max(gpos)+2, col = "white", border="white")
+               color = cols[groups[order(y, decreasing = FALSE)]],
+               xlim = c(1,ratingscale+1),
+               cex = 0.6,  pch = 19, xlab = ttl, frame.plot = FALSE,
+               xaxt = "n")
+      abline(v=1:(ratingscale-1), lwd=2, lty=2, col="gray66")
+      text((1:ratingscale), rep(max(gpos)+1, ratingscale), 1:ratingscale, cex=0.8, font=2)
+      rect(ratingscale+.05,0,ratingscale+2,max(gpos)+2, col = "white", border="white")
       rect(0,0,0.95,max(gpos)+2, col = "white", border="white")
-      text(rep(5.2, length(cardNames[,1])), gpos, clusterNames(), cex=0.8,
+      text(rep(ratingscale+.2, length(cardNames[,1])), gpos, clusterNames(), cex=0.8,
            col=cols, font=2, pos = 4)
     }
   })
@@ -968,7 +1002,7 @@ showParallelCoordinates <- function() {
         #SS[i] <- rtgsmm[nrow(rtgsmm),which(colnames(rtgsmm) == paste0(colnames(ratings)[metric+2],"_N"))]
       }
       if (jj == 1) {
-        plot(rep(1, nclust), MN[,1], ylim=c(0.5,5), xlim=c(0.2,length(pcoordChoice)+0.8),
+        plot(rep(1, nclust), MN[,1], ylim=c(0.5, ratingscale), xlim=c(0.2,length(pcoordChoice)+0.8),
              main="", col=cols, axes=F, xlab="", ylab="Rating", pch=19, cex=0.3)
         axis(2)
         grid()
@@ -981,7 +1015,7 @@ showParallelCoordinates <- function() {
     }
     cnms <- clusterNames()
     text(rep(length(cmapdat$pcoordChoice)+0.1, length(cnms)),
-         seq(1,5,length=length(cnms)), cnms, col=cols, cex=0.8, pos=4,font=2)
+         seq(1, ratingscale,length=length(cnms)), cnms, col=cols, cex=0.8, pos=4,font=2)
 
   })
 }
@@ -1020,31 +1054,32 @@ showGoZone <- function() {
   kendall <- cor.test(MN[-nrow(rtgsmm),1], MN[-nrow(rtgsmm),2], method = "kendall")
   Kendall <- paste0("Kendall's tau=", format(kendall$estimate, digits=2),
                     " (p=", format(kendall$p.value, digits=3),")")
-  plot( MN[-nrow(rtgsmm),1], MN[-nrow(rtgsmm),2], ylim=c(1,5), xlim=c(1,5.9),
+  plot( MN[-nrow(rtgsmm),1], MN[-nrow(rtgsmm),2],
+        ylim=c(1,cmapdat$ratingscale), xlim=c(1,cmapdat$ratingscale+0.9),
         main=Kendall, col=0, axes=F, xlab=cmapdat$pcoordChoice[1],
         ylab=cmapdat$pcoordChoice[2], pch=19, cex=0.6, cex.main=1)
   text(MN[-nrow(rtgsmm),1], MN[-nrow(rtgsmm),2],
        rownames(cmapdat$DS), cex=0.7,
        col=cols[groups], font=2)
-  axis(1, at = 1:5); axis(2)
+  axis(1, at = 1:cmapdat$ratingscale); axis(2, at = 1:cmapdat$ratingscale)
   grid()
   rect(xleft = 1, ybottom = 1, xright = MN[nrow(rtgsmm),1],
        ytop = MN[nrow(rtgsmm),2], col=rgb(0.5, 0, 0.5, .1),
        border = "white")
   rect(xleft = 1, ybottom = MN[nrow(rtgsmm),2], xright = MN[nrow(rtgsmm),1],
-       ytop = 5, col=rgb(0.5, 0.5, 0, .1),
+       ytop = cmapdat$ratingscale, col=rgb(0.5, 0.5, 0, .1),
        border = "white")
-  rect(xleft = MN[nrow(rtgsmm),1], ybottom = 1, xright = 5,
+  rect(xleft = MN[nrow(rtgsmm),1], ybottom = 1, xright = cmapdat$ratingscale,
        ytop = MN[nrow(rtgsmm),2], col=rgb(0.5, 0, 0, .1),
        border = "white")
-  rect(xleft = MN[nrow(rtgsmm),1], ybottom = MN[nrow(rtgsmm),2], xright = 5,
-       ytop = 5, col=rgb(0, 0.5, 0.5, .1),
+  rect(xleft = MN[nrow(rtgsmm),1], ybottom = MN[nrow(rtgsmm),2], xright = cmapdat$ratingscale,
+       ytop = cmapdat$ratingscale, col=rgb(0, 0.5, 0.5, .1),
        border = "white")
   abline(v=MN[nrow(rtgsmm),1], col="grey", lwd=2)
   abline(h=MN[nrow(rtgsmm),2], col="grey", lwd=2)
   cnms <- clusterNames()
-  rect(5.1, 0, 7, 7, col = "white", border= "white")
-  text(rep(5.1, length(cnms)), seq(1,5,length=length(cnms)),
+  rect(cmapdat$ratingscale+0.1, 0, cmapdat$ratingscale+2, cmapdat$ratingscale+2, col = "white", border= "white")
+  text(rep(cmapdat$ratingscale+0.1, length(cnms)), seq(1,cmapdat$ratingscale,length=length(cnms)),
        cnms, col=cols, cex=0.8, pos=4,font=2)
 
   #  })
@@ -1059,7 +1094,7 @@ sorterReport <- function() {
     for (i in 1:length(adj.mat)) {
       cardsInPiles <- which(rowSums(adj.mat[[i]])>0)
       cardsSorted <- length(cardsInPiles)
-      adjM <- adj.mat[[i]][cardsInPiles, cardsInPiles]
+      adjM <- (adj.mat[[i]][cardsInPiles, cardsInPiles] > 0)
       diag(adjM) <- 1
       noPiles <- length(unique(apply(adjM, 1, paste0, collapse="")))
       cat(paste0("Sorter ", i, " sorted ", cardsSorted, " cards into ", noPiles," piles\n"))
@@ -1657,13 +1692,13 @@ rcmenu <- function (choices, graphics = FALSE, title = NULL, slctd=NULL) {
 
 
 troubleshooting <- c(
-  "cardfilename" = "Make sure the file is spelled correctly (Statements.csv, case-sesitive), and that the data folder contains all the input files.",
+  "cardfilename" = "Make sure the file is spelled correctly (Statements.csv, case-sensitive), and that the data folder contains all the input files.",
   "cardfilesep" = "Make sure you use the correct column separator. If your statements contain commas, use tab as a column separator, and invoke the program with RCMapMenu(sep='\\t')",
-  "pilesfilename" = "Make sure the file is spelled correctly (SortedCards.csv, case-sesitive), and that the data folder contains all the input files.",
+  "pilesfilename" = "Make sure the file is spelled correctly (SortedCards.csv, case-sensitive), and that the data folder contains all the input files.",
   "pilesfilesep" = "Make sure you use the correct column separator. The first column in SortedCards.csv must contain the sorter IDs, the second column has to contain pile labels (text), and columns 3,4,... contain the cards in each pile.",
-  "ratingsfilename" = "Make sure the file is spelled correctly (Ratings.csv, case-sesitive), and that the data folder contains all the input files.",
+  "ratingsfilename" = "Make sure the file is spelled correctly (Ratings.csv, case-sensitive), and that the data folder contains all the input files.",
   "ratingsfilesep" = "The first two columns must be named RaterID	and StatementID (case-sensitive) and StatementID must match the values in the Statements.csv file",
-  "demographicsfilename" = "Make sure the file is spelled correctly (Demographics.csv, case-sesitive), and that the data folder contains all the input files.",
+  "demographicsfilename" = "Make sure the file is spelled correctly (Demographics.csv, case-sensitive), and that the data folder contains all the input files.",
   "demographicsfilesep" = "The first column must be named RaterID (case-sensitive) and must match the values in the Ratings.csv file",
   "demographicsnodata" = "Either no columns in the file, or all columns contain categorical data with distinct values, or all values in each column are identical.",
   "non-numeric" = "has a non-numeric value where a card number is expected"
