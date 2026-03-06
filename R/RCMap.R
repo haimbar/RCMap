@@ -1206,7 +1206,7 @@ showClusterPlot <- function(type="rays", metric=NULL) {
       distM <- D2h
     ttl <- ""
     cols <- clusterCols(nclust, clrscm)
-    fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+    fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     groups <- cutree(fit.Clust, k=nclust)
     sz <- rep(0, nclust)
     if(!is.null(metric)) {
@@ -1300,7 +1300,7 @@ update_clusters <- function() {
     if(distmetric == "Hyperbolic")
       distM <- D2h
     cols <- clusterCols(nclust, clrscm)
-    fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+    fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     clus <- cutree(fit.Clust, nclust)
     cmapdat$clusMember <<- clus
     cat(cmapdat$clusMember,"\n")
@@ -1318,7 +1318,7 @@ showDendrogram <- function(phylo=FALSE) {
     if(distmetric == "Hyperbolic")
       distM <- D2h
     cols <- clusterCols(nclust, clrscm)
-    fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+    fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     clus <- cutree(fit.Clust, nclust)
     cmapdat$clusMember <<- clus
     if(phylo) {
@@ -1360,7 +1360,7 @@ showDotPlot <- function(metric=NULL) {
       distM <- D2h
     ttl <- ""
     cols <- clusterCols(nclust, clrscm)
-    fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+    fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     groups <- cutree(fit.Clust, k=nclust)
     gpos <- rev(cumsum(rev(tapply(groups, groups, length)) + 2) - 1) - 2
     y <- c()
@@ -1414,7 +1414,7 @@ showBarPlot <- function(metric=NULL) {
       distM <- D2h
     ttl <- ""
     cols <- clusterCols(nclust, clrscm)
-    fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+    fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     groups <- cutree(fit.Clust, k=nclust)
     MN <- SD <- SS <- rep(0, nclust)
     if(!is.null(metric)) {
@@ -1470,7 +1470,7 @@ showParallelCoordinates <- function() {
       distM <- D2h
     ttl <- ""
     cols <- clusterCols(nclust, clrscm)
-    fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+    fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     groups <- cutree(fit.Clust, k=nclust)
     MN <- matrix(0, nrow=nclust, ncol=length(pcoordChoice))
     for (jj in 1:length(pcoordChoice)) {
@@ -1526,7 +1526,7 @@ showGoZone <- function() {
     distM <- cmapdat$D2h
   ttl <- ""
   cols <- clusterCols(cmapdat$nclust, cmapdat$clrscm)
-  fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+  fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
   groups <- cutree(fit.Clust, k=cmapdat$nclust)
   MN <- matrix(0, nrow=1+nrow(distM), ncol=length(cmapdat$pcoordChoice))
   for (jj in 1:2) {
@@ -1625,7 +1625,7 @@ statementReport <- function() {
       distM <- D2h
       eta_ij <- eta_ijk_h[[nclust+1]]
     }
-    fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+    fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     jidx <- colMeans(eta_ij)
     groups <- cutree(fit.Clust, k=nclust)
     retdf <- as.data.frame(matrix(0, ncol=4+5*(ncol(ratings)-2), nrow=nclust+nrow(DS)))
@@ -1665,7 +1665,7 @@ clusterANOVA <- function() {
       distM <- D2h
     ttl <- ""
     cols <- clusterCols(nclust, clrscm)
-    fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+    fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     groups <- cutree(fit.Clust, k=nclust)
     fn <- paste0(dataDir,"output/ANOVA", nclust,".txt")
     Cluster <- rep(1, nrow(ratings))
@@ -1708,7 +1708,7 @@ clusterTUKEY <- function() {
       distM <- D2h
     ttl <- ""
     cols <- clusterCols(nclust, clrscm)
-    fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+    fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     groups <- cutree(fit.Clust, k=nclust)
     Cluster <- rep(1, nrow(ratings))
     fn <- paste0(dataDir,"output/Tukey", nclust,".txt")
@@ -1972,7 +1972,7 @@ RCMapMenu <- function(enc = "UTF-8", sep=",") {
                  cex=1.5, pch=18, col="navyblue")
         }
         if(clustNo == 3) {
-          fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+          fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
           #cmapdat$clusMember <- cutree(fit.Clust, k=cmapdat$nclust)
           showDendrogram()
           curNC <- cmapdat$nclust
@@ -2238,7 +2238,7 @@ clusterConfig <- function() {
   distM <- cmapdat$D2e
   if(cmapdat$distmetric == "Hyperbolic")
     distM <- cmapdat$D2h
-  fit.Clust <- hclust(as.dist(distM), method=clustMethod)
+  fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
   cutree(fit.Clust, k=cmapdat$nclust)
 }
 
