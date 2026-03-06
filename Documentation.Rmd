@@ -40,7 +40,17 @@ knitr::opts_chunk$set(echo = TRUE)
 What's New
 ---------------
 
-**Version 0.3.1 (current)**
+**Version 0.3.2 (current)**
+
+- **Adaptive bottom margin in bar plot.** The bottom margin is sized to the
+  longest cluster name so that vertical x-axis labels are never truncated.
+- **Bottom legend in dendrogram, phylogenic tree, parallel coordinates, and
+  Go-Zone plots.** Cluster names previously drawn as text inside or beside the
+  plot area are now displayed as a horizontal colour-keyed legend below each
+  plot. When the total label width exceeds the figure width the legend wraps to
+  multiple rows; the bottom margin grows automatically to fit.
+
+**Version 0.3.1**
 
 - **Cluster names in statement report.** The `StatementSummaryNN.csv` file now
   includes a `ClusterName` column as its last column, showing the user-assigned
@@ -106,7 +116,7 @@ and to cite the latest version of the package with BibTeX, use citation("RCMap")
     title = {RCMap: Group Concept Mapping},
     author = {Haim Bar},
     year = {2026},
-    note = {R package version 0.3.1},
+    note = {R package version 0.3.2},
 }
 ```
 

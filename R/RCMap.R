@@ -1321,25 +1321,33 @@ showDendrogram <- function(phylo=FALSE) {
     fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     clus <- cutree(fit.Clust, nclust)
     cmapdat$clusMember <<- clus
+    cnames <- clusterNames()
+    # Compute legend layout: how many columns fit across the figure width
+    item_width_in <- (max(nchar(cnames)) + 3) * par("cin")[1] * 0.8
+    ncol_leg <- max(1, floor(par("fin")[1] / item_width_in))
+    nrow_leg <- ceiling(length(cnames) / ncol_leg)
+    # Expand bottom margin to fit the legend rows plus a gap line
+    bot_mar <- nrow_leg * 2 + 4
+    old_mar <- par(mar = c(bot_mar, par("mar")[2:4]))
+    on.exit(par(old_mar), add = TRUE)
     if(phylo) {
       X <- as.phylo(fit.Clust)
-      edge.clus <- sapply(1:cmapdat$nclust,function(i)max(which(X$edge[,2] %in% which(clus==i))))
-      order     <- order(edge.clus)
-      edge.clus <- c(min(edge.clus),diff(sort(edge.clus)))
-      edge.clus <- rep(order,edge.clus)
-      plot(X,type='fan',
-           tip.color=cols[clus],edge.color=cols[edge.clus],
-           label.offset=0,no.margin=FALSE, cex=0.70)
-      text(rep(0.6,length(cardNames[,1])), max(fit.Clust$height)*
-             seq(-0.5, 0.5, length=length(clusterNames())), clusterNames(),
-           pos=4, col=cols, cex=0.8, font=2)
+      edge.clus <- sapply(seq_len(cmapdat$nclust),
+                          function(i) max(which(X$edge[,2] %in% which(clus==i))))
+      ord       <- order(edge.clus)
+      edge.clus <- c(min(edge.clus), diff(sort(edge.clus)))
+      edge.clus <- rep(ord, edge.clus)
+      plot(X, type = "fan",
+           tip.color = cols[clus], edge.color = cols[edge.clus],
+           label.offset = 0, no.margin = FALSE, cex = 0.70)
     } else {
       clusDendro <- dendrapply(as.dendrogram(fit.Clust), colLab)
       plot(clusDendro, main = "")
-      text(rep(2,length(cardNames[,1])),  max(fit.Clust$height)*
-             seq(0.3, 1, length=length(clusterNames())), clusterNames(),
-           pos=4, col=cols, cex=0.8, font=2)
     }
+    # Place legend in the bottom margin (below the plot region)
+    inset_down <- (nrow_leg * par("cin")[2] * 2 + 0.1) / par("pin")[2]
+    legend("bottom", legend = cnames, fill = cols, ncol = ncol_leg,
+           bty = "n", cex = 0.8, xpd = NA, inset = c(0, -inset_down))
   })
 }
 
@@ -1445,6 +1453,9 @@ showBarPlot <- function(metric=NULL) {
     }
     SEM <- SD/sqrt(SS)
     Yl = ceiling(max(MN+SEM+0.5, na.rm = TRUE))
+    bot_mar <- max(5, ceiling(max(nchar(cname)) * 0.7) + 2)
+    old_mar <- par(mar = c(bot_mar, par("mar")[2:4]))
+    on.exit(par(old_mar), add = TRUE)
     bp <- barplot(MN, main=ttl,col=barcols,ylim=c(0,Yl),
                   names.arg=cname,cex.names=0.8,las=3,
                   width=rep(0.8,nclust),space=0.2)
@@ -1468,43 +1479,45 @@ showParallelCoordinates <- function() {
     distM <- D2e
     if(distmetric == "Hyperbolic")
       distM <- D2h
-    ttl <- ""
     cols <- clusterCols(nclust, clrscm)
     fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     groups <- cutree(fit.Clust, k=nclust)
+    cnms <- clusterNames()
+    # Bottom margin to fit horizontal legend
+    item_width_in <- (max(nchar(cnms)) + 3) * par("cin")[1] * 0.8
+    ncol_leg <- max(1, floor(par("fin")[1] / item_width_in))
+    nrow_leg <- ceiling(length(cnms) / ncol_leg)
+    bot_mar <- nrow_leg * 2 + 4
+    old_mar <- par(mar = c(bot_mar, par("mar")[2:4]))
+    on.exit(par(old_mar), add = TRUE)
     MN <- matrix(0, nrow=nclust, ncol=length(pcoordChoice))
-    for (jj in 1:length(pcoordChoice)) {
+    for (jj in seq_along(pcoordChoice)) {
       vars <- unlist(strsplit(pcoordChoice[jj],"/"))
       metric <- which(colnames(ratings) == vars[1])
       cohortCol <- which(colnames(cohorts) == vars[2])
-      ttl <- paste(colnames(ratings)[metric],
-                   colnames(cmapdat$cohorts)[cmapdat$cohortCol])
       ratingstmp <- ratings[which(cohorts[,cohortCol] == 1),]
-      for (i in 1:length(unique(groups))) {
+      for (i in seq_along(unique(groups))) {
         cardsInCluster <- names(which(groups == i))
         cardsInCluster <- which(ratingstmp$StatementID %in% cardsInCluster)
         rtgsmm <- ratingSummary(ratingstmp[cardsInCluster,])
         rownames(rtgsmm) <- c(rownames(DS)[which(groups == i)], "total")
         MN[i, jj] <- rtgsmm[nrow(rtgsmm),which(colnames(rtgsmm) == paste0(colnames(ratings)[metric],"_Mean"))]
-        #SD[i] <- rtgsmm[nrow(rtgsmm),which(colnames(rtgsmm) == paste0(colnames(ratings)[metric+2],"_SD"))]
-        #SS[i] <- rtgsmm[nrow(rtgsmm),which(colnames(rtgsmm) == paste0(colnames(ratings)[metric+2],"_N"))]
       }
       if (jj == 1) {
         plot(rep(1, nclust), MN[,1], ylim=c(0.5, ratingscale), xlim=c(0.2,length(pcoordChoice)+0.8),
-             main="", col=cols, axes=F, xlab="", ylab="Rating", pch=19, cex=0.3)
+             main="", col=cols, axes=FALSE, xlab="", ylab="Rating", pch=19, cex=0.3)
         axis(2)
         grid()
       } else {
         points(rep(jj, nclust), MN[,jj], col=cols, pch=19, cex=0.3)
-        for (k in 1:nclust)
+        for (k in seq_len(nclust))
           lines(c(jj-1,jj), c(MN[k,jj-1], MN[k,jj]), col=cols[k])
       }
       text(jj, 0.8, cmapdat$pcoordChoice[jj], cex=0.6)
     }
-    cnms <- clusterNames()
-    text(rep(length(cmapdat$pcoordChoice)+0.1, length(cnms)),
-         seq(1, ratingscale,length=length(cnms)), cnms, col=cols, cex=0.8, pos=4,font=2)
-
+    inset_down <- (nrow_leg * par("cin")[2] * 2 + 0.1) / par("pin")[2]
+    legend("bottom", legend = cnms, fill = cols, ncol = ncol_leg,
+           bty = "n", cex = 0.8, xpd = NA, inset = c(0, -inset_down))
   })
 }
 
@@ -1524,8 +1537,14 @@ showGoZone <- function() {
   distM <- cmapdat$D2e
   if(cmapdat$distmetric == "Hyperbolic")
     distM <- cmapdat$D2h
-  ttl <- ""
   cols <- clusterCols(cmapdat$nclust, cmapdat$clrscm)
+  cnms <- clusterNames()
+  item_width_in <- (max(nchar(cnms)) + 3) * par("cin")[1] * 0.8
+  ncol_leg <- max(1, floor(par("fin")[1] / item_width_in))
+  nrow_leg <- ceiling(length(cnms) / ncol_leg)
+  bot_mar <- nrow_leg * 2 + 4
+  old_mar <- par(mar = c(bot_mar, par("mar")[2:4]))
+  on.exit(par(old_mar), add = TRUE)
   fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
   groups <- cutree(fit.Clust, k=cmapdat$nclust)
   MN <- matrix(0, nrow=1+nrow(distM), ncol=length(cmapdat$pcoordChoice))
@@ -1547,8 +1566,8 @@ showGoZone <- function() {
   Kendall <- paste0("Kendall's tau=", format(kendall$estimate, digits=2),
                     " (p=", format(kendall$p.value, digits=3),")")
   plot( MN[-nrow(rtgsmm),1], MN[-nrow(rtgsmm),2],
-        ylim=c(1,cmapdat$ratingscale), xlim=c(1,cmapdat$ratingscale+0.9),
-        main=Kendall, col=0, axes=F, xlab=cmapdat$pcoordChoice[1],
+        ylim=c(1,cmapdat$ratingscale), xlim=c(1,cmapdat$ratingscale),
+        main=Kendall, col=0, axes=FALSE, xlab=cmapdat$pcoordChoice[1],
         ylab=cmapdat$pcoordChoice[2], pch=19, cex=0.6, cex.main=1)
   text(MN[-nrow(rtgsmm),1], MN[-nrow(rtgsmm),2],
        rownames(cmapdat$DS), cex=0.7,
@@ -1569,10 +1588,9 @@ showGoZone <- function() {
        border = "white")
   abline(v=MN[nrow(rtgsmm),1], col="grey", lwd=2)
   abline(h=MN[nrow(rtgsmm),2], col="grey", lwd=2)
-  cnms <- clusterNames()
-  rect(cmapdat$ratingscale+0.1, 0, cmapdat$ratingscale+2, cmapdat$ratingscale+2, col = "white", border= "white")
-  text(rep(cmapdat$ratingscale+0.1, length(cnms)), seq(1,cmapdat$ratingscale,length=length(cnms)),
-       cnms, col=cols, cex=0.8, pos=4,font=2)
+  inset_down <- (nrow_leg * par("cin")[2] * 2 + 0.1) / par("pin")[2]
+  legend("bottom", legend = cnms, fill = cols, ncol = ncol_leg,
+         bty = "n", cex = 0.8, xpd = NA, inset = c(0, -inset_down))
 
   #  })
 }

@@ -1,3 +1,26 @@
+# RCMap 0.3.2
+
+## Improvements
+
+- **Adaptive bottom margin in bar plot.** The bottom margin of the cluster bar
+  plot is now computed from the longest cluster name so that vertical x-axis
+  labels are never truncated.
+
+- **Bottom legend in dendrogram and phylogenic tree.** Cluster names are now
+  shown as a horizontal legend below the plot rather than as text drawn inside
+  the plot area. When the combined label width exceeds the figure width the
+  legend wraps to multiple rows, and the bottom margin grows automatically to
+  accommodate all rows.
+
+- **Bottom legend in parallel coordinates plot.** Same treatment as the
+  dendrogram: the right-edge label list is replaced by a wrapping horizontal
+  legend below the plot.
+
+- **Bottom legend in Go-Zone plot.** The white rectangle and right-edge label
+  list are replaced by a wrapping horizontal legend below the plot. The plot
+  x-axis now spans the full rating scale without the extra padding that was
+  reserved for the side legend.
+
 # RCMap 0.3.1
 
 ## Improvements
