@@ -1796,7 +1796,7 @@ colLab <- function(dn) {
 #' @importFrom graphics abline axis grid points rect text lines
 #' @importFrom grDevices rgb
 #' @importFrom stats as.dendrogram as.dist cor.test cutree dendrapply dist hclust is.leaf median model.matrix na.exclude na.omit na.pass quantile sd setNames interaction.plot
-#' @importFrom factoextra fviz_nbclust
+#' @importFrom cluster silhouette
 #' @importFrom stringdist stringdistmatrix
 #' @importFrom tcltk tk_choose.dir
 #'
@@ -1924,34 +1924,52 @@ RCMapMenu <- function(enc = "UTF-8", sep=",") {
                         title=bold("  Method used to select the number of clusters"))
         menuLevel <- ifelse(clustNo == 4, 0, 1)
         if(clustNo == 1) {
-          nbcwss <- fviz_nbclust(cbind(cmapdat$x, cmapdat$y),
-                                 factoextra::hcut,
-                                 method = c("wss"), diss=distM,
-                                 k.max = length(cmapdat$cardNames[,1])/3)
-          difflogs <- -diff(log(nbcwss$data$y))
-          plot(nbcwss$data$y, pch=19, col=4, cex=0.6,
-               ylim=c(0,1.05*max(nbcwss$data$y)),
-               xlab="No. of clusters", ylab="Within cluster sums of squares",
-               main="", cex.main=1, axes=F)
+          xy      <- cbind(cmapdat$x, cmapdat$y)
+          kmax    <- max(2, floor(length(cmapdat$cardNames[, 1]) / 3))
+          kvals   <- 2:kmax
+          fit_hc  <- hclust(as.dist(distM), method = clustMethod)
+          wss_vals <- sapply(kvals, function(k) {
+            grps <- cutree(fit_hc, k = k)
+            sum(sapply(unique(grps), function(g) {
+              pts <- xy[grps == g, , drop = FALSE]
+              if (nrow(pts) < 2) return(0)
+              sum(sweep(pts, 2, colMeans(pts), "-")^2)
+            }))
+          })
+          difflogs <- -diff(log(wss_vals))
+          plot(kvals, wss_vals, pch=19, col=4, cex=0.6,
+               ylim=c(0, 1.05*max(wss_vals)),
+               xlab="No. of clusters",
+               ylab="Within cluster sums of squares",
+               main="", cex.main=1, axes=FALSE)
           grid(); axis(1); axis(2)
           abline(h=0, lwd=2)
-          if(all(difflogs >= 0.1)) {
-            cmapdat$nclust <<- length(nbcwss$data$y)
+          if (all(difflogs >= 0.1)) {
+            cmapdat$nclust <<- kmax
           } else {
-            cmapdat$nclust <<- min(which(difflogs < 0.1))
+            cmapdat$nclust <<- kvals[min(which(difflogs < 0.1))]
           }
           update_clusters()
-          points(cmapdat$nclust, nbcwss$data$y[cmapdat$nclust], cex=1.5, pch=18,
-                 col="navyblue")
+          points(cmapdat$nclust, wss_vals[cmapdat$nclust - 1],
+                 cex=1.5, pch=18, col="navyblue")
         }
         if(clustNo == 2) {
-          nbcsil <- fviz_nbclust(cbind(cmapdat$x, cmapdat$y),
-                                 factoextra::hcut,
-                                 method = c("sil"), diss=distM,
-                                 k.max = length(cmapdat$cardNames[,1])/4)
-          plot(nbcsil)
-          cmapdat$nclust <<- which.max(nbcsil$data$y)
+          kmax     <- max(2, floor(length(cmapdat$cardNames[, 1]) / 4))
+          kvals    <- 2:kmax
+          fit_hc   <- hclust(as.dist(distM), method = clustMethod)
+          sil_vals <- sapply(kvals, function(k) {
+            grps <- cutree(fit_hc, k = k)
+            mean(cluster::silhouette(grps, as.dist(distM))[, 3])
+          })
+          plot(kvals, sil_vals, pch=19, col=4, cex=0.6, type="b",
+               ylim=c(0, 1.05*max(sil_vals)),
+               xlab="No. of clusters", ylab="Average silhouette width",
+               main="", axes=FALSE)
+          grid(); axis(1); axis(2)
+          cmapdat$nclust <<- kvals[which.max(sil_vals)]
           update_clusters()
+          points(cmapdat$nclust, sil_vals[which.max(sil_vals)],
+                 cex=1.5, pch=18, col="navyblue")
         }
         if(clustNo == 3) {
           fit.Clust <- hclust(as.dist(distM), method=clustMethod)
