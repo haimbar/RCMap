@@ -7,5 +7,9 @@
 showGoZone()
 }
 \description{
-A Go-Zone plot.
+Plots two rating variables against each other (one per axis), with each
+statement labeled by its ID and colored by cluster. Reference lines are drawn
+at the overall mean of each variable, dividing the plot into four quadrants.
+Kendall's tau and its p-value are shown in the title. The two rating
+variables to compare are taken from \code{cmapdat$pcoordChoice}.
 }

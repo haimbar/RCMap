@@ -2,13 +2,16 @@
 % Please edit documentation in R/RCMap.R
 \name{choose_dir}
 \alias{choose_dir}
-\title{Choose the project's directory.}
+\title{Open a GUI folder-selection dialog (OS-specific implementation).}
 \usage{
 choose_dir()
 }
 \value{
-The user's selected directory.
+A character string with the selected directory path, or an empty
+  string if the user cancels.
 }
 \description{
-From the easycsv package.
+A lower-level alternative to \code{choose_directory}. Uses
+\code{utils::choose.dir()} on Windows, \code{zenity} on Linux, and an
+AppleScript call on macOS.
 }

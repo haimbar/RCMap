@@ -2,10 +2,14 @@
 % Please edit documentation in R/RCMap.R
 \name{showParallelCoordinates}
 \alias{showParallelCoordinates}
-\title{A parallel coordinate plot.}
+\title{Show a parallel coordinates plot of cluster mean ratings.}
 \usage{
 showParallelCoordinates()
 }
 \description{
-A parallel coordinate plot.
+Plots mean ratings per cluster across multiple rating-variable / cohort
+combinations, with one axis position per combination and one colored line per
+cluster. The variable / cohort combinations are taken from
+\code{cmapdat$pcoordChoice}, which the user selects before this function is
+called. Cluster names are shown at the right edge of the plot.
 }

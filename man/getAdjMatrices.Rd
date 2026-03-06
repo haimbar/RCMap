@@ -4,16 +4,27 @@
 \alias{getAdjMatrices}
 \title{Create adjacency matrices from pile-sorting data}
 \usage{
-getAdjMatrices(piledat, showWarnings = TRUE)
+getAdjMatrices(piledat, cardNames, sorters_dict, showWarnings = TRUE)
 }
 \arguments{
-\item{piledat}{The pile sorting data.}
+\item{piledat}{The pile sorting data frame as read from \code{SortedCards.csv}:
+first column sorter ID, second column pile label, columns 3+ card numbers.}
 
-\item{showWarnings}{Print any potential problems in the pile-sorting data
-(default=TRUE).}
+\item{cardNames}{Data frame of statements from \code{read_statements()}, with
+at least a \code{StatementID} column used to map card numbers to matrix rows/cols.}
+
+\item{sorters_dict}{Data frame with columns \code{orig_ID} (original sorter
+identifiers as they appear in \code{piledat}) and \code{seq_ID} (sequential
+integer index 1..n used internally).}
+
+\item{showWarnings}{If \code{TRUE} (default), print warnings about potential
+data problems such as unsorted cards, all cards in one pile, or cards
+appearing in multiple piles.}
 }
 \value{
-A list of n SxS 0/1-matrices - one for each sorter.
+A list with two elements: \code{mat.list} (a list of n SxS 0/1
+  adjacency matrices, one per sorter) and \code{issues} (a character string
+  accumulating any warnings found, empty string if none).
 }
 \description{
 N stakeholder sort S cards into piles, and this function converts this

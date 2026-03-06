@@ -2,10 +2,11 @@
 % Please edit documentation in R/RCMap.R
 \name{raterReport}
 \alias{raterReport}
-\title{A report about the raters.}
+\title{Print a summary report about the raters.}
 \usage{
 raterReport()
 }
 \description{
-A report about the raters.
+Prints a statistical summary of all demographic variables for the raters.
+Pauses for user input before returning to the menu.
 }

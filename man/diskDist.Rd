@@ -2,17 +2,19 @@
 % Please edit documentation in R/RCMap.R
 \name{diskDist}
 \alias{diskDist}
-\title{Convert Euclidean distances in the unit disk to a hyperbolic space distance.}
+\title{Convert 2-D coordinates in the unit disk to Poincare (hyperbolic) distances.}
 \usage{
 diskDist(x)
 }
 \arguments{
-\item{x}{distance matrix obtained for points in 2-D.}
+\item{x}{A matrix of 2-D coordinates (one point per row) for points lying
+inside the unit disk. This is NOT a distance matrix — it is the raw
+coordinate output from an MDS projection.}
 }
 \value{
-The hyperbolic distances.
+A symmetric matrix of pairwise hyperbolic (Poincare) distances.
 }
 \description{
-Converts a Euclidean distance matrix between points in a unit 2-D disk into a
-(Poincare) distance in a 2-D hyperbolic space.
+Takes a matrix of 2-D coordinates of points inside the unit disk and returns
+the pairwise Poincare distances in hyperbolic space.
 }

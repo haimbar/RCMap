@@ -2,13 +2,17 @@
 % Please edit documentation in R/RCMap.R
 \name{showBarPlot}
 \alias{showBarPlot}
-\title{Show average ratings by clusters as a barplot.}
+\title{Show average ratings by cluster as a bar chart.}
 \usage{
 showBarPlot(metric = NULL)
 }
 \arguments{
-\item{metric}{Euclidean or hyperbolic.}
+\item{metric}{An integer selecting which rating variable to display (column
+index into the ratings data frame, offset by 2). Returns \code{NULL}
+invisibly if \code{metric} is 0.}
 }
 \description{
-Show average ratings by clusters as a barplot.
+Displays mean ratings (with standard error bars) per cluster for a selected
+rating variable. Prompts the user to choose bar ordering (alphabetical or by
+height) before plotting.
 }

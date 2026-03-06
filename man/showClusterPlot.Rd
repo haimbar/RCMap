@@ -2,15 +2,21 @@
 % Please edit documentation in R/RCMap.R
 \name{showClusterPlot}
 \alias{showClusterPlot}
-\title{Plot the clusters in the 2-D representation of the pile-sorting data}
+\title{Plot the clusters in the 2-D representation of the pile-sorting data.}
 \usage{
 showClusterPlot(type = "rays", metric = NULL)
 }
 \arguments{
-\item{type}{Rays, or polygon.}
+\item{type}{Display style: \code{"rays"} (default) draws lines from each
+point to the cluster center; \code{"polygon"} draws a filled convex hull
+around each cluster.}
 
-\item{metric}{cols The metric to be used (Euclidean or hyperbolic.)}
+\item{metric}{Controls cluster-center sizing. \code{NULL} (default) shows
+cluster centers as equal-sized markers. An integer \code{k} (offset by 2
+into the ratings data frame) sizes the cluster-center marker by the mean
+rating for that variable in the cluster.}
 }
 \description{
-Can show the clusters either as convex polygons, or as lines connected to the center of each cluster.
+Can show the clusters either as convex hull polygons or as rays connecting
+each statement to its cluster centroid.
 }

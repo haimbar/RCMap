@@ -2,13 +2,18 @@
 % Please edit documentation in R/RCMap.R
 \name{colLab}
 \alias{colLab}
-\title{Colors for the dendrograms.}
+\title{Color dendrogram leaves by cluster membership.}
 \usage{
 colLab(dn)
 }
 \arguments{
-\item{dn}{The dendrogram object.}
+\item{dn}{A dendrogram node (leaf or internal), as passed by \code{dendrapply}.}
+}
+\value{
+The same dendrogram node with updated \code{nodePar} attributes for
+  leaf nodes; internal nodes are returned unchanged.
 }
 \description{
-Colors for the dendrograms.
+A helper passed to \code{dendrapply} that sets the label color and point
+style of each leaf node to the color of its assigned cluster.
 }

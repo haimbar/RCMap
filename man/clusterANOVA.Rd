@@ -2,10 +2,13 @@
 % Please edit documentation in R/RCMap.R
 \name{clusterANOVA}
 \alias{clusterANOVA}
-\title{Run analysis of variance by clusters.}
+\title{Run one-way ANOVA comparing rating variables across clusters.}
 \usage{
 clusterANOVA()
 }
 \description{
-Run analysis of variance by clusters.
+For each rating variable, fits a one-way ANOVA with cluster membership as the
+factor and prints the F-test table to the console. Results are also written
+to \code{<dataDir>/output/ANOVA<nclust>.txt}. Pauses for user input before
+returning to the menu.
 }

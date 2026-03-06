@@ -2,15 +2,20 @@
 % Please edit documentation in R/RCMap.R
 \name{showMDSPlot}
 \alias{showMDSPlot}
-\title{Plot the 2-D representation of the pile-sorting data}
+\title{Plot the 2-D MDS representation of the pile-sorting data.}
 \usage{
-showMDSPlot(cols = "blue", metric = NULL)
+showMDSPlot(metric = NULL, tau = 0.3)
 }
 \arguments{
-\item{cols}{The colors of the data (default= all blue.)}
+\item{metric}{Controls what is displayed. \code{NULL} (default) shows a plain
+point map with all statements in blue. \code{"MPindex"} colors and sizes
+points by the misplacement index (Jaccard-based bridging/anchoring score).
+An integer \code{k} (offset by 2 into the ratings data frame) colors and
+sizes points by the mean rating for that variable.}
 
-\item{metric}{The metric to be used (Euclidean or hyperbolic.)}
+\item{tau}{The Jaccard index threshold used to compute the misplacement
+index proportion (default=0.3). Only used when \code{metric="MPindex"}.}
 }
 \description{
-Plot the 2-D representation of the pile-sorting data
+Plot the 2-D MDS representation of the pile-sorting data.
 }

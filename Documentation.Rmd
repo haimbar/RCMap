@@ -40,6 +40,18 @@ knitr::opts_chunk$set(echo = TRUE)
 What's New
 ---------------
 
+**Version 0.3.0 (current)**
+
+- **Fuzzy pile label matching.** Pile labels entered by different sorters are automatically grouped using Jaro-Winkler fuzzy string matching, so typographical variants such as "Health", "helath", and "hlth" are merged into a single canonical form before cluster name suggestions are generated. The matching threshold and other parameters are configurable (see the [Project Configuration File](#configfile) section).
+- **Edit canonical pile labels.** A new Settings menu option (option 5) lets users view all canonical labels alongside the original labels from which they were derived. Labels that were automatically merged are highlighted in yellow. Any canonical label can be renamed interactively, and changes are saved immediately.
+- **Project configuration file (`config.txt`).** On first load RCMap automatically creates a `config.txt` file in the project folder containing all tunable settings with their defaults and descriptions. If the file already exists only missing settings are appended; existing user-specified values are never overwritten. See the [Project Configuration File](#configfile) section for the complete list of settings.
+- **Graceful rater ID mismatch handling.** If a rater appears in the ratings file but not in the demographics file, a warning is shown and the analysis continues (rather than aborting). If a rater appears in the demographics file but has no rating data, they are automatically excluded and a warning is displayed.
+- **Non-consecutive IDs supported.** Statement IDs, sorter IDs, and rater IDs no longer need to be consecutive integers; any unique numeric or character identifiers are accepted.
+- **Error recovery in folder selection.** If the selected data folder is missing required files, an error message is displayed and the program returns to the main menu instead of terminating.
+- **Configurable seeds and analysis parameters.** The random seed for MDS jitter, the split-half random seed, the number of split-half replications, and the Jaccard instability threshold are all now read from `config.txt` and stored in the session, making analyses fully reproducible and customisable without code changes.
+
+**Version 0.2.x**
+
 - Version 0.2.x is available as an R package, available through GitHub (https://github.com/haimbar/RCMap).
 - The group of sorters is no longer required to be the same as the group of raters.
 - The input data is now expected as four plain-text CSV files (see details below).
@@ -70,7 +82,7 @@ This document provides information on the required format of the input data, the
 RCMap [@BAR2017284] is user-friendly and does not require any programming experience. It can be used to generate cluster maps, point rating, cluster rating maps, pattern matching, go-zone plots, as well as several other types of plots.
 It can also be used to generate detailed reports with statistical analyses. Windows users can generate Windows Metafile formatted plots which can be edited in Microsoft Word and PowerPoint, in order to manually adjust various features to achieve the best visual results. Details about the plots, reports, and features appear in the sections below.
 
-The RCMap homepage is https://github.com/haimbar/RCMap https://haim-bar.uconn.edu/software/RCMap/ .
+The RCMap homepage is [https://github.com/haimbar/RCMap](https://haim-bar.uconn.edu/software/RCMap/) .
 For questions, comments, and suggestions, please contact <a href="mailto:haim.bar@uconn.edu">Haim Bar</a>.
 
 
@@ -83,8 +95,8 @@ and to cite the latest version of the package with BibTeX, use citation("RCMap")
 @Manual{,
     title = {RCMap: Group Concept Mapping},
     author = {Haim Bar},
-    year = {2025},
-    note = {R package version 0.2.0},
+    year = {2026},
+    note = {R package version 0.3.0},
 }
 ```
 
@@ -100,9 +112,10 @@ RCMap requires the following packages:
 - factoextra - for obtaining a recommended number of clusters [@factoextra].
 - crayon - for terminal colors [@crayon].
 - ape - for drawing a phylogenic tree [@ape].
-- tcltk - for the function tk_choose.dir, used when choosing a project folder
+- tcltk - for the function tk_choose.dir, used when choosing a project folder.
+- stringdist - for fuzzy pile label matching (Jaro-Winkler distance).
 
-Follow the installation instruction of R, and start R (version > 0.1.x no longer requires RStudio - any integrated development environment, or IDE, or even a simple command line shell will do.) From the R console install the RCMap library. It will install the required libraries. You can do it by cloning the GitHub repo and building the package on your computer, or by using the install_github function (for which you will have to install the devtools package, first.)
+Follow the installation instructions for R, and start R (from version > 0.1.x it is no longer required to use RStudio - any integrated development environment, or IDE, or even a simple command line shell will do.) From the R console install the RCMap library. It will install the required libraries. You can do it by cloning the GitHub repo and building the package on your computer, or by using the install_github function (for which you will have to install the devtools package, first.)
 
 ```{.inputbox}
 devtools::install_github("haimbar/RCMap")
@@ -134,17 +147,17 @@ Selection:
 ```
 The menu choices are described in subsequent sections.
 
-A graphical user interface via a browser is not currently available. The menu-driven approach in this new version of RCMap has the advantage that the user can use built-in options and functions through an intuitive interface, but can also get back to the R prompt and perform any additional operations (for example, creating new variables, plots, or analyses.) This also allows greater flexibility in saving results. For example, plots can be saved to a file using the user's preferred size, and in any format supported by R (pdf, png, jpeg, svg, eps, TIFF, bmp, and on Windows - wmf.)
+A graphical user interface via a browser is not currently available. The menu-driven approach in recent versions of RCMap has the advantage that the user can use built-in options and functions through an intuitive interface, but can also get back to the R prompt and perform any additional operations (for example, creating new variables, plots, or analyses.) This also allows greater flexibility in saving results. For example, plots can be saved to a file using the user's preferred size, and in any format supported by R (pdf, png, jpeg, svg, eps, TIFF, bmp, and on Windows - wmf.)
 
 The Input Data
 ---------------
 <p>
-The input data has to be in four CSV (comma separated values) files. Note that the file and column names below are all case-sensitive. An example is provided with the RCMap software for reference.
+The input data has to be in four CSV (comma separated values) files. Note that the **file and column names below are all case-sensitive**. An example is provided with the RCMap software for reference.
 
-- **Statements.csv** must have two columns: StatementID and Statement. The statement IDs (first column) are numbers from 1 to N, where N is the number of statements. This sheet must have the field names ("StatementID" and "Statement") in the first line.
-- **SortedCards.csv** records the statements in each pile, per sorter. The first column in the sorter ID (again, sequential number from 1 to M, where M is the number of sorters). The second column contains a name of the pile, as given by the sorter. It may be blank, but the column must be included in the sheet. The next columns contain the card numbers that person j put in pile k. Note that each row in this file may have a different number of non-empty cells.
-- **Demographics** contains information about the sorters. The first column must be named RaterID and must contain the IDs of all the sorters. The other columns will contain information specific to the experiment. The first row must contain the variable names.
-- **Ratings** contains ratings given to each card (statement) by each rater. The first column must be named RaterID (note - they do not have to be the same as the sorter IDs). The second column must be called StatementID and it contains the ID of each card. So, if there are 10 raters and 80 statements, there will be 800 rows in the sheet, plus one row for the header. The rest of the columns will contain any rating variable that the raters have rated. In the provided example, we have Feasibility and Importance. It is required that all rating variables are all on the same scale (1-5).
+- **Statements.csv** must have two columns: StatementID and Statement. The statement IDs (first column) must be unique numeric values; they do not need to be consecutive. This sheet must have the field names ("StatementID" and "Statement") in the first line.
+- **SortedCards.csv** records the statements in each pile, per sorter. The first column is the sorter ID (unique numeric values; they do not need to be consecutive). The second column contains the name of the pile as given by the sorter — it may be blank, but the column must be present. The next columns contain the card numbers (matching StatementID values) that person j put in pile k. Note that each row in this file may have a different number of non-empty cells. Pile labels from different sorters are automatically matched using fuzzy string comparison so that minor spelling variations are merged into a single canonical label (see [Project Configuration File](#configfile)).
+- **Demographics.csv** contains information about the raters. The first column must be named RaterID and must contain the IDs of the raters. The other columns will contain information specific to the experiment. The first row must contain the variable names. Rater IDs do not need to match sorter IDs, and mismatches between the demographics and ratings files are handled gracefully: raters who appear in the ratings file but not in the demographics file produce a warning and are analysed without demographic information; raters who appear in the demographics file but have no rating data are automatically excluded with a warning.
+- **Ratings.csv** contains ratings given to each card (statement) by each rater. The first column must be named RaterID (rater IDs do not have to be the same as the sorter IDs, and do not need to be consecutive). The second column must be called StatementID and it contains the ID of each card. So, if there are 10 raters and 80 statements, there will be 800 rows in the sheet, plus one row for the header. The rest of the columns will contain any rating variable that the raters have rated. In the provided example, we have Feasibility and Importance. It is required that all rating variables are on the same scale (1–5 by default; configurable via `config.txt`).
 
 Most common data-entry problems occur because of one of the following reasons:
 
@@ -175,9 +188,9 @@ RCMap saves your selections (such as the number of clusters, cluster names, etc.
 
 RCMap will attempt to read the files and create the RCMap dataset. If any errors are encountered, RCMap will show an error message in the console. It will also print any issues concerning the pile sorting data. The possible warnings are
 
-- Sorter x: All cards in one pile!
+- Sorter x: All cards in one pile
 - Sorter x put more than a third of the cards in one pile
-- Sorter x: Each card in its own pile!
+- Sorter x: Each card in its own pile
 - Sorter x did not sort card(s) y, z
 - Sorter x put cards y,z in multiple piles
 
@@ -200,12 +213,13 @@ For example:
 ```{.outputbox}
 RCMap command-line interface.
 Data folder: C:/Project/
-Number of sorters: 10
-Number of statements: 80
+Number of sorters: 74
+Number of statements: 81
 Issues:
-Sorter  6  did not sort card(s)  12 
-Sorter  10  did not sort card(s)  30 
-
+Sorter  1  put more than a third of the cards in one pile.
+Sorter  4  put more than a third of the cards in one pile.
+Sorter  7 did not sort card(s) 56,57,59,61,62,63,64,66,67,68,69,70,72,73,75,76,77,78,79,80,81
+...[Truncated]
 
 1: Perform split-half analysis
 2: Perform leave-one-out analysis
@@ -228,12 +242,12 @@ We divide the set of sorters into two subsets, perform MDS on each half, and obt
 
 
 ```{.outputbox}
-Mean correlation between split halves: 0.54 (using 20 random splits, distance= Euclidean)
+Mean correlation between split halves: 0.64 (using 20 random splits, distance= Euclidean)
 ```
 
 The mean correlation between the split halves (using 20 random splits) is quite high, which suggests good reliability.
 
-```{r badiffs, echo=FALSE, fig.align='center', cap.align='center', out.width='50%', fig.cap=''}
+```{r badiffs, echo=FALSE, fig.align='left', cap.align='center', out.width='60%', fig.cap=''}
 knitr::include_graphics("Figures/splithalf.jpg")
 ```
 <center><B>Split-half reliability with B=20 random splits.</B></center><BR>
@@ -241,7 +255,7 @@ knitr::include_graphics("Figures/splithalf.jpg")
 <H4>Perform leave-one-out analysis</H4>
 The clustering is performed on the two-dimensional map obtained from the multidimensional scaling. When high-dimensional data are projcted to a lower dimension, the (scaled) distances between pairs of points may be quite different than they are in the original space. The important question with regard to clustering is whether the multidimensional scaling process affects the clustering. One global measure that is often used is the *stress*. However, it does not tell us what the impact on the clustering is, or which clusters are affected.
 
-Furthermore, it may be that some sorters have a large impact on the final MDS map. The stress measure, or the half-split analysis do not tell us whether such sorters exist, or what impact individual sorters have on the final map.
+Furthermore, it may be that some sorters have a large impact on the final MDS map. The stress measure, or the split-half analysis do not tell us whether such sorters exist, or what impact individual sorters have on the final map.
 
 To provide an answer to these questions, we perform a leave-one-out analysis. If there are M sorters, we perform the MDS step M+1 times: once with all the sorters, and then M more times, each time leaving on sorter out. For each of these M+1 MDS plots, we obtain the clustering for k=2,...,N/4 clusters, where N is the total number of statements.
 Then, we calculate the [Jaccard index](https://en.wikipedia.org/wiki/Jaccard_index) for each k, and for each of the M leave-one-out clusterings. The Jaccard index is defined as
@@ -251,7 +265,7 @@ where TP is the number of pairs of points that are placed in the same cluster wh
 The Jaccard index takes values between 0 (no agreement between two clusterings) and 1 (the same clusters were obtained by the two methods.)
 The following plot shows an example of such leave-one-out analysis:
 
-```{r jaccard, echo=FALSE, fig.align='center', cap.align='center', out.width='70%', fig.cap=''}
+```{r jaccard, echo=FALSE, fig.align='left', cap.align='center', out.width='70%', fig.cap=''}
 knitr::include_graphics("Figures/leaveoneout.jpeg")
 ```
 <center><B>Leave-one-out analysis.</B></center><BR>
@@ -260,7 +274,7 @@ The grey lines in this plot are the Jaccard index values (vertical axis) for eac
 The dark black line is the median Jaccard index, and the two blue lines are the first and third quartiles.
 
 What we can see in this example is that the median is maximized when 9 clusters are used. The upper and lower quartiles are also close to their maximum value for k=9, which suggests that nine clusters may give us the most reliable clusters. We can also see that some statements become almost perfectly placed once we get to k=8, but after k=18 the Jaccard index drops.
-We also see that some statements get consistent low scores, suggesting that there was at least one sorter who sorted these statements very differently than the consensus.
+We also see that a couple of statements get consistent low scores, suggesting that there was at least one sorter who sorted these statements very differently than the consensus.
 
 We say more about this later.
 
@@ -268,53 +282,122 @@ We say more about this later.
 <a name="settings"></a>
 <H3>Settings</H3>
 <p>
-This menu option has five choices:
+This menu option has six choices:
 
 ```{.outputbox}
 RCMap command-line interface.
-  Settings 
+  Settings
 
 1: Choose the distance metric
 2: Choose the number of clusters
 3: Set cluster names
 4: Choose color scheme
-5: Main menu
+5: Edit pile label canonical names
+6: Main menu
 
 Selection:
 ```
 
 <ul>
-<li>**Choose the distance metric** The user can choose one of two methods to measure distances between points in the two-dimensional (MDS) plot: Euclidean or hyperbolic (more on the differences between the two will appear separately). 
-<li>**Choose the number of clusters**: There are two methods to choose the number of clusters automatically - one based on minimizing the within-cluster sums of squares and the other based on the average silhouette, both are obtained from the function factoextra::fviz_nbclust. Each of the methods also produces a plot which helps to visualize the selection criterion. The third choice is to set the number of clusters manually.
-<li>**Set cluster names**: When choosing this option, the user gets a submenu consisting of the current cluster names (dafult values are 1,2,...,k where k is the selected number of clusters.) The use then selects a cluster number and RCMap shows the card names in the selected cluster, as well as the most common labels associated with statements in this clusters (as `suggested names'). See the example below, in a configuration with 17 clusters. The user can then type a cluster name, which will be used in subsequent plots and analyses.
-<li>**Choose color scheme**: The user can choose between the RCMap color scheme (for up to 21 clusters) or the rainbow function in R.
+<li>**Choose the distance metric** The user can choose one of two methods to measure distances between points in the two-dimensional (MDS) plot: Euclidean or hyperbolic (more on the differences between the two will appear separately). The default metric can also be set in `config.txt` (see [Project Configuration File](#configfile)).
+<li>**Choose the number of clusters**: There are two methods to choose the number of clusters automatically - one based on minimizing the within-cluster sums of squares and the other based on the average silhouette, both are obtained from the function factoextra::fviz_nbclust. Each of the methods also produces a plot which helps to visualize the selection criterion. The third choice is to set the number of clusters manually, which the user can do by interpreting the Jaccard index plot, for example. The initial number of clusters can be set in `config.txt`.
+<li>**Set cluster names**: When choosing this option, the user gets a submenu consisting of the current cluster names (default values are 1, 2, ..., k where k is the selected number of clusters). The user then selects a cluster number and RCMap shows the card names in the selected cluster, as well as the most common canonical labels associated with statements in that cluster (as "suggested names"). See the example below, in a configuration with 17 clusters. The user can then type a cluster name, which will be used in subsequent plots and analyses.
+<li>**Choose color scheme**: The user can choose between the RCMap color scheme (for up to 21 clusters) or the rainbow function in R. The default can also be set in `config.txt`.
+<li>**Edit pile label canonical names**: Displays the full list of canonical pile labels — labels that have been standardized from the raw labels entered by sorters. Labels that were automatically merged from multiple similar originals (e.g. "health", "helath", "hlth" → "health") are highlighted in yellow, and the original variants are shown in brackets. The user can select any canonical label and type a new name for it; the change is applied immediately to both the in-memory session and the saved project files.
 </ul>
 
+<br>
+Here is an example of the menu option for cluster name selection. Here, the number of clusters (11) was selected by minimizing the within-cluster sums of squares. It includes the top labels, and extracts some suggested cluster names. For example, based on sorter-provided labels, four of the top five suggestions include collaboration or community.
+The output has been truncated for brevity.
 
 ```{.outputbox}
 RCMap command-line interface.
-  Select cluster number (or 0 to return to the Settings menu) 
+  Select cluster number (or 0 to return to the main menu) 
 
- 1: 1    2: 2    3: 3    4: 4    5: 5    6: 6    7: 7    8: 8    9: 9   10: 10
- 11: 11   12: 12  13: 13  14: 14  15: 15  16: 16  17: 17  
+ 1: 1    2: 2    3: 3    4: 4    5: 5    6: 6    7: 7    8: 8    9: 9 
+10: 10  11: 11  
 
-Selection: 17
-17 [ 17 ]
-Statements in the cluster
- develop better strategies to learn what other programs are doing
- investigate emerging partnership or new program opportunities
- look for small organizations we might partner with
- find out what our other similar programs are planning to do in our area
+Selection: 3
+3 [ 3 ]
+Statements in the cluster 
+Institutional collaboration and commitment to clinical...
+Number and types of CTSA Hub interactions with state...
+Number and types of new or ongoing collaborations with...
+Number, type, duration, and quality of Hub-supported community...
+Number and types of collaborative research projects and collaborators...
+Number and types of Hub collaborations with community members...
+...[Truncated]
+
 Suggested names 
- Partnership
- Expansion
- Outside Industry Context
- Management
- Marketing for the Future
+collaboration
+community engagement
+community
+team science
+collaborations
 
-Enter a name [ 17 ]
-1: 
+Enter a name [ 3 ]
+1:
 ```
+
+<a name="configfile"></a>
+<H3>Project Configuration File</H3>
+<p>
+The first time a project folder is loaded, RCMap automatically creates a plain-text file called **`config.txt`** in that folder. The file lists every tunable setting with its current value and a short description. On subsequent loads, any settings already in the file are read and applied; any settings that are missing are appended with their default values. This means you can freely add, remove, or edit lines in the file between sessions — RCMap will never overwrite values you have set.
+
+The following settings are supported:
+
+| Setting | Default | Description |
+|---|---|---|
+| `ratingscale` | `5` | Number of Likert scale points (e.g. 5 or 7). |
+| `clust_method` | `ward.D2` | Hierarchical clustering method passed to `hclust`. Options: `ward.D2`, `ward.D`, `single`, `complete`, `average`, `mcquitty`, `median`, `centroid`. |
+| `dist_metric` | `Euclidean` | Initial distance metric for clustering and plots. Options: `Euclidean`, `Hyperbolic`. |
+| `color_scheme` | `rcmap` | Initial color scheme for cluster plots. Options: `rcmap`, `rainbow`. |
+| `n_clusters` | `3` | Starting number of clusters (can be changed interactively in Settings). |
+| `mds_seed` | `154204` | Random seed for the tiny jitter applied to the MDS distance matrix to break ties. Change this only if you need to verify that results are not seed-dependent. |
+| `splithalf_seed` | `23456` | Random seed for the split-half reliability analysis. |
+| `splithalf_B` | `20` | Number of random splits used in the split-half reliability analysis. |
+| `fuzzy_label_threshold` | `0.15` | Jaro-Winkler distance threshold for fuzzy pile label matching. Values closer to 0 require labels to be nearly identical to be merged; values closer to 1 are more aggressive. A value of 0.15 catches most typos and abbreviations while keeping clearly distinct labels separate. |
+| `jaccard_threshold` | `0.3` | Jaccard index values below this threshold are considered "unstable" in the leave-one-out stability plot. Statements with consistently low Jaccard values may be misplaced in the 2-D map. |
+
+A typical `config.txt` looks like this:
+
+```{.outputbox}
+# RCMap project configuration file
+# Edit the values below to override defaults.
+
+# ratingscale: number of Likert scale points (e.g. 5, 7)
+ratingscale=5
+
+# clust_method: hierarchical clustering method (...)
+clust_method=ward.D2
+
+# dist_metric: initial distance metric for plots (Euclidean, Hyperbolic)
+dist_metric=Euclidean
+
+# color_scheme: initial color scheme for plots (rcmap, rainbow)
+color_scheme=rcmap
+
+# n_clusters: initial number of clusters
+n_clusters=3
+
+# mds_seed: random seed for MDS distance-matrix jitter (reproducibility)
+mds_seed=154204
+
+# splithalf_seed: random seed for split-half reliability analysis
+splithalf_seed=23456
+
+# splithalf_B: number of split-half replications
+splithalf_B=20
+
+# fuzzy_label_threshold: Jaro-Winkler distance threshold for pile label
+# fuzzy matching (0-1, lower = stricter)
+fuzzy_label_threshold=0.15
+
+# jaccard_threshold: Jaccard index values below this are flagged as unstable
+jaccard_threshold=0.3
+```
+
+Lines starting with `#` are comments and are ignored. Values set interactively (such as the number of clusters or cluster names) are saved to `CMapSession.RData` and restored on the next load; they take precedence over the values in `config.txt`.
 
 <a name="plots"></a>
 <H3>Plots</H3> 
@@ -339,95 +422,112 @@ Selection:
 <p>
 Displays the two-dimensional representation of the distances between statements, as obtained from the MDS (multi-dimensional scaling) algorithm. Statements are labeled on the plot using their number. 
 
-```{r mds, echo=FALSE, fig.align='center', out.width='70%', fig.cap=''}
-knitr::include_graphics("Figures/MDS.jpg")
+```{r mds, echo=FALSE, fig.align='left', out.width='70%', fig.cap=''}
+knitr::include_graphics("Figures/MDS.png")
 ```
 <center><B>A point map (MDS).</B></center><BR>
 
 <H4>Clusters</H4>
 <p>
-Displays the two-dimensional MDS plot, with points grouped into clusters. The number of clusters is determined by the user in the Settings menu option. There are two types of cluster display - Rays, where each point in a cluster is connected to the cluster's center; and Polygons, where clusters appear as convex polygons, with smooth corners.  The default cluster names are number 1,...,k where k is the selected number of clusters. However, the user can choose more descriptive cluster names via the Settings menu.
+The Clusters option displays the two-dimensional MDS plot, with points grouped into clusters. The number of clusters is determined by the user in the Settings menu option. There are two types of cluster display - Rays, where each point in a cluster is connected to the cluster's center; and Polygons, where clusters appear as convex polygons, with smooth corners.  The default cluster names are number 1,...,k where k is the selected number of clusters. However, the user can choose more descriptive cluster names via the Settings menu. Here, we show just the polygon view, and with cluster 3 named "Collaboration".
 
-```{r rays, echo=FALSE,out.width="50%",  out.height="20%",fig.cap="",fig.show='hold',fig.align='center'}
-knitr::include_graphics("Figures/ClustersRays.jpg")
-knitr::include_graphics("Figures/ClustersPoly.jpg")
+```{r rays, echo=FALSE,out.width="70%",  out.height="20%",fig.cap="",fig.show='hold',fig.align='left'}
+knitr::include_graphics("Figures/ClustersPoly.png")
 ```
-<center><B>Cluster plots. Top - rays, bottom - polygons.</B></center><BR>
+<center><B>Cluster plots - polygons.</B></center><BR>
 
 
 <h4>Dendrogram  and  Phylogenic tree</h4>
 <p>
-Following the MDS step, a hierarchical clustering is performed on the two-dimensional representation of the data. In the process, components (statements, or sets of statements) are joined iteratively with their nearest neighbor. The nearest neighbor may be another statement, or a group of statements which were joined into one group in a previous iteration. A dendrogram depicts the hierarchical clustering process. "Leaves" in this binary-tree diagram correspond to the statements, and branches represent the nearest neighbor connections made in each iteration. The length of an edge in a dendrogram is a function of the dis-similarity between joined components. The clusters can also be shown phylogenic trees. Both plots allow users to manually select the preferred number of clusters, based on the lengths of the stems in the tree. The phylogenic tree is more convenient when the number of statements is large, in which case a dendrogram may be too wide for a page.
+Following the MDS step, a hierarchical clustering is performed on the two-dimensional representation of the data. In the process, components (statements, or sets of statements) are joined iteratively with their nearest neighbor. The nearest neighbor may be another statement, or a group of statements which were joined into one group in a previous iteration. A dendrogram depicts the hierarchical clustering process. "Leaves" in this binary-tree diagram correspond to the statements, and branches represent the nearest neighbor connections made in each iteration. The length of an edge in a dendrogram is a function of the dis-similarity between joined components. The clusters can also be shown phylogenic trees. Both plots allow users to manually select the preferred number of clusters, based on the lengths of the stems in the tree. The phylogenic tree is more convenient when the number of statements is large, in which case a dendrogram may be too wide for a page. Here, we demonstrate just the dendrogram, with 11 clusters.
 
 
-```{r dendro, echo=FALSE, fig.align='center', out.width='100%', fig.cap=''}
-knitr::include_graphics("Figures/Dendrogram.jpg")
+```{r dendro, echo=FALSE, fig.align='left', out.width='90%', fig.cap=''}
+knitr::include_graphics("Figures/Dendrogram.png")
 ```
 <center><B>A dendrogram.</B></center><BR>
 
 
-```{r phylo, echo=FALSE, fig.align='center', out.width='50%', fig.cap=''}
+<!--
+```{r phylo, echo=FALSE, fig.align='left', out.width='50%', fig.cap=''}
 knitr::include_graphics("Figures/Phylogenic.jpg")
 ```
 <center><B>A phylogenic tree.</B></center><BR>
+-->
 
-
-<a id="mpi"></a><h4>Misplacement Index</h4>
+<a id="mpi"></a><h4>Misplacement</h4>
 <p>
-Based on the user’s choice of a distance metric, RCMap calculates a `misplacement index'. The index is a number between 0 and 1. A small value is assigned to a point which is placed well in the 2-D map in the sense that it appears close in the 2-D map to points to which it was also close in the original space, and it appears far from points which were also far from it in the original space. In other words, a small value corresponds to a point which was projected to the 2-D space so as to preserve its relative distances with the other points. A value close to 1 means that the point's representation in the MDS plot distorts its position (relative to the other points) in the original space.
+Based on the user’s choice of a distance metric, RCMap calculates a 'misplacement index'. The index is a number between 0 and 1. A small value is assigned to a point which is placed well in the 2-D map in the sense that it appears close in the 2-D map to points to which it was also close in the original space, and it appears far from points which were also far from it in the original space. In other words, a small value corresponds to a point which was projected to the 2-D space so as to preserve its relative distances with the other points. A value close to 1 means that the point's representation in the MDS plot distorts its position (relative to the other points) in the original space.
 
-The following figure shows the MDS plot, and the radius of each point corresponds to its misplacement index value. This helps to identify potential ‘bridges’ – statements with a large radius which indicate that they were placed on the 2-D map close to points with which they were rarely sorted together, or far from statements with which they were sorted often. In this case, because we used the hyperbolic distance, and the median was chosen as the function in the calculation of the index, the circles are all quite small. If we use the maximum instead, the circles will all be larger. As stated earlier, the maximum function is stricter and is more likely to lead to a determination that a point is a bridge. For the maximum to be small it means that all the components that are used in the calculation of the index are small. For the median to be small it is sufficient that half the components that are used in the calculation of the index are small (so, it is possible that among the other half there are some points which were close to the given point in the original space and far from it in the MDS plot, or visa versa.)
+The index is based on the Jaccard index, which we described above in the 'Perform leave-one-out analysis' section. Recall that the Jaccard index of a statement is close to 1 if it is placed in the same cluster with high probability in the leave-one-out process. The misplacement for a given clustering configuration is calculated as the proportion of times that the Jaccard index falls below a certain threshold. A higher value indicates a misplaced point in the 2-D point.
 
+The following figure shows the MDS plot, and the radius of each point corresponds to its misplacement index value. This helps to identify potential ‘bridges’ – statements with a large radius which indicate that they were placed on the 2-D map close to points with which they were rarely sorted together, or far from statements with which they were sorted often. 
 
-```{r misplacement, echo=FALSE, fig.align='center', out.width='60%', fig.cap=''}
-knitr::include_graphics("Figures/MPindex.jpg")
+For example, point 41 (in cluster #10) has a relatively large value, suggesting that it may not be a good fit for the cluster, in the sense that some sorters put it with statements other than the ones in the same cluster (20, 23, 29, 37, 74, and 81). 
+
+In contrast, the collaboration cluster (with statement 7 close to its center) has very low vaalues of the misplacement index, suggesting that this cluster represents the high-dimensional data rather faithfully.
+
+```{r misplacement, echo=FALSE, fig.align='left', out.width='70%', fig.cap=''}
+knitr::include_graphics("Figures/MPIndex.png")
 ```
 <center><B>A misplacement index plot.</B></center><BR>
 
 <h4>Statement Rating - Map and Dot chart</h4>
 <p>
-After selecting one of the statement rating options the user is prompted to provide a cohort and a rating variable. If a map view is selected, the average ratings of statements for that variable in the selected cohort is shown on the point-map, with point-size proportional to the average rating. The second option is a dot-chart, where the points are shown on a 1-5 scale by cluster, and within each cluster they are shown in increasing rating order (from bottom to top). The dot-chart is useful in identifying statements which rank high or low in one of the rating variables, and to see which clusters contain statements. For example, in the following figure (right) it can be seen that the cluster at the top (red) consists of statements which are considered less feasible by the raters.
+After selecting one of the statement rating options the user is prompted to provide a cohort and a rating variable. If a map view is selected, the average ratings of statements for that variable in the selected cohort is shown on the point-map, with point-size proportional to the average rating. The second option is a dot-chart, where the points are shown on a 1-5 scale by cluster, and within each cluster they are shown in increasing rating order (from bottom to top). The dot-chart is useful in identifying statements which rank high or low in one of the rating variables, and to see which clusters contain statements. For example, in the following dot chart it can be seen that  cluster 10 consists of statements which are considered less feasible by the raters.
 
 ```{.outputbox}
 1: allRaters
-2: CompanySize_large
-3: CompanySize_medium
-4: CompanySize_small
-5: Years_H
-6: Years_L
+ 2: X1_Administrator
+ 3: X1_Community.Partner
+ 4: X1_Evaluator
+ 5: X1_KL2.PI
+ 6: X1_NCATS.Staff
+ 7: X1_Other..please.specify.below..
+ 8: X1_Other.CTSA.Hub.Staff
+ 9: X1_TL1.PI
+10: X1_UL1.PI
+11: X2___
+12: X2_L
+13: X2_M
+14: X2_S
 
 Selection: 1
 Rating variable 
 
-1: Feasibility
-2: Importance
+1: Importance
+2: Feasibility
 
 Selection:
 ```
 
-```{r statementratingmap, echo=FALSE, fig.align='center', out.width='60%', fig.cap=''}
-knitr::include_graphics("Figures/Feasibility.jpg")
+```{r statementratingmap, echo=FALSE, fig.align='left', out.width='80%', fig.cap=''}
+knitr::include_graphics("Figures/Feasibility.png")
 ```
 <center><B>Average statement ratings as a point map.</B></center><BR>
 
-```{r statementratingdotchart, echo=FALSE, fig.align='center', out.width='80%',  fig.cap=''}
-knitr::include_graphics("Figures/Dotchart.jpg")
+```{r statementratingdotchart, echo=FALSE, fig.align='left', out.width='80%',  fig.cap=''}
+knitr::include_graphics("Figures/Dotchart.png")
 ```
 <center><B>Average statement ratings as a dotchart.</B></center><BR>
 
 <h4>Cluster Rating - Map and Bar chart</h4>
 <p>
-Similar to the statement rating plots, but the average ratings are calcualated at the cluster level.The bar chart view shows the average rating per cluster for the selected cohort and variable. The bar plot also includes `whiskers' corresponding to the standard error of the mean.
+Similar to the statement rating plots, but the average ratings are calcualated at the cluster level. The bar chart view shows the average rating per cluster for the selected cohort and variable. The bar plot also includes 'whiskers' corresponding to the standard error of the mean.
+
+There are two options to sort the bars in the plot -- alphabetically, or by height. Below, we demonstrate the latter, and we can see that cluster 10 is the least feasible, while cluster 9 is the most feasible.
 
 
 
-```{r clusterratingmap, echo=FALSE, fig.align='center', out.width='70%', fig.cap=''}
+<!--
+```{r clusterratingmap, echo=FALSE, fig.align='left', out.width='70%', fig.cap=''}
 knitr::include_graphics("Figures/ClusterRating.jpg")
 ```
 <center><B>Average statement ratings as a point map.</B></center><BR>
+-->
 
-```{r clusterbarchart, echo=FALSE, fig.align='center', out.width='70%', fig.cap=''}
-knitr::include_graphics("Figures/BarChart.jpg")
+```{r clusterbarchart, echo=FALSE, fig.align='left', out.width='70%', fig.cap=''}
+knitr::include_graphics("Figures/BarChart.png")
 ```
 <center><B>Average cluster ratings as a barplot.</B></center><BR>
 
@@ -435,7 +535,7 @@ knitr::include_graphics("Figures/BarChart.jpg")
 <p>
 It is possible to compare average cluster ratings by cohort and rating variables by using a parallel coordinate plot (also known in the concept mapping literature as pattern matching). In this version of RCMap it is possible to use more that two cohort/rating variable combinations. For example, the following figure shows the relationships between feasibility ratings by the three company sizes. It is possible for example to visualize how clusters are rated in terms of feasibility by engineers vs. how they are rated in terms of importance by managers.
 
-```{r parallelplot, echo=FALSE, fig.align='center', out.width='100%', fig.cap=''}
+```{r parallelplot, echo=FALSE, fig.align='left', out.width='100%', fig.cap=''}
 knitr::include_graphics("Figures/ParalleCoord.jpg")
 ```
 <CENTER><B>A parellel coordinates plot.</B></CENTER><BR>
@@ -444,13 +544,13 @@ knitr::include_graphics("Figures/ParalleCoord.jpg")
 <p>
 A bivariate plot is used to show the rating of the statements based on combinations of a rating variable and a cohort. Each statement is represented by a point, allowing to see very easily how points are evaluated by users on both axes, simultaneously. For example, if the variables are Importance and Feasibility, points in the upper-right corner are considered highly important and also very feasible. Each point is also colored by the cluster to which it belongs, allowing to see which clusters rate higher on each dimension. The plot is divided into quadrants, defined by the overall mean ratings along each axis.
 
-```{r gozone1, echo=FALSE, fig.align='center', out.width='60%', fig.cap=''}
+```{r gozone1, echo=FALSE, fig.align='left', out.width='60%', fig.cap=''}
 knitr::include_graphics("Figures/GoZone2.jpg")
 ```
 <CENTER><B>GoZone plot – comparing the feasibility and importance ratings using all the raters.</B></CENTER><BR>
 
 Another example shows the average statement feasibility ratings by the Years variable (L vs. H, where L and H correspond to below/above the median Years, respectively.) Go-zones are very useful for planning purposes, as they highlight which specific statements rank highest on two dimensions, thus helping stakeholders to prioritize action-items, either by individual statements or by cluster. The ability to view this plot by group can be particularly helpful in planning and evaluating.
-```{r gozone2, echo=FALSE, fig.align='center', out.width='60%', fig.cap=''}
+```{r gozone2, echo=FALSE, fig.align='left', out.width='60%', fig.cap=''}
 knitr::include_graphics("Figures/GoZone1.jpg")
 ```
 <CENTER><B>GoZone plot – comparing the feasibility ratings by the Years variable (L and H correspond to below/above the median Years, respectively.</B></CENTER><BR>

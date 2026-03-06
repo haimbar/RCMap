@@ -4,14 +4,41 @@
 \alias{initCMap}
 \title{Read the card-sorting data files and generate the MDS data.}
 \usage{
-initCMap(dataDir)
+initCMap(dataDir, enc = "UTF-8", sep = ",")
 }
 \arguments{
-\item{dataDir}{The project's directory.}
+\item{dataDir}{Path to the project folder containing \code{Statements.csv},
+\code{SortedCards.csv}, \code{Ratings.csv}, and \code{Demographics.csv}.
+An optional \code{config.txt} (for \code{ratingscale}) and
+\code{Weights.csv} (per-sorter weights) are also read if present.}
+
+\item{enc}{File encoding passed to \code{read.csv} (default \code{"UTF-8"}).}
+
+\item{sep}{Column separator passed to \code{read.csv} (default \code{","}).}
 }
 \value{
-A list with 9 elements n.indiv=number of sorters, cardNames=the statements on the cards, adj.mat=the adjacency matrix, DS=the pairwise distances matrix in the original high-dimensional space, D2e=the Euclidean distance matrix in the 2-D space, D2h=the hyperbolic distance matrix in the 2-D space, x=the x coordinates in the MDS plot, y=the y coordinates, stress=the stress of the MDS plot.
+A named list (\code{cmapdat}) with elements: \code{n.indiv} (number
+  of sorters), \code{cardNames} (statements data frame), \code{adj.mat}
+  (list of adjacency matrices), \code{DS} (SxS dissimilarity matrix),
+  \code{D2e}/\code{D2h} (Euclidean and hyperbolic 2-D distance matrices),
+  \code{x}/\code{y} (MDS coordinates), \code{stress} (MDS stress value),
+  \code{ratings}, \code{demographics}, \code{cohorts}, \code{eta_ijk_e}/
+  \code{eta_ijk_h} (Jaccard index arrays), and settings for the interactive
+  menu. The list is also saved to \code{CMapSession.RData} in \code{dataDir}.
 }
 \description{
-Takes two input file names.
+Loads all project input files from \code{dataDir}, validates them, builds
+per-sorter adjacency matrices, runs multidimensional scaling (MDS), computes
+Euclidean and hyperbolic 2-D distances, and performs the leave-one-out
+Jaccard index analysis. If a previously saved session (\code{CMapSession.RData})
+is found in \code{dataDir}, the user is prompted to reuse it.
+}
+\details{
+Uses \code{<<-} to set \code{clustMethod} and \code{cmapdat} in the
+  calling environment, as required by the menu-driven interface. After
+  reading pile labels, similar labels (across sorters) are merged using
+  Jaro-Winkler fuzzy matching (threshold 0.15) and a \code{canonical} label
+  is assigned to each group; the mapping is stored in \code{label_dict} and
+  saved to \code{dictionaries.RData}. Run
+  \code{print_input_checklist()} to review the expected file formats.
 }

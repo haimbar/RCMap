@@ -7,8 +7,11 @@
 showDotPlot(metric = NULL)
 }
 \arguments{
-\item{metric}{Euclidean or hyperbolic.}
+\item{metric}{An integer selecting which rating variable to display (column
+index into the ratings data frame, offset by 2). Returns \code{NULL}
+invisibly if \code{metric} is 0.}
 }
 \description{
-Show statement ratings as a dotchart.
+Displays mean ratings per statement grouped by cluster, sorted in ascending
+order, with statements color-coded by their cluster membership.
 }

@@ -2,15 +2,22 @@
 % Please edit documentation in R/RCMap.R
 \name{toText}
 \alias{toText}
-\title{Convert menu choices to text}
+\title{Convert a menu selection index to its text label.}
 \usage{
 toText(varType, choice)
 }
 \arguments{
-\item{varType}{The type of variable (e.g., "clusteringMethod", "distance")}
+\item{varType}{Category of setting. One of \code{"clusteringMethod"},
+\code{"distance"}, \code{"MPparam"}, or \code{"colorScheme"}.}
 
-\item{choice}{The number of the selected menu item}
+\item{choice}{Integer index into the options vector for \code{varType}.}
+}
+\value{
+A character string (or vector when \code{choice} is missing) giving
+  the label(s) for the selected setting.
 }
 \description{
-Convert menu choices to text
+Maps an integer menu selection to the corresponding string value for a given
+settings category. When called with only \code{varType}, returns the full
+vector of options for that category (useful for building menus).
 }

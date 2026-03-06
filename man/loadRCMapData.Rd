@@ -2,10 +2,18 @@
 % Please edit documentation in R/RCMap.R
 \name{loadRCMapData}
 \alias{loadRCMapData}
-\title{Load the input files for a concept mapping project.}
+\title{Interactively select a project folder and load its data.}
 \usage{
-loadRCMapData()
+loadRCMapData(enc = "UTF-8", sep = ",")
+}
+\arguments{
+\item{enc}{File encoding passed through to \code{initCMap} (default \code{"UTF-8"}).}
+
+\item{sep}{Column separator passed through to \code{initCMap} (default \code{","}).}
 }
 \description{
-Load the input files for a concept mapping project.
+Prompts the user to choose a directory via a GUI dialog, then calls
+\code{initCMap()} to load all project files and \code{update_clusters()} to
+compute the initial cluster assignment. The resulting \code{cmapdat} object
+is stored in the calling environment via \code{<<-}.
 }

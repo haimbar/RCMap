@@ -2,10 +2,13 @@
 % Please edit documentation in R/RCMap.R
 \name{clusterTUKEY}
 \alias{clusterTUKEY}
-\title{All pairwise comparisons with Tukey's method for multiple comparisons.}
+\title{Run Tukey HSD post-hoc tests for all pairwise cluster comparisons.}
 \usage{
 clusterTUKEY()
 }
 \description{
-All pairwise comparisons with Tukey's method for multiple comparisons.
+For each rating variable, fits a one-way ANOVA and then runs Tukey's Honest
+Significant Difference test for all pairs of clusters. Results are printed to
+the console and written to \code{<dataDir>/output/Tukey<nclust>.txt}. Pauses
+for user input before returning to the menu.
 }

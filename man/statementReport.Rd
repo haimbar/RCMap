@@ -2,10 +2,14 @@
 % Please edit documentation in R/RCMap.R
 \name{statementReport}
 \alias{statementReport}
-\title{A report about the statements.}
+\title{Generate and save a per-statement summary report.}
 \usage{
 statementReport()
 }
 \description{
-A report about the statements.
+For each statement, reports its cluster assignment, Jaccard index (clustering
+stability), and rating summary statistics (N, mean, SD, min, max) for every
+rating variable. Results are written to
+\code{<dataDir>/output/StatementSummary<nclust>.csv} and the path is printed
+to the console. Pauses for user input before returning to the menu.
 }

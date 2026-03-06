@@ -2,10 +2,15 @@
 % Please edit documentation in R/RCMap.R
 \name{clusterNames}
 \alias{clusterNames}
-\title{Return the cluster names.}
+\title{Return the display names for the current clusters.}
 \usage{
 clusterNames()
 }
+\value{
+A character vector of length \code{cmapdat$nclust} with the display
+  name for each cluster.
+}
 \description{
-Return the cluster names.
+Looks up user-assigned names from \code{cmapdat$clustname} (keyed by cluster
+count and index). Falls back to the cluster index number for any unnamed cluster.
 }

@@ -2,10 +2,14 @@
 % Please edit documentation in R/RCMap.R
 \name{getOS}
 \alias{getOS}
-\title{Return the operating system info}
+\title{Detect the current operating system.}
 \usage{
 getOS()
 }
+\value{
+A character string: \code{"windows"}, \code{"Linux"}, or
+  \code{"MacOSX"}.
+}
 \description{
-Return the operating system info
+Detect the current operating system.
 }

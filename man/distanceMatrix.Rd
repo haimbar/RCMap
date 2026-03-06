@@ -2,17 +2,29 @@
 % Please edit documentation in R/RCMap.R
 \name{distanceMatrix}
 \alias{distanceMatrix}
-\title{Add adjacency matrices from pile-sorting data and return a distance matrix}
+\title{Add adjacency matrices from pile-sorting data and return a distance matrix.}
 \usage{
-distanceMatrix(adjMats)
+distanceMatrix(adjMats, seed = 154204)
 }
 \arguments{
-\item{adjMats}{a list of n SxS adjacency matrices, created by getAdjMatrices.}
+\item{adjMats}{A list of n SxS 0/1 adjacency matrices (one per sorter), as
+returned by \code{getAdjMatrices()}.}
+
+\item{seed}{Integer random seed set before applying jitter, for
+reproducibility (default 154204). Affects the global RNG state.}
 }
 \value{
-An SxS distance matrix.
+An SxS dissimilarity matrix. The diagonal is zero; off-diagonal entry
+  (i,j) is the number of sorters who did NOT place cards i and j in the same
+  pile (plus a negligible jitter for numerical stability).
 }
 \description{
-n SxS adjacency matrices are added to create a similarity matrix, which is
-then converted into a distance matrix in the S-dimensional Euclidean space.
+Sums n SxS adjacency matrices to create a similarity matrix M, then computes
+the dissimilarity as \code{n*(J - I) - M}, where J is the all-ones matrix and
+I is the identity. A tiny jitter is applied to break ties when two statements
+have identical pile distributions across all sorters.
+}
+\details{
+Sets the random seed before applying jitter. This ensures
+  reproducibility but will affect the global RNG state.
 }

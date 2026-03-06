@@ -2,10 +2,15 @@
 % Please edit documentation in R/RCMap.R
 \name{clusterConfig}
 \alias{clusterConfig}
-\title{Return the clusters for the concept mapping project}
+\title{Return the current cluster assignment vector.}
 \usage{
 clusterConfig()
 }
+\value{
+A named integer vector of length S (number of statements) giving the
+  cluster index (1 to \code{nclust}) for each statement.
+}
 \description{
-Return the clusters for the concept mapping project
+Runs hierarchical clustering on the active distance matrix using the current
+settings in \code{cmapdat} and cuts the tree at \code{cmapdat$nclust} clusters.
 }

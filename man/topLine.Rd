@@ -2,10 +2,10 @@
 % Please edit documentation in R/RCMap.R
 \name{topLine}
 \alias{topLine}
-\title{Show the header of the menu}
+\title{Clear the console and print the RCMap menu header.}
 \usage{
 topLine()
 }
 \description{
-Show the header of the menu
+Clear the console and print the RCMap menu header.
 }

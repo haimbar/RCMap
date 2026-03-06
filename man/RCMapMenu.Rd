@@ -4,7 +4,12 @@
 \alias{RCMapMenu}
 \title{Concept mapping text-based menu-driven interface.}
 \usage{
-RCMapMenu()
+RCMapMenu(enc = "UTF-8", sep = ",")
+}
+\arguments{
+\item{enc}{Encoding (default=UTF-8).}
+
+\item{sep}{Column separator for csv files (default=,).}
 }
 \description{
 This is the main function in the package. Run RCMapMenu() to perform the concept mapping analysis via a hierarchical menu.

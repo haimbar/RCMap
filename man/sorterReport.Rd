@@ -2,10 +2,11 @@
 % Please edit documentation in R/RCMap.R
 \name{sorterReport}
 \alias{sorterReport}
-\title{A report about the sorters.}
+\title{Print a summary report about each sorter.}
 \usage{
 sorterReport()
 }
 \description{
-A report about the sorters.
+For each sorter, prints the number of cards sorted and the number of piles
+created. Pauses for user input before returning to the menu.
 }

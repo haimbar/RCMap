@@ -2,7 +2,7 @@
 % Please edit documentation in R/RCMap.R
 \name{splitHalf}
 \alias{splitHalf}
-\title{Calculate reliability metrics.}
+\title{Assess reliability using split-half analysis.}
 \usage{
 splitHalf(
   adjMat,
@@ -13,24 +13,24 @@ splitHalf(
 )
 }
 \arguments{
-\item{adjMat}{pile-sorting data (n 0-1 matrices).}
+\item{adjMat}{A list of n SxS adjacency matrices (one per sorter).}
 
-\item{B}{the number of random splits (default=10).}
+\item{B}{The number of random splits (default=10).}
 
-\item{disttype}{The distance metric to be used ("Hyperbolic", otherwise it's assumed to be Euclidean).}
+\item{disttype}{The distance metric to be used: "Hyperbolic" for Poincare
+distances, anything else for Euclidean (default="Hyperbolic").}
 
-\item{seed}{The random seed to be used.}
+\item{seed}{The base random seed; each split uses seed+i.}
 
-\item{plotit}{if TRUE, show a plot of the differences between the misplacement index between the two random halves.}
+\item{plotit}{If TRUE, show a plot of the per-split correlations (default=FALSE).}
 }
 \value{
-A list with two elements: reliability, which contains the mean correlation between the splits, the distance metric being used, and the function used to calculate the misplacement index.
+A list with two elements: \code{cors} (numeric vector of length B
+  with the correlation for each split) and \code{distmetric} (the distance
+  metric used as a character string).
 }
 \description{
-Takes a dissimilarity matrix from a pile-sorting study and a distance matrix
-obtained from the 2-D map (from multidimensional scaling) and returns an
-index which is close to 0 for statements which are positioned close (in 2-D)
-to other statements with which they put in the same pile often (anchors),
-and a value close to 1 for points which are positioned in the 2-D map
-far from other  statements with which were put in the same pile (bridges).
+Randomly splits the sorters into two halves B times and computes the
+Pearson correlation between the pairwise distance matrices derived from each
+half. Higher mean correlation indicates greater reliability of the map.
 }
