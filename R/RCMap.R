@@ -1927,7 +1927,7 @@ RCMapMenu <- function(enc = "UTF-8", sep=",") {
           xy      <- cbind(cmapdat$x, cmapdat$y)
           kmax    <- max(2, floor(length(cmapdat$cardNames[, 1]) / 3))
           kvals   <- 2:kmax
-          fit_hc  <- hclust(as.dist(distM), method = clustMethod)
+          fit_hc  <- hclust(as.dist(distM), method = cmapdat$clustMethod)
           wss_vals <- sapply(kvals, function(k) {
             grps <- cutree(fit_hc, k = k)
             sum(sapply(unique(grps), function(g) {
@@ -1956,7 +1956,7 @@ RCMapMenu <- function(enc = "UTF-8", sep=",") {
         if(clustNo == 2) {
           kmax     <- max(2, floor(length(cmapdat$cardNames[, 1]) / 4))
           kvals    <- 2:kmax
-          fit_hc   <- hclust(as.dist(distM), method = clustMethod)
+          fit_hc   <- hclust(as.dist(distM), method = cmapdat$clustMethod)
           sil_vals <- sapply(kvals, function(k) {
             grps <- cutree(fit_hc, k = k)
             mean(cluster::silhouette(grps, as.dist(distM))[, 3])
