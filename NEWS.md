@@ -1,3 +1,16 @@
+# RCMap 0.3.3
+
+## Bug fixes
+
+- **Console screen clearing now works in terminal sessions.** `topLine()`
+  previously used only a form-feed character (`\014`), which clears the
+  RStudio console pane but has no effect in a macOS/Linux terminal. It now
+  also writes the ANSI escape sequence `\033[2J\033[H` (clear screen + cursor
+  home) before the form-feed, so the screen is cleared correctly in both
+  terminal and RStudio environments. A new `clear_screen` parameter on
+  `RCMapMenu()` (default `TRUE`) lets users disable this behaviour when a
+  scrollable history is preferred: `RCMapMenu(clear_screen = FALSE)`.
+
 # RCMap 0.3.2
 
 ## Improvements

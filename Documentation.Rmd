@@ -40,7 +40,16 @@ knitr::opts_chunk$set(echo = TRUE)
 What's New
 ---------------
 
-**Version 0.3.2 (current)**
+**Version 0.3.3 (current)**
+
+- **Console screen clearing fixed for terminal sessions.** The menu header
+  function now writes ANSI escape codes (`\033[2J\033[H`) in addition to the
+  form-feed character, so the screen is cleared correctly when R is run from
+  a macOS or Linux terminal as well as inside RStudio. A new `clear_screen`
+  parameter on `RCMapMenu()` (default `TRUE`) allows users to disable screen
+  clearing: `RCMapMenu(clear_screen = FALSE)`.
+
+**Version 0.3.2**
 
 - **Adaptive bottom margin in bar plot.** The bottom margin is sized to the
   longest cluster name so that vertical x-axis labels are never truncated.
@@ -116,7 +125,7 @@ and to cite the latest version of the package with BibTeX, use citation("RCMap")
     title = {RCMap: Group Concept Mapping},
     author = {Haim Bar},
     year = {2026},
-    note = {R package version 0.3.2},
+    note = {R package version 0.3.3},
 }
 ```
 

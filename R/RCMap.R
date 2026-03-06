@@ -1760,8 +1760,21 @@ clusterTUKEY <- function() {
 }
 
 #' Clear the console and print the RCMap menu header.
+#'
+#' Clears the screen using a form-feed character (works in RStudio / RGui) and
+#' a system \code{clear}/\code{cls} call (works in terminal sessions). Screen
+#' clearing is skipped when the package-level flag
+#' \code{.rcmap_clear_screen} is \code{FALSE}.
 topLine <- function() {
-  cat("\014" %+% blue(underline(bold("\nRCMap command-line interface.\n"))))
+  if (isTRUE(getOption("rcmap_clear_screen", default = TRUE))) {
+    if (getOS() == "windows") {
+      cat("\014")           # form-feed: works in RGui / RStudio on Windows
+    } else {
+      cat("\033[2J\033[H")  # ANSI: clear screen + cursor home (terminal/Mac)
+      cat("\014")           # form-feed: also clears RStudio console pane
+    }
+  }
+  cat(blue(underline(bold("\nRCMap command-line interface.\n"))))
 }
 
 #' Convert a menu selection index to its text label.
@@ -1825,12 +1838,17 @@ colLab <- function(dn) {
 #'
 #' @param enc Encoding (default=UTF-8).
 #' @param sep Column separator for csv files (default=,).
+#' @param clear_screen Whether to clear the console before each menu
+#'   (default=TRUE). Set to FALSE if your terminal does not support screen
+#'   clearing, or to keep a scrollable history of menu interactions.
 #' @export
 #' @examples
 #' \donttest{
 #' #RCMapMenu()
 #' }
-RCMapMenu <- function(enc = "UTF-8", sep=",") {
+RCMapMenu <- function(enc = "UTF-8", sep=",", clear_screen = TRUE) {
+  old_opt <- options(rcmap_clear_screen = isTRUE(clear_screen))
+  on.exit(options(old_opt), add = TRUE)
   menuLevel <- 0
   while(menuLevel >= 0) {
     topLine()
