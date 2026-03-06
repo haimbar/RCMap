@@ -1628,7 +1628,8 @@ statementReport <- function() {
     fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     jidx <- colMeans(eta_ij)
     groups <- cutree(fit.Clust, k=nclust)
-    retdf <- as.data.frame(matrix(0, ncol=4+5*(ncol(ratings)-2), nrow=nclust+nrow(DS)))
+    retdf <- as.data.frame(matrix(0, ncol=5+5*(ncol(ratings)-2), nrow=nclust+nrow(DS)))
+    clusLabels <- clusterNames()
     k <- 0
     for (i in 1:nclust) {
       cardsInCluster <- names(which(groups == i))
@@ -1637,8 +1638,10 @@ statementReport <- function() {
       cardsInCluster <- which(ratings$StatementID %in% cardsInCluster)
       rtgsmm <- ratingSummary(ratings[cardsInCluster,])
       rtgsmm <- data.frame(cNames, c(names(cmapdat$x)[which(groups == i)],""),
-                           rep(i, nrow(rtgsmm)), jidx_i, rtgsmm)
+                           rep(i, nrow(rtgsmm)), jidx_i, rtgsmm,
+                           rep(clusLabels[i], nrow(rtgsmm)))
       colnames(rtgsmm)[1:4] <- c("Statement", "CardNo", "ClusterNo", "JI")
+      colnames(rtgsmm)[ncol(rtgsmm)] <- "ClusterName"
       rownames(rtgsmm) <- c(rownames(DS)[which(groups == i)], paste0("total_",i))
       retdf[(1+k):(k+nrow(rtgsmm)),] <- rtgsmm
       k <- k + nrow(rtgsmm)
@@ -1668,13 +1671,14 @@ clusterANOVA <- function() {
     fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     groups <- cutree(fit.Clust, k=nclust)
     fn <- paste0(dataDir,"output/ANOVA", nclust,".txt")
-    Cluster <- rep(1, nrow(ratings))
+    clusLabels <- clusterNames()
+    Cluster <- rep(clusLabels[1], nrow(ratings))
     for (i in 1:length(groups)) {
       cardsInCluster <- names(which(groups == i))
       cardsInCluster <- which(ratings$StatementID %in% cardsInCluster)
-      Cluster[cardsInCluster] <- i
+      Cluster[cardsInCluster] <- clusLabels[i]
     }
-    Cluster <- as.factor(Cluster)
+    Cluster <- factor(Cluster, levels = clusLabels)
     for (i in 3:ncol(ratings)) {
       ftest <- summary(aov(ratings[,i] ~ Cluster))
       cat("Analysis of Variance: Response=", colnames(ratings)[i],"\n")
@@ -1710,14 +1714,15 @@ clusterTUKEY <- function() {
     cols <- clusterCols(nclust, clrscm)
     fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     groups <- cutree(fit.Clust, k=nclust)
-    Cluster <- rep(1, nrow(ratings))
+    clusLabels <- clusterNames()
+    Cluster <- rep(clusLabels[1], nrow(ratings))
     fn <- paste0(dataDir,"output/Tukey", nclust,".txt")
     for (i in 1:length(groups)) {
       cardsInCluster <- names(which(groups == i))
       cardsInCluster <- which(ratings$StatementID %in% cardsInCluster)
-      Cluster[cardsInCluster] <- i
+      Cluster[cardsInCluster] <- clusLabels[i]
     }
-    Cluster <- as.factor(Cluster)
+    Cluster <- factor(Cluster, levels = clusLabels)
 
     for (i in 3:ncol(ratings)) {
       cat("Analysis of Variance: Response=", colnames(ratings)[i],"\n")

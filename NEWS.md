@@ -1,3 +1,19 @@
+# RCMap 0.3.1
+
+## Improvements
+
+- **Cluster names in statement report.** `StatementSummaryNN.csv` now includes
+  a `ClusterName` column (last column) containing the user-assigned cluster
+  name for each statement row, in addition to the existing `ClusterNo` integer
+  column.
+
+- **Cluster names in ANOVA and Tukey output.** The one-way ANOVA table
+  (`ANOVANN.txt`) and Tukey HSD post-hoc tests (`TukeyNN.txt`) now label the
+  cluster factor levels with user-assigned cluster names rather than integer
+  indices. Pairwise Tukey comparisons therefore appear as e.g.
+  `"Health-Education"` instead of `"2-1"`. When no names have been assigned the
+  cluster index is used as before.
+
 # RCMap 0.3.0
 
 ## New features

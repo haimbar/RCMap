@@ -40,7 +40,17 @@ knitr::opts_chunk$set(echo = TRUE)
 What's New
 ---------------
 
-**Version 0.3.0 (current)**
+**Version 0.3.1 (current)**
+
+- **Cluster names in statement report.** The `StatementSummaryNN.csv` file now
+  includes a `ClusterName` column as its last column, showing the user-assigned
+  cluster name for every statement row in addition to the `ClusterNo` integer.
+- **Cluster names in ANOVA and Tukey output.** The ANOVA table and Tukey HSD
+  post-hoc pairwise comparisons now use user-assigned cluster names as factor
+  labels (e.g. `"Health-Education"` instead of `"2-1"`). When no names have
+  been assigned the cluster index is used as before.
+
+**Version 0.3.0**
 
 - **Fuzzy pile label matching.** Pile labels entered by different sorters are automatically grouped using Jaro-Winkler fuzzy string matching, so typographical variants such as "Health", "helath", and "hlth" are merged into a single canonical form before cluster name suggestions are generated. The matching threshold and other parameters are configurable (see the [Project Configuration File](#configfile) section).
 - **Edit canonical pile labels.** A new Settings menu option (option 5) lets users view all canonical labels alongside the original labels from which they were derived. Labels that were automatically merged are highlighted in yellow. Any canonical label can be renamed interactively, and changes are saved immediately.
@@ -96,7 +106,7 @@ and to cite the latest version of the package with BibTeX, use citation("RCMap")
     title = {RCMap: Group Concept Mapping},
     author = {Haim Bar},
     year = {2026},
-    note = {R package version 0.3.0},
+    note = {R package version 0.3.1},
 }
 ```
 
