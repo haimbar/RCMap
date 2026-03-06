@@ -713,4 +713,162 @@ You can use the save.image() function in R in order to save the project analysis
 
 <hr>
 
+## Troubleshooting
+
+This section describes the errors and warnings that RCMap may report, their
+most common causes, and how to resolve them.
+
+### Errors that stop the analysis
+
+These messages appear in red and halt data loading. After reading the message,
+press **Enter** to return to the main menu, correct the problem in your CSV
+files, and reload the project.
+
+---
+
+**`Missing required file(s) in '<folder>': ...`**
+
+One or more of the four required CSV files (`Statements.csv`,
+`SortedCards.csv`, `Ratings.csv`, `Demographics.csv`) is absent from the
+selected project folder. Check that the folder you selected is the correct one
+and that all four files are present with exactly these names (case-sensitive).
+
+---
+
+**`'Statements.csv' appears empty or malformed.`**
+
+The file could not be parsed as a two-column CSV.  Make sure it has a header
+row with (at least) `StatementID` and `Statement` columns, and that each
+subsequent row contains an integer ID and the statement text.
+
+---
+
+**`StatementID column must be numeric.`** /
+**`Duplicate StatementID values found.`**
+
+Every row in `Statements.csv` must have a unique integer in the `StatementID`
+column. Non-numeric values (e.g. blank cells, letters) and duplicated IDs are
+both rejected. Statement IDs do not need to be consecutive but must be unique.
+
+---
+
+**`SortedCards.csv references card ID(s) not present in Statements.csv`**
+
+A card number that appears in `SortedCards.csv` has no matching entry in
+`Statements.csv`. This usually means a statement was added or removed from
+one file but not the other, or that the ID was mistyped. Align the IDs across
+both files.
+
+---
+
+**`Problems in 'SortedCards.csv' / 'Ratings.csv' / 'Demographics.csv': ...`**
+
+The named file is missing a required column, has the wrong number of columns,
+or contains unexpected data. The message includes a short description of the
+specific issue. Run `print_input_checklist()` at the R prompt for a full
+description of the expected column layout of each file.
+
+---
+
+**`Ratings column '<name>' contains non-numeric values.`** /
+**`Ratings column '<name>' contains values outside 1..<scale>.`**
+
+All rating columns in `Ratings.csv` must contain integers in the range
+`1` to `ratingscale` (default 5, configurable in `config.txt`). Blank cells,
+text, or out-of-range numbers will trigger this error. Fill in or remove the
+offending rows.
+
+---
+
+**`'Weights.csv' has N row(s) but there are M sorter(s).`** /
+**`Weight column contains missing or non-numeric values.`** /
+**`Weight column must contain strictly positive values.`**
+
+If a `Weights.csv` file is present in the project folder it must have exactly
+one row per sorter, a column named `Weight`, and all positive numeric values.
+Remove the file to use equal weights, or correct the row count and values.
+
+---
+
+**`Error loading project: ...`**
+
+A general catch-all shown when an unexpected R error occurs during data
+loading. The original R error message is shown after the colon. If the cause
+is not immediately clear, check that none of your CSV files are open in Excel
+(which locks the file on Windows) and that the encoding matches the `enc`
+argument passed to `RCMapMenu()` (default UTF-8).
+
+---
+
+### Warnings that allow the analysis to continue
+
+These messages appear in yellow. The analysis continues after you press
+**Enter**, but you should review the warning to decide whether the data need
+correction.
+
+---
+
+**`Warning: Rater <ID> appears in Ratings.csv but not in Demographics.csv`**
+
+A rater submitted ratings but has no row in `Demographics.csv`. Their ratings
+are included in the overall analysis, but they cannot be assigned to any cohort
+and will not appear in cohort-specific reports. If this rater should be in a
+cohort, add their demographic information to `Demographics.csv`.
+
+---
+
+**`Warning: N rater(s) in Demographics.csv have no rating data and will be excluded: <IDs>`**
+
+One or more raters listed in `Demographics.csv` have no corresponding rows in
+`Ratings.csv`. They are automatically dropped from the analysis. If ratings
+were expected from these raters, check whether their `RaterID` values match
+between the two files.
+
+---
+
+**`Note: The following pile labels were merged based on similarity: {label1, label2} -> 'canonical'`**
+
+During data loading, the fuzzy label matching step detected pile labels that
+are typographically similar (e.g. "Health", "helath", "hlth") and merged them
+into a single canonical label. Review the list to confirm that the merges are
+correct. If any merge is wrong, use **Settings → Edit pile label canonical
+names** to rename or separate the labels. The similarity threshold is
+controlled by `fuzzy_label_threshold` in `config.txt` (default 0.15; lower
+values are stricter).
+
+---
+
+**`No pile label data available.`**
+
+Shown in the **Edit pile label canonical names** settings screen when the
+current session has no pile label information. This can happen if the project
+was loaded from a `CMapSession.RData` file saved by an older version of RCMap.
+Reload the raw CSV data (option 1 in the main menu) to rebuild the label
+dictionary.
+
+---
+
+### General tips
+
+- **Menu screen does not clear / text accumulates.** If each menu appears
+  below the previous one rather than on a fresh screen, your terminal may not
+  support the ANSI escape sequence used for clearing. Start RCMap with
+  `RCMapMenu(clear_screen = FALSE)` to disable screen clearing and keep a
+  scrollable history instead.
+
+- **Plots do not appear.** On some systems R may need a graphics device to be
+  opened before plotting. Try calling `x11()` (Linux), `quartz()` (macOS), or
+  `windows()` (Windows) at the R prompt before running `RCMapMenu()`.
+
+- **Analysis options are greyed out.** The Plots, Reports, and Analysis menus
+  are only active after a project has been loaded (main menu option 1). If they
+  appear dimmed, return to the main menu and load a project first.
+
+- **Reproducibility.** MDS jitter and split-half randomisation both use seeds
+  that can be set in `config.txt` (`mds_seed`, `splithalf_seed`). To reproduce
+  a previous result exactly, ensure these values match the session in which the
+  original analysis was run.
+
+<hr>
+
 ## Citations

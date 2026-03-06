@@ -54,6 +54,58 @@ ul {
  text-align: justify;
 }
 
+/* Inline code: dark text on a faint gray background */
+code {
+  color: #c0392b;
+  background-color: #f4f4f4;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.85em;
+}
+
+/* Code inside pre blocks: reset generic code styling */
+pre code {
+  color: inherit;
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+/* Force correct colors inside .inputbox and .outputbox blocks */
+pre.inputbox,
+pre.inputbox code {
+  color: #24292f !important;
+  background-color: #f6f8fa !important;
+}
+
+pre.outputbox,
+pre.outputbox code {
+  color: #cdd9e5 !important;
+  background-color: #1c2128 !important;
+}
+
+/* Floating TOC sidebar */
+#TOC {
+  color: #24292f;
+  background-color: #f6f8fa;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  padding: 0.5em 0.8em;
+  font-size: 0.88em;
+}
+
+#TOC a {
+  color: #0969da;
+  text-decoration: none;
+}
+
+#TOC a:hover {
+  color: #0550ae;
+  text-decoration: underline;
+}
+
 .infobox {
   padding: 1em 1em 1em 4em;
   margin-bottom: 10px;
@@ -63,17 +115,27 @@ ul {
 }
 
 .inputbox {
-  padding: 0.2em 0.1em 0.1em 2em;
-  border: 1px solid blue;
-  border-radius: 2px;
-  background: #e8f4f8;
-  max-width: 650px;
+  padding: 0.6em 1em 0.6em 1.2em;
+  border-left: 4px solid #0969da;
+  border-top: 1px solid #d0d7de;
+  border-right: 1px solid #d0d7de;
+  border-bottom: 1px solid #d0d7de;
+  border-radius: 4px;
+  background: #f6f8fa;
+  color: #24292f;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.88em;
+  max-width: 680px;
 }
 
 .outputbox {
-  padding: 0.2em 0.1em 0.1em 2em;
-  border: 1px solid red;
-  border-radius: 2px;
-  background: #ffe4e1;
-  max-width: 650px;
+  padding: 0.7em 1em 0.7em 1.2em;
+  border: 1px solid #444c56;
+  border-left: 4px solid #57a64a;
+  border-radius: 4px;
+  background: #1c2128;
+  color: #cdd9e5;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.88em;
+  max-width: 680px;
 }
