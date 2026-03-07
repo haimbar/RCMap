@@ -106,6 +106,18 @@ pre.outputbox code {
   text-decoration: underline;
 }
 
+/* Config table bottom border */
+table tbody tr:last-child {
+  border-bottom: 1px solid #d0d7de;
+}
+
+/* Figure captions */
+p.caption, .caption {
+  text-align: left;
+  font-size: 0.88em;
+  color: #555;
+}
+
 .infobox {
   padding: 1em 1em 1em 4em;
   margin-bottom: 10px;

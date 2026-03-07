@@ -4,12 +4,16 @@
 \alias{RCMapMenu}
 \title{Concept mapping text-based menu-driven interface.}
 \usage{
-RCMapMenu(enc = "UTF-8", sep = ",")
+RCMapMenu(enc = "UTF-8", sep = ",", clear_screen = TRUE)
 }
 \arguments{
 \item{enc}{Encoding (default=UTF-8).}
 
 \item{sep}{Column separator for csv files (default=,).}
+
+\item{clear_screen}{Whether to clear the console before each menu
+(default=TRUE). Set to FALSE if your terminal does not support screen
+clearing, or to keep a scrollable history of menu interactions.}
 }
 \description{
 This is the main function in the package. Run RCMapMenu() to perform the concept mapping analysis via a hierarchical menu.

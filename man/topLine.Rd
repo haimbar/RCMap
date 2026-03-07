@@ -7,5 +7,8 @@
 topLine()
 }
 \description{
-Clear the console and print the RCMap menu header.
+Clears the screen using a form-feed character (works in RStudio / RGui) and
+a system \code{clear}/\code{cls} call (works in terminal sessions). Screen
+clearing is skipped when the package-level flag
+\code{.rcmap_clear_screen} is \code{FALSE}.
 }
