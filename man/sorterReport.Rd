@@ -6,6 +6,9 @@
 \usage{
 sorterReport()
 }
+\value{
+Called for side effects. Returns \code{NULL} invisibly.
+}
 \description{
 For each sorter, prints the number of cards sorted and the number of piles
 created. Pauses for user input before returning to the menu.

@@ -9,7 +9,10 @@ showDotPlot(metric = NULL)
 \arguments{
 \item{metric}{An integer selecting which rating variable to display (column
 index into the ratings data frame, offset by 2). Returns \code{NULL}
-invisibly if \code{metric} is 0.}
+if \code{metric} is 0.}
+}
+\value{
+Called for side effects (plot). Returns \code{NULL} invisibly when \code{metric} is 0.
 }
 \description{
 Displays mean ratings per statement grouped by cluster, sorted in ascending

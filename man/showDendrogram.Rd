@@ -2,13 +2,18 @@
 % Please edit documentation in R/RCMap.R
 \name{showDendrogram}
 \alias{showDendrogram}
-\title{Plot the clusters as a dendrogram or a phylogenic tree plot.}
+\title{Plot the clusters as a dendrogram or a phylogenetic tree plot.}
 \usage{
 showDendrogram(phylo = FALSE)
 }
 \arguments{
-\item{phylo}{Whether to show a dendrogram (a default) or a phylogenic tree.}
+\item{phylo}{Logical. If \code{FALSE} (the default), a standard dendrogram
+is plotted. If \code{TRUE}, a phylogenetic tree is plotted instead.}
+}
+\value{
+Called for side effects (plot). Returns \code{NULL} invisibly when \code{metric} is 0.
 }
 \description{
-Plot the clusters as a dendrogram or a phylogenic tree plot.
+Displays the hierarchical cluster structure either as a standard dendrogram
+or as a phylogenetic tree.
 }

@@ -6,6 +6,9 @@
 \usage{
 clusterANOVA()
 }
+\value{
+Called for side effects (writes results to a file via \code{sink()}). Returns \code{NULL} invisibly.
+}
 \description{
 For each rating variable, fits a one-way ANOVA with cluster membership as the
 factor and prints the F-test table to the console. Results are also written

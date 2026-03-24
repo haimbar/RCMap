@@ -6,6 +6,9 @@
 \usage{
 statementReport()
 }
+\value{
+Called for side effects. Returns \code{NULL} invisibly.
+}
 \description{
 For each statement, reports its cluster assignment, Jaccard index (clustering
 stability), and rating summary statistics (N, mean, SD, min, max) for every

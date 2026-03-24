@@ -27,7 +27,7 @@ A list with two elements: \code{mat.list} (a list of n SxS 0/1
   accumulating any warnings found, empty string if none).
 }
 \description{
-N stakeholder sort S cards into piles, and this function converts this
+N stakeholders sort S cards into piles, and this function converts this
 data into n SxS adjacency matrices (one per sorter) in which cell i,j
 contains 1 if user k put cards i and j in the same pile, and 0 otherwise.
 The first column in the input file contains the sorters IDs, the

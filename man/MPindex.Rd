@@ -24,7 +24,7 @@ A vector of size nrow(D) with the bridging/anchoring metric.
 Takes a dissimilarity matrix from a pile-sorting study and a distance matrix
 obtained from the 2-D map (from multidimensional scaling) and returns an
 index which is close to 0 for statements which are positioned close (in 2-D)
-to other statements with which they put in the same pile often (anchors),
+to other statements that were put in the same pile as them often (anchors),
 and a value close to 1 for points which are positioned in the 2-D map
-far from other  statements with which were put in the same pile (bridges).
+far from other statements that were put in the same pile as them often (bridges).
 }

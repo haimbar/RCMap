@@ -7,10 +7,15 @@
 ratingSummary(ratingsDat)
 }
 \arguments{
-\item{ratingsDat}{The ratings data.}
+\item{ratingsDat}{A data frame where column 1 is \code{RaterID}, column 2 is
+\code{StatementID} (will be coerced to factor), and columns 3 onward are
+numeric rating variables.}
 }
 \value{
-A matrix with summary statistics for all rating variables and all statements.
+A matrix with summary statistics for all rating variables and all
+  statements. Each block of 5 columns corresponds to one rating variable
+  (N, Mean, SD, Min, Max). The final row contains grand-total summary values
+  across all statements.
 }
 \description{
 Raters provide Likert scale ratings for k criteria (e.g. feasibility). This function returns summary statistics for each statement.

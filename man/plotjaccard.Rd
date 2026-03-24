@@ -15,6 +15,9 @@ values are Jaccard indices measuring clustering stability.}
 when computing the proportion of sorters with low stability per statement
 (default 0.3).}
 }
+\value{
+Called for side effects (plot). Returns \code{NULL} invisibly.
+}
 \description{
 Takes a list of per-sorter Jaccard index matrices (as returned by the
 leave-one-out analysis in \code{initCMap}) and produces an interaction plot

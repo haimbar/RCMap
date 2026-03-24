@@ -6,6 +6,9 @@
 \usage{
 print_input_checklist()
 }
+\value{
+\code{NULL} invisibly.
+}
 \description{
 Prints a checklist of required and optional project files with their expected
 column layouts. Useful for diagnosing input errors.

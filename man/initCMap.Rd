@@ -25,6 +25,9 @@ A named list (\code{cmapdat}) with elements: \code{n.indiv} (number
   \code{ratings}, \code{demographics}, \code{cohorts}, \code{eta_ijk_e}/
   \code{eta_ijk_h} (Jaccard index arrays), and settings for the interactive
   menu. The list is also saved to \code{CMapSession.RData} in \code{dataDir}.
+  For \code{eta_ijk_e} and \code{eta_ijk_h}, element \code{[[k-1]]} is the
+  k-cluster solution for k clusters (i.e., \code{[[1]]} = 2-cluster solution,
+  \code{[[2]]} = 3-cluster solution, etc.).
 }
 \description{
 Loads all project input files from \code{dataDir}, validates them, builds

@@ -11,6 +11,9 @@ clusterCols(n, type = "rcmap")
 
 \item{type}{Either rcmap (default) or rainbow.}
 }
+\value{
+A character vector of hex color strings, one per cluster.
+}
 \description{
 Either use the RCMap scheme which has 21 colors, or the rainbow function.
 }

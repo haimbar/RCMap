@@ -53,7 +53,7 @@ What's New
 
 - **Adaptive bottom margin in bar plot.** The bottom margin is sized to the
   longest cluster name so that vertical x-axis labels are never truncated.
-- **Bottom legend in dendrogram, phylogenic tree, parallel coordinates, and
+- **Bottom legend in dendrogram, phylogenetic tree, parallel coordinates, and
   Go-Zone plots.** Cluster names previously drawn as text inside or beside the
   plot area are now displayed as a horizontal colour-keyed legend below each
   plot. When the total label width exceeds the figure width the legend wraps to
@@ -95,7 +95,7 @@ What's New
 - The user can choose between the Euclidean distance and the hyperbolic distance in order to perform the clustering in the two-dimensional MDS plot.
 - A new dot-chart option is now available.
 - Dendrograms are now available in colors by cluster.
-- There is also a new visualization as a phylogenic tree.
+- There is also a new visualization as a phylogenetic tree.
 - More detailed error checking (including checking if there are "lumpers".)
 - New layout for the average rating per statements and clusters is available.
 - The user can choose between two color schemes for plots.
@@ -140,7 +140,7 @@ RCMap requires the following packages:
 - smacof - for multidimensional scaling [@smacof],[@smacof2].
 - factoextra - for obtaining a recommended number of clusters [@factoextra].
 - crayon - for terminal colors [@crayon].
-- ape - for drawing a phylogenic tree [@ape].
+- ape - for drawing a phylogenetic tree [@ape].
 - tcltk - for the function tk_choose.dir, used when choosing a project folder.
 - stringdist - for fuzzy pile label matching (Jaro-Winkler distance).
 
@@ -482,7 +482,7 @@ knitr::include_graphics("Figures/ClustersPoly.png")
 
 <h4>Dendrogram  and  Phylogenic tree</h4>
 <p>
-Following the MDS step, a hierarchical clustering is performed on the two-dimensional representation of the data. In the process, components (statements, or sets of statements) are joined iteratively with their nearest neighbor. The nearest neighbor may be another statement, or a group of statements which were joined into one group in a previous iteration. A dendrogram depicts the hierarchical clustering process. "Leaves" in this binary-tree diagram correspond to the statements, and branches represent the nearest neighbor connections made in each iteration. The length of an edge in a dendrogram is a function of the dis-similarity between joined components. The clusters can also be shown phylogenic trees. Both plots allow users to manually select the preferred number of clusters, based on the lengths of the stems in the tree. The phylogenic tree is more convenient when the number of statements is large, in which case a dendrogram may be too wide for a page. Here, we demonstrate just the dendrogram, with 11 clusters.
+Following the MDS step, a hierarchical clustering is performed on the two-dimensional representation of the data. In the process, components (statements, or sets of statements) are joined iteratively with their nearest neighbor. The nearest neighbor may be another statement, or a group of statements which were joined into one group in a previous iteration. A dendrogram depicts the hierarchical clustering process. "Leaves" in this binary-tree diagram correspond to the statements, and branches represent the nearest neighbor connections made in each iteration. The length of an edge in a dendrogram is a function of the dis-similarity between joined components. The clusters can also be shown phylogenetic trees. Both plots allow users to manually select the preferred number of clusters, based on the lengths of the stems in the tree. The phylogenetic tree is more convenient when the number of statements is large, in which case a dendrogram may be too wide for a page. Here, we demonstrate just the dendrogram, with 11 clusters.
 
 
 ```{r dendro, echo=FALSE, fig.align='left', out.width='90%', fig.cap=''}
@@ -495,7 +495,7 @@ knitr::include_graphics("Figures/Dendrogram.png")
 ```{r phylo, echo=FALSE, fig.align='left', out.width='50%', fig.cap=''}
 knitr::include_graphics("Figures/Phylogenic.jpg")
 ```
-<center><B>A phylogenic tree.</B></center><BR>
+<center><B>A phylogenetic tree.</B></center><BR>
 -->
 
 <a id="mpi"></a><h4>Misplacement</h4>

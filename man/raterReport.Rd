@@ -6,6 +6,9 @@
 \usage{
 raterReport()
 }
+\value{
+Called for side effects. Returns \code{NULL} invisibly.
+}
 \description{
 Prints a statistical summary of all demographic variables for the raters.
 Pauses for user input before returning to the menu.

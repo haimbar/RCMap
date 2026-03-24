@@ -20,7 +20,7 @@ splitHalf(
 \item{disttype}{The distance metric to be used: "Hyperbolic" for Poincare
 distances, anything else for Euclidean (default="Hyperbolic").}
 
-\item{seed}{The base random seed; each split uses seed+i.}
+\item{seed}{Integer. The base random seed; each split uses \code{seed + i} (default: 968421).}
 
 \item{plotit}{If TRUE, show a plot of the per-split correlations (default=FALSE).}
 }

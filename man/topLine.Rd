@@ -9,6 +9,6 @@ topLine()
 \description{
 Clears the screen using a form-feed character (works in RStudio / RGui) and
 a system \code{clear}/\code{cls} call (works in terminal sessions). Screen
-clearing is skipped when the package-level flag
-\code{.rcmap_clear_screen} is \code{FALSE}.
+clearing is skipped when the R option \code{"rcmap_clear_screen"} is
+\code{FALSE} (set via \code{options(rcmap_clear_screen = FALSE)}).
 }

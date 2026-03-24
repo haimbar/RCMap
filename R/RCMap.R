@@ -1,7 +1,7 @@
 
 #' Create adjacency matrices from pile-sorting data
 #'
-#' N stakeholder sort S cards into piles, and this function converts this
+#' N stakeholders sort S cards into piles, and this function converts this
 #' data into n SxS adjacency matrices (one per sorter) in which cell i,j
 #' contains 1 if user k put cards i and j in the same pile, and 0 otherwise.
 #' The first column in the input file contains the sorters IDs, the
@@ -92,11 +92,11 @@ getAdjMatrices <- function(piledat, cardNames, sorters_dict, showWarnings=TRUE) 
 #' have identical pile distributions across all sorters.
 #' @param adjMats A list of n SxS 0/1 adjacency matrices (one per sorter), as
 #'   returned by \code{getAdjMatrices()}.
+#' @param seed Integer random seed set before applying jitter, for
+#'   reproducibility (default 154204). Affects the global RNG state.
 #' @return An SxS dissimilarity matrix. The diagonal is zero; off-diagonal entry
 #'   (i,j) is the number of sorters who did NOT place cards i and j in the same
 #'   pile (plus a negligible jitter for numerical stability).
-#' @param seed Integer random seed set before applying jitter, for
-#'   reproducibility (default 154204). Affects the global RNG state.
 #' @details Sets the random seed before applying jitter. This ensures
 #'   reproducibility but will affect the global RNG state.
 #' @export
@@ -216,9 +216,9 @@ clusterings <- function(adjmat, j=0, max_nc=3, clustMethod="ward.D2") {
 #' Takes a dissimilarity matrix from a pile-sorting study and a distance matrix
 #' obtained from the 2-D map (from multidimensional scaling) and returns an
 #' index which is close to 0 for statements which are positioned close (in 2-D)
-#' to other statements with which they put in the same pile often (anchors),
+#' to other statements that were put in the same pile as them often (anchors),
 #' and a value close to 1 for points which are positioned in the 2-D map
-#' far from other  statements with which were put in the same pile (bridges).
+#' far from other statements that were put in the same pile as them often (bridges).
 #' @param D dissimilarity matrix obtained for the pile sorting data.
 #' @param d distance matrix obtained for points in the 2-D projection.
 #' @param cst The power parameter for the misplacement index function (default=1).
@@ -245,7 +245,7 @@ MPindex <- function(D, d, cst=1, func=median, ...) {
 #' @param B The number of random splits (default=10).
 #' @param disttype The distance metric to be used: "Hyperbolic" for Poincare
 #'   distances, anything else for Euclidean (default="Hyperbolic").
-#' @param seed The base random seed; each split uses seed+i.
+#' @param seed Integer. The base random seed; each split uses \code{seed + i} (default: 968421).
 #' @param plotit If TRUE, show a plot of the per-split correlations (default=FALSE).
 #' @return A list with two elements: \code{cors} (numeric vector of length B
 #'   with the correlation for each split) and \code{distmetric} (the distance
@@ -298,6 +298,7 @@ splitHalf <- function(adjMat, B=10, disttype="Hyperbolic",
 #' @param threshold Jaccard values below this are counted as "unstable"
 #'   when computing the proportion of sorters with low stability per statement
 #'   (default 0.3).
+#' @return Called for side effects (plot). Returns \code{NULL} invisibly.
 #' @export
 plotjaccard <- function(eta_ij, threshold=0.3) {
   M <- matrix(0, nrow=length(eta_ij), ncol=ncol(eta_ij[[1]]))
@@ -335,9 +336,11 @@ plotjaccard <- function(eta_ij, threshold=0.3) {
 #' @param filename Path to the statements CSV file.
 #' @param enc File encoding (default UTF-8).
 #' @param sep Field separator (default comma).
-#' @return A list with elements `issues` (NULL if none) and `cardNames` (data.frame)
+#' @return A list with elements \code{issues} (NULL if none) and \code{cardNames} (data.frame)
 #' @examples
+#' \donttest{
 #' read_statements('Statements.csv')
+#' }
 #' @export
 read_statements <- function(filename, enc = "UTF-8", sep=",") {
   if (!file.exists(filename))
@@ -476,6 +479,11 @@ read_piles <- function(filename, ncards, enc = "UTF-8", sep=",") {
 #' @return A list with elements: \code{issues} (NULL if none, otherwise an error
 #'   string) and \code{ratings} (the validated data frame with \code{RaterID}
 #'   as character and \code{StatementID} as factor).
+#'   On error, the list contains \code{issues} (the error message) and
+#'   \code{cardDat} set to \code{NULL}. On success, it contains
+#'   \code{issues = NULL} and \code{ratings} (the validated data frame).
+#'   Note: \code{RaterID} is not explicitly coerced to character and may be
+#'   numeric if read from a CSV with integer IDs.
 read_ratings <- function(filename, statements, ratingscale=5, enc = "UTF-8", sep=",") {
   if(!file.exists(filename))
     return(list(issues=paste("read_ratings: File", filename,
@@ -639,6 +647,7 @@ read_demographics <- function(filename, ratings, enc = "UTF-8", sep=",") {
 #'
 #' Prints a checklist of required and optional project files with their expected
 #' column layouts. Useful for diagnosing input errors.
+#' @return \code{NULL} invisibly.
 #' @export
 print_input_checklist <- function() {
   cat("Required project files and expected columns:\n")
@@ -673,6 +682,9 @@ print_input_checklist <- function() {
 #'   \code{ratings}, \code{demographics}, \code{cohorts}, \code{eta_ijk_e}/
 #'   \code{eta_ijk_h} (Jaccard index arrays), and settings for the interactive
 #'   menu. The list is also saved to \code{CMapSession.RData} in \code{dataDir}.
+#'   For \code{eta_ijk_e} and \code{eta_ijk_h}, element \code{[[k-1]]} is the
+#'   k-cluster solution for k clusters (i.e., \code{[[1]]} = 2-cluster solution,
+#'   \code{[[2]]} = 3-cluster solution, etc.).
 #' @details Uses \code{<<-} to set \code{clustMethod} and \code{cmapdat} in the
 #'   calling environment, as required by the menu-driven interface. After
 #'   reading pile labels, similar labels (across sorters) are merged using
@@ -1079,8 +1091,13 @@ initCMap <- function(dataDir, enc="UTF-8", sep=",") {
 #' Get ratings statistics (N, mean, sd, min, max) for each statement
 #'
 #' Raters provide Likert scale ratings for k criteria (e.g. feasibility). This function returns summary statistics for each statement.
-#' @param ratingsDat The ratings data.
-#' @return A matrix with summary statistics for all rating variables and all statements.
+#' @param ratingsDat A data frame where column 1 is \code{RaterID}, column 2 is
+#'   \code{StatementID} (will be coerced to factor), and columns 3 onward are
+#'   numeric rating variables.
+#' @return A matrix with summary statistics for all rating variables and all
+#'   statements. Each block of 5 columns corresponds to one rating variable
+#'   (N, Mean, SD, Min, Max). The final row contains grand-total summary values
+#'   across all statements.
 #' @export
 ratingSummary <- function(ratingsDat) {
   nVar <- ncol(ratingsDat)-2
@@ -1108,6 +1125,9 @@ ratingSummary <- function(ratingsDat) {
 
 #' Plot the 2-D MDS representation of the pile-sorting data.
 #'
+#' @description
+#' Displays a 2-D MDS map of the pile-sorting data, optionally coloured or
+#' annotated by a rating variable.
 #' @param metric Controls what is displayed. \code{NULL} (default) shows a plain
 #'   point map with all statements in blue. \code{"MPindex"} colors and sizes
 #'   points by the misplacement index (Jaccard-based bridging/anchoring score).
@@ -1115,6 +1135,7 @@ ratingSummary <- function(ratingsDat) {
 #'   sizes points by the mean rating for that variable.
 #' @param tau The Jaccard index threshold used to compute the misplacement
 #'   index proportion (default=0.3). Only used when \code{metric="MPindex"}.
+#' @return Called for side effects (plot). Returns \code{NULL} invisibly when \code{metric} is 0.
 #' @export
 showMDSPlot <- function(metric=NULL, tau=0.3) {
   ter.cols <- rev(c("#440154D0","#472D7BD0","#3B528BD0","#2C728ED0",
@@ -1195,6 +1216,7 @@ showMDSPlot <- function(metric=NULL, tau=0.3) {
 #'   cluster centers as equal-sized markers. An integer \code{k} (offset by 2
 #'   into the ratings data frame) sizes the cluster-center marker by the mean
 #'   rating for that variable in the cluster.
+#' @return Called for side effects (plot). Returns \code{NULL} invisibly when \code{metric} is 0.
 #' @export
 showClusterPlot <- function(type="rays", metric=NULL) {
   if(!is.null(metric))
@@ -1307,9 +1329,14 @@ update_clusters <- function() {
   })
 }
 
-#' Plot the clusters as a dendrogram or a phylogenic tree plot.
+#' Plot the clusters as a dendrogram or a phylogenetic tree plot.
 #'
-#' @param phylo Whether to show a dendrogram (a default) or a phylogenic tree.
+#' @description
+#' Displays the hierarchical cluster structure either as a standard dendrogram
+#' or as a phylogenetic tree.
+#' @param phylo Logical. If \code{FALSE} (the default), a standard dendrogram
+#'   is plotted. If \code{TRUE}, a phylogenetic tree is plotted instead.
+#' @return Called for side effects (plot). Returns \code{NULL} invisibly when \code{metric} is 0.
 #' @importFrom ape as.phylo
 #' @export
 showDendrogram <- function(phylo=FALSE) {
@@ -1357,7 +1384,8 @@ showDendrogram <- function(phylo=FALSE) {
 #' order, with statements color-coded by their cluster membership.
 #' @param metric An integer selecting which rating variable to display (column
 #'   index into the ratings data frame, offset by 2). Returns \code{NULL}
-#'   invisibly if \code{metric} is 0.
+#'   if \code{metric} is 0.
+#' @return Called for side effects (plot). Returns \code{NULL} invisibly when \code{metric} is 0.
 #' @export
 showDotPlot <- function(metric=NULL) {
   if(metric == 0)
@@ -1406,7 +1434,8 @@ showDotPlot <- function(metric=NULL) {
 #' height) before plotting.
 #' @param metric An integer selecting which rating variable to display (column
 #'   index into the ratings data frame, offset by 2). Returns \code{NULL}
-#'   invisibly if \code{metric} is 0.
+#'   if \code{metric} is 0.
+#' @return Called for side effects (plot). Returns \code{NULL} invisibly when \code{metric} is 0.
 #' @export
 showBarPlot <- function(metric=NULL) {
   if(metric == 0)
@@ -1472,6 +1501,7 @@ showBarPlot <- function(metric=NULL) {
 #' cluster. The variable / cohort combinations are taken from
 #' \code{cmapdat$pcoordChoice}, which the user selects before this function is
 #' called. Cluster names are shown at the right edge of the plot.
+#' @return Called for side effects (plot). Returns \code{NULL} invisibly.
 #' @export
 showParallelCoordinates <- function() {
   with(cmapdat,{
@@ -1529,6 +1559,8 @@ showParallelCoordinates <- function() {
 #' at the overall mean of each variable, dividing the plot into four quadrants.
 #' Kendall's tau and its p-value are shown in the title. The two rating
 #' variables to compare are taken from \code{cmapdat$pcoordChoice}.
+#' @return Called for side effects (plot). Returns \code{NULL} invisibly.
+#' @importFrom graphics legend par
 #' @export
 showGoZone <- function() {
   #  with(cmapdat,{
@@ -1600,6 +1632,7 @@ showGoZone <- function() {
 #'
 #' For each sorter, prints the number of cards sorted and the number of piles
 #' created. Pauses for user input before returning to the menu.
+#' @return Called for side effects. Returns \code{NULL} invisibly.
 #' @export
 sorterReport <- function() {
   with(cmapdat, {
@@ -1619,6 +1652,7 @@ sorterReport <- function() {
 #'
 #' Prints a statistical summary of all demographic variables for the raters.
 #' Pauses for user input before returning to the menu.
+#' @return Called for side effects. Returns \code{NULL} invisibly.
 #' @export
 raterReport <- function() {
   with(cmapdat, {
@@ -1634,14 +1668,15 @@ raterReport <- function() {
 #' rating variable. Results are written to
 #' \code{<dataDir>/output/StatementSummary<nclust>.csv} and the path is printed
 #' to the console. Pauses for user input before returning to the menu.
+#' @return Called for side effects. Returns \code{NULL} invisibly.
 #' @export
 statementReport <- function() {
   with(cmapdat, {
     distM <- D2e
-    eta_ij <- eta_ijk_e[[nclust+1]]
+    eta_ij <- eta_ijk_e[[nclust-1]]
     if(distmetric == "Hyperbolic") {
       distM <- D2h
-      eta_ij <- eta_ijk_h[[nclust+1]]
+      eta_ij <- eta_ijk_h[[nclust-1]]
     }
     fit.Clust <- hclust(as.dist(distM), method=cmapdat$clustMethod)
     jidx <- colMeans(eta_ij)
@@ -1678,6 +1713,7 @@ statementReport <- function() {
 #' factor and prints the F-test table to the console. Results are also written
 #' to \code{<dataDir>/output/ANOVA<nclust>.txt}. Pauses for user input before
 #' returning to the menu.
+#' @return Called for side effects (writes results to a file via \code{sink()}). Returns \code{NULL} invisibly.
 #' @export
 clusterANOVA <- function() {
   with(cmapdat,{
@@ -1722,6 +1758,7 @@ clusterANOVA <- function() {
 #' Significant Difference test for all pairs of clusters. Results are printed to
 #' the console and written to \code{<dataDir>/output/Tukey<nclust>.txt}. Pauses
 #' for user input before returning to the menu.
+#' @return Called for side effects (writes results to a file via \code{sink()}). Returns \code{NULL} invisibly.
 #' @export
 clusterTUKEY <- function() {
   with(cmapdat,{
@@ -1763,8 +1800,8 @@ clusterTUKEY <- function() {
 #'
 #' Clears the screen using a form-feed character (works in RStudio / RGui) and
 #' a system \code{clear}/\code{cls} call (works in terminal sessions). Screen
-#' clearing is skipped when the package-level flag
-#' \code{.rcmap_clear_screen} is \code{FALSE}.
+#' clearing is skipped when the R option \code{"rcmap_clear_screen"} is
+#' \code{FALSE} (set via \code{options(rcmap_clear_screen = FALSE)}).
 topLine <- function() {
   if (isTRUE(getOption("rcmap_clear_screen", default = TRUE))) {
     if (getOS() == "windows") {
@@ -1780,13 +1817,11 @@ topLine <- function() {
 #' Convert a menu selection index to its text label.
 #'
 #' Maps an integer menu selection to the corresponding string value for a given
-#' settings category. When called with only \code{varType}, returns the full
-#' vector of options for that category (useful for building menus).
+#' settings category.
 #' @param varType Category of setting. One of \code{"clusteringMethod"},
 #'   \code{"distance"}, \code{"MPparam"}, or \code{"colorScheme"}.
 #' @param choice Integer index into the options vector for \code{varType}.
-#' @return A character string (or vector when \code{choice} is missing) giving
-#'   the label(s) for the selected setting.
+#' @return The string from the pre-defined list for \code{varType} at index \code{choice}.
 toText <- function(varType, choice) {
   if (varType == "clusteringMethod") {
     #    strs <- c("ward.D", "ward.D2", "single","complete", "average","mcquitty",
@@ -1841,6 +1876,7 @@ colLab <- function(dn) {
 #' @param clear_screen Whether to clear the console before each menu
 #'   (default=TRUE). Set to FALSE if your terminal does not support screen
 #'   clearing, or to keep a scrollable history of menu interactions.
+#' @return Called for side effects. Saves the session to \code{CMapSession.RData} before exiting. Returns \code{NULL} invisibly.
 #' @export
 #' @examples
 #' \donttest{
@@ -2118,7 +2154,7 @@ RCMapMenu <- function(enc = "UTF-8", sep=",", clear_screen = TRUE) {
                          blue("Clusters (rays)"),
                          blue("Clusters (polygons)"),
                          blue("Dendrogram"),
-                         blue("Phylogenic tree"),
+                         blue("Phylogenetic tree"),
                          blue("Misplacement"),
                          crayon::green("Statement Rating (Map)"),
                          crayon::green("Statement Rating (Dot chart)"),
@@ -2216,7 +2252,6 @@ loadRCMapData <- function(enc = "UTF-8", sep=",") {
 
 #' Choose the project's directory.
 #'
-#' From the easycsv package.
 #' @param caption Title shown in the folder-selection dialog (default
 #'   \code{'Select data directory'}).
 #' @return The user's selected directory.
@@ -2307,6 +2342,7 @@ clusterNames <- function() {
 #' Either use the RCMap scheme which has 21 colors, or the rainbow function.
 #' @param n Number of colors.
 #' @param type Either rcmap (default) or rainbow.
+#' @return A character vector of hex color strings, one per cluster.
 #' @importFrom grDevices rainbow
 #' @export
 clusterCols <- function(n, type="rcmap") {

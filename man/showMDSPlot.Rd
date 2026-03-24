@@ -16,6 +16,10 @@ sizes points by the mean rating for that variable.}
 \item{tau}{The Jaccard index threshold used to compute the misplacement
 index proportion (default=0.3). Only used when \code{metric="MPindex"}.}
 }
+\value{
+Called for side effects (plot). Returns \code{NULL} invisibly when \code{metric} is 0.
+}
 \description{
-Plot the 2-D MDS representation of the pile-sorting data.
+Displays a 2-D MDS map of the pile-sorting data, optionally coloured or
+annotated by a rating variable.
 }

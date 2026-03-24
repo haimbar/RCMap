@@ -15,6 +15,9 @@ RCMapMenu(enc = "UTF-8", sep = ",", clear_screen = TRUE)
 (default=TRUE). Set to FALSE if your terminal does not support screen
 clearing, or to keep a scrollable history of menu interactions.}
 }
+\value{
+Called for side effects. Saves the session to \code{CMapSession.RData} before exiting. Returns \code{NULL} invisibly.
+}
 \description{
 This is the main function in the package. Run RCMapMenu() to perform the concept mapping analysis via a hierarchical menu.
 }

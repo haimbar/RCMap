@@ -16,6 +16,9 @@ cluster centers as equal-sized markers. An integer \code{k} (offset by 2
 into the ratings data frame) sizes the cluster-center marker by the mean
 rating for that variable in the cluster.}
 }
+\value{
+Called for side effects (plot). Returns \code{NULL} invisibly when \code{metric} is 0.
+}
 \description{
 Can show the clusters either as convex hull polygons or as rays connecting
 each statement to its cluster centroid.

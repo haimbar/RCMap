@@ -1,3 +1,14 @@
+# RCMap 0.3.4
+
+## Bug fixes
+
+- **Fixed off-by-one indexing in `statementReport()`.**  The Jaccard-index
+  arrays `eta_ijk_e` and `eta_ijk_h` are indexed as `[[k-1]]` for the
+  k-cluster solution, but the code was using `[[nclust+1]]`. This caused
+  `statementReport()` to read the wrong Jaccard data (or crash with an
+  out-of-bounds error) for any cluster count other than one. Corrected to
+  `[[nclust-1]]`.
+
 # RCMap 0.3.3
 
 ## Bug fixes
@@ -19,7 +30,7 @@
   plot is now computed from the longest cluster name so that vertical x-axis
   labels are never truncated.
 
-- **Bottom legend in dendrogram and phylogenic tree.** Cluster names are now
+- **Bottom legend in dendrogram and phylogenetic tree.** Cluster names are now
   shown as a horizontal legend below the plot rather than as text drawn inside
   the plot area. When the combined label width exceeds the figure width the
   legend wraps to multiple rows, and the bottom margin grows automatically to
@@ -151,5 +162,5 @@
 - Two automatic cluster-count methods: within-cluster sums of squares and
   average silhouette (via `factoextra::fviz_nbclust`).
 - Dot-chart and bar-chart rating plots added.
-- Colored dendrograms and phylogenic tree visualisation added.
+- Colored dendrograms and phylogenetic tree visualisation added.
 - Two color schemes: `rcmap` (up to 21 clusters) and `rainbow`.

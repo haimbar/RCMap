@@ -6,6 +6,9 @@
 \usage{
 clusterTUKEY()
 }
+\value{
+Called for side effects (writes results to a file via \code{sink()}). Returns \code{NULL} invisibly.
+}
 \description{
 For each rating variable, fits a one-way ANOVA and then runs Tukey's Honest
 Significant Difference test for all pairs of clusters. Results are printed to

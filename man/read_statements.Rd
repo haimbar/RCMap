@@ -14,7 +14,7 @@ read_statements(filename, enc = "UTF-8", sep = ",")
 \item{sep}{Field separator (default comma).}
 }
 \value{
-A list with elements `issues` (NULL if none) and `cardNames` (data.frame)
+A list with elements \code{issues} (NULL if none) and \code{cardNames} (data.frame)
 }
 \description{
 The statements file should be a CSV with two columns (ID and statement text).
@@ -23,5 +23,7 @@ columns to `StatementID` and `Statement`) and will normalize encodings and
 whitespace. It validates that StatementID values are numeric and unique.
 }
 \examples{
+\donttest{
 read_statements('Statements.csv')
+}
 }

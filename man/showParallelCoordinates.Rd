@@ -6,6 +6,9 @@
 \usage{
 showParallelCoordinates()
 }
+\value{
+Called for side effects (plot). Returns \code{NULL} invisibly.
+}
 \description{
 Plots mean ratings per cluster across multiple rating-variable / cohort
 combinations, with one axis position per combination and one colored line per

@@ -23,6 +23,11 @@ read_ratings(filename, statements, ratingscale = 5, enc = "UTF-8", sep = ",")
 A list with elements: \code{issues} (NULL if none, otherwise an error
   string) and \code{ratings} (the validated data frame with \code{RaterID}
   as character and \code{StatementID} as factor).
+  On error, the list contains \code{issues} (the error message) and
+  \code{cardDat} set to \code{NULL}. On success, it contains
+  \code{issues = NULL} and \code{ratings} (the validated data frame).
+  Note: \code{RaterID} is not explicitly coerced to character and may be
+  numeric if read from a CSV with integer IDs.
 }
 \description{
 Reads \code{Ratings.csv} and checks that the first two column names are

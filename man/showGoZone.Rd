@@ -6,6 +6,9 @@
 \usage{
 showGoZone()
 }
+\value{
+Called for side effects (plot). Returns \code{NULL} invisibly.
+}
 \description{
 Plots two rating variables against each other (one per axis), with each
 statement labeled by its ID and colored by cluster. Reference lines are drawn

@@ -1,4 +1,29 @@
 # RCMap
-R Concept Mapping
+Group Concept Mapping in R
 
-RCMap is an open-source concept mapping software, implemented in R. It provides a menu-driven user interface to guide users through the concept mapping analytical process. For more information, see the [Documentation](https://haimbar.github.io/RCMap/) page in this repo.
+RCMap is an open-source implementation of group concept mapping, implemented in R. It provides a menu-driven user interface to guide users through the concept mapping analytical process.
+
+## Requirements
+
+- R >= 4.0.0
+- Dependencies: `smacof`, `crayon`, `ape`, `tcltk`, `stringdist`, `cluster`
+
+## Installation
+
+```r
+# install.packages("remotes")
+remotes::install_github("haimbar/RCMap")
+```
+
+## Quick Start
+
+```r
+library(RCMap)
+RCMapMenu()
+```
+
+This launches the interactive menu-driven interface for the full concept mapping workflow.
+
+## Documentation
+
+For detailed documentation and examples, see the [Documentation](https://haimbar.github.io/RCMap/) page (web-only resource, not a package vignette).

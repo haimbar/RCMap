@@ -14,5 +14,5 @@ choose_directory(caption = "Select data directory")
 The user's selected directory.
 }
 \description{
-From the easycsv package.
+Choose the project's directory.
 }

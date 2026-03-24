@@ -13,11 +13,9 @@ toText(varType, choice)
 \item{choice}{Integer index into the options vector for \code{varType}.}
 }
 \value{
-A character string (or vector when \code{choice} is missing) giving
-  the label(s) for the selected setting.
+The string from the pre-defined list for \code{varType} at index \code{choice}.
 }
 \description{
 Maps an integer menu selection to the corresponding string value for a given
-settings category. When called with only \code{varType}, returns the full
-vector of options for that category (useful for building menus).
+settings category.
 }
