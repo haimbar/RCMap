@@ -27,3 +27,5 @@ This launches the interactive menu-driven interface for the full concept mapping
 ## Documentation
 
 For detailed documentation and examples, see the [Documentation](https://haimbar.github.io/RCMap/) page (web-only resource, not a package vignette).
+
+**Data**: The repository contains two sample datasets: *sampleproject* contains a synthetic dataset with 10 sorters/raters. *DataNCATS* contains a real dataset with 74 (anonimized) sorters/raters.

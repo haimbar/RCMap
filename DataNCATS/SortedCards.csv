@@ -1,0 +1,1565 @@
+1,outcomes of activities,1,10,11,12,14,18,22,23,24,25,30,37,40,46,48,50,51,52,53,55,58,61,66,68,69,70,74,77,78,79 
+1,process,2,5,7,8,19,20,21,26,27,28,31,32,33,34,36,38,39,41,42,43,47,54,57,59,60,62,63,64,65,67,71,80,81 
+1,structure,3,4,6,9,13,15,16,17,29,35,44,45,49,56,72,73,75,76 
+2,bibliometrics,14,25,52 
+2,common metrics,80 
+2,d&i,37,46,55 
+2,deia,6,8,10,13,47,61,67,72,77 
+2,engagement,7,12,28,36,43,57,59 
+2,evaluation,24,31,60,68,69,70,78,79 
+2,hub infrastructure,5,27,30,35,45,62,64,65 
+2,impact,1,15,16,18,20,22,29,40,41,42,48,58,74 
+2,informatics,17,75 
+2,inst support,3,19,71 
+2,irb,44 
+2,pilots,4,39,53,66 
+2,recruitment,63 
+2,regulatory,73 
+2,response,11,81 
+2,roi,21,23 
+2,rppr,38 
+2,team science,9,34,54 
+2,training,2,26,32 
+2,wfd,33,50,51 
+2,workforce,49,56,76 
+3,clinical research,20,56,59,64,79,80 
+3,community engagement,16,36,43,57 
+3,diversity; equity; and inclusion,6,8,13,28,58,61,72 
+3,education,2,32,67 
+3,evidence synthesis,24 
+3,external collaboration,7,9,30 
+3,health economics,21,23,69 
+3,hub performance,3,12,15,19,38,41,44,47,49,54,63,65,71,76 
+3,hub services,5,14,27,31,35,45,62 
+3,informatics,17,60,75 
+3,interdisciplinarity,22 
+3,internal collaboration,34 
+3,mentorship,26 
+3,pilot grants,4,10,25,53,66 
+3,program outcomes,1,18,33,37,40,42,50,51,55,68,70,74,77,78 
+3,public health resposiveness,11,81 
+3,research impact,46,48,52 
+3,retrospective analysis,29 
+3,web analytics,39,73 
+4,d&i,1,37,40,42,46,55 
+4,diversity,6,8,13,61,72 
+4,impact,4,7,11,14,18,23,24,25,29,38,41,43,48,52,53,57,66,68,69,70,74,77,78,81 
+4,research support,5,10,12,15,16,17,20,21,27,28,30,31,33,35,39,44,45,47,56,58,59,60,62,63,64,65,71,73,75,76,79,80 
+4,team science,3,9,19,22,34,36,54 
+4,workforce development,2,26,32,49,50,51,67 
+5,accural measure,80 
+5,benefits measure,69,70,78 
+5,collaboration measure,3,7,9,16,34,36 
+5,community engagment measure,57 
+5,consultation measure,45 
+5,cost measure,21,23 
+5,customer measure,62 
+5,data quality measure,60 
+5,dissemination measure,11,17,24,25,37,46,77 
+5,diversity measure,6,8,10,13,28,72 
+5,education measure,2,12,32 
+5,efficiency measure,5,53,81 
+5,impact measure,52 
+5,informatics measure,75 
+5,irb turnaround time measure,44 
+5,methods,29 
+5,opportunity measure,20 
+5,outcome measure,4,14,18,33,66,68,74 
+5,productivity measure,30 
+5,quality measure,31,71,73 
+5,reach measure,39,47,48,55 
+5,research barriers measure,65 
+5,research measure,35,58,59,63,79 
+5,research quality measure,15 
+5,rppr measure,38 
+5,stakeholder engagment measure,43 
+5,study start-up measure,64 
+5,team science measure,54 
+5,translation measure,1,27,40,41,42 
+5,workforce measure,19,22,26,49,50,51,56,61,67,76 
+6,patents,1 
+6,trainings,2,32,57 
+6,collaboration,3,9,36 
+6,pilot,4,10,25,28,66 
+6,consultation,5,45,47 
+6,dei,6,8 
+6,interactions,7 
+6,relevance,11 
+6,terms,12 
+6,recruitment,13,59,80 
+6,supported,14 
+6,qualities,15 
+6,community,16 
+6,data,17 
+6,stories,18 
+6,tenure,19 
+6,care,20 
+6,cpst,21 
+6,interdisciplinary,22 
+6,investiment,23 
+6,reviews,24 
+6,mentors,26 
+6,projects,27,34 
+6,studies,29 
+6,trials,30,35,64,73,79 
+6,services,31 
+6,programs,33 
+6,innovation,37,40 
+6,report,38 
+6,website,39 
+6,research,41,43,58,63,74 
+6,approvals,42 
+6,irb,44 
+6,media,46 
+6,attention,48 
+6,personnel,49,72,76 
+6,careers,50 
+6,engagement,51 
+6,bibliomrtrics,52 
+6,funding,53 
+6,teams,54 
+6,reach,55 
+6,faculty,56 
+6,quality,60,71 
+6,underrepresented,61 
+6,investigatorsw,62 
+6,barriers,65 
+6,applications,67 
+6,benefits,68,69,70 
+6,records,75 
+6,productivity,77 
+6,policy,78 
+6,response,81 
+7,mixed methods,6,9,19,27,30,32,34,35,36,38,40,41,45,50,54,58,60,71,74 
+7,qualitative,8,12,18,29,31,37,43,65 
+7,quantitative,1,2,3,4,5,7,10,11,13,14,15,16,17,20,21,22,23,24,25,26,28,33,39,42,44,46,47,48,49,51,52,53,55,56,57,59,61,62,63,64,66,67,68,69,70,72,73,75,76,77,78,79,80,81 
+8,?,38 
+8,bibliometrics,11,24,25,29,48,52,77 
+8,community engagement,7,16,34,36,43,57,70 
+8,d&i,1,33,40,42,74 
+8,deia,6,8,13,28,61,72 
+8,media,39,46 
+8,qa/qc,2,5,31,44,49,53,64,71,76 
+8,research support provided,14,26,35,45,47,58,62 
+8,team science,22,54 
+8,translational research,15,19,20,27,30,37,41,56,59,60,63,73,75,79,80 
+8,translational science,3,9,12,65,81 
+8,translational training,4,10,32,50,51,66,67 
+8,tsbm,17,18,21,23,55,68,69,78 
+9,innovation,1,4,15,20,25,66 
+9,workforce development,2,19,26,32,50,51,67,76 
+9,preparedness,3,35,54,81 
+9,efficiency,5,11,17,21,23,31,41,44,45,49,53,63,64,65,68,69,70,71,73,80 
+9,justice,6,8,10,13,28,61,72 
+9,reach,7,9,12,16,30,36,39,43,46,55,57,59,75 
+9,effectiveness,14,18,24,29,33,38,40,48,52,60,77 
+9,saturation,22,27,34,42,47,56,58,62 
+9,translation,37,74,78,79 
+10,collaboration,3,7,9,34,36,55,75 
+10,communication,12,39,46 
+10,compliance,73 
+10,dissemination,17,48,68,69,70 
+10,diversity,6,8,10,13,28,47,58,61,72 
+10,evaluation,5,15,24,29,31,44,45,52,60,65,78 
+10,feasibility,21,59,63,64,80 
+10,impact,18,19,20,38,42,74 
+10,implementation,41 
+10,infrastructure,35 
+10,innovation,33 
+10,membership,54,62 
+10,outreach,16,43 
+10,product,1,14,23,25,37,40,53,66,77 
+10,readiness,11,71,81 
+10,translational,4,27,30,79 
+10,workforce,2,22,26,32,49,50,51,56,57,67,76 
+11,academic outcomes,1,14,19,48,52,53,56,69,77 
+11,collaboration,3,7,9,22,30,34,54 
+11,community engagement,16,36,43,57,70 
+11,deia,6,8,10,13,28,61,67,72 
+11,dissemination,38,39,46 
+11,informatics,17,60,75 
+11,informative clinical research,15,42,44,59,64,73,80 
+11,operations,5,21,23,31,35,45,47,49,55,62,63,65,66,71,76 
+11,pandemic response,11,81 
+11,patient care,20,68 
+11,programmatic development,33 
+11,research advances,4,18,24,25,27,29,37,40,41,58,74,78,79 
+11,workforce development,2,12,26,32,50,51 
+12,clinical informatics and research analytics,17,24,29,75 
+12,community engagement,16,20,36,43,57 
+12,cts research processes,5,15,21,37,44,60,64,65,73 
+12,deia,6,8,10,13,28,58,61,72,77 
+12,dissemination and implementation of cts,12,18,25,46,48,52,53,68,78 
+12,evaluation and metrics,38,39,59,71,79,80 
+12,multisite collaborations,3,9,30,34,55 
+12,product/solution development,1,40,41,42,74 
+12,public health collaborations and response,7,11,70,81 
+12,resources and services,14,27,31,35,45,47,49,62,63,76 
+12,return on investment,4,23,33,66,69 
+12,training and career development,2,19,22,26,32,50,51,54,56,67 
+13,patents,1 
+13,training,2,32,33,50,57,67 
+13,collaborations,3,7,9,22,34,36 
+13,pilots,4,10,25,27,53,66 
+13,consults,5,45 
+13,deia,6,8,13,47,61,72 
+13,impact,11,14,18,19,20,24,29,40,42,43,46,48,51,52,55,65,68,69,70,77,78,81 
+13,translational science,12 
+13,rcqi,15,31,38,49,63,71 
+13,community engagement,16 
+13,dissemination,17 
+13,efficiency,21,76 
+13,roi,23 
+13,mentorship,26 
+13,d and i,28,37,39 
+13,ct,30,35,56,59,64,73,74,79,80 
+13,tracking,41 
+13,irb,44 
+13,team science,54 
+13,resources,58,62 
+13,rigor,60 
+13,informatics,75 
+14,career trajectory metric,48,50,51,53 
+14,clinical trial metric,21,30,73 
+14,community engagement activity,36,57 
+14,community engagement outcome,43 
+14,consosrtium metric,55 
+14,dissemination product,1,24,40,42,46,68,69,70,78 
+14,diversity and inclusion metric,6,8,10,13,61,67,72,77 
+14,hub process,2,3,5,7,9,11,15,16,18,29,31,38,39,41,49,58,62,65,71,75,81 
+14,interoperability metric,60 
+14,longer term hub metric,66 
+14,longer term hub outcome,14,19,20,23,33,37,74,76 
+14,pilot outcome metric,4,25 
+14,research training metric,26,32 
+14,shorter term hub outcome,12 
+14,shoter term hub outcome,22 
+14,translational research metric,52,79,80 
+14,translational research process,27,28,34,35,44,45,47,54,56,59,63,64 
+14,workforce metric,17 
+15,collaboration,3,7,9,34,36 
+15,consults,5,45,47,55,56 
+15,deia,6,8,13,22,28,51,61,65,67,72,77 
+15,innovation,1,33,35,37,40,74,75 
+15,marketing,39,48 
+15,net promoter score,26,31 
+15,network,16,17 
+15,pilots,4,10,21,27,30,44,59,66,73,79,80 
+15,productivity,14,25,42,52,63,64,69 
+15,rural health,43,57,58,70 
+15,training,2 
+15,translational sci ecosystem,12,15,19,20,29,32,41,49,50,53,54,62,68,76,78 
+15,urgent,11,71,81 
+15,wins,18,23,24,38,46,60 
+16,moderately important,4,6,8,10,11,13,15,17,25,30,32,34,35,36,39,40,45,47,50,58,59,60,61,62,66,67,72,74,77,80 
+16,some importance,5,7,9,14,16,18,19,20,21,23,24,27,28,29,31,33,37,38,41,43,44,46,48,49,52,53,54,55,56,57,63,64,65,68,69,70,71,75,78,79,81 
+16,unimportant,1,12,22,42,76 
+16,very important,2,26,51,73 
+16,vital,3 
+17,translation intellectual property,1,42 
+17,workforce development,2,26,32,49,51,67,76 
+17,translational science culture change,3,12,19,22,33,65 
+17,cost outcome,4,14,23,25,53 
+17,service utilization,5 
+17,diversity; equity; inclusion; accessibilty culture change,6,10,28,47,61,72 
+17,network configuration,7,9,34,36,55,57,77 
+17,theory of change,8 
+17,cts hub capacity,11 
+17,health equity,13,58 
+17,hub portfolio,15,27,30,56,79 
+17,hub infrastructure capacity,16,17,20 
+17,communication & dissemination,18 
+17,clinical trials management,21,59,63,64,73,75,80 
+17,reproducibility,24 
+17,methods,29 
+17,services quality,31 
+17,none 1,35 
+17,dissemination,37 
+17,?,38,54 
+17,communication reach,39 
+17,outcome,40 
+17,process marker,41 
+17,none 2,43 
+17,regulatory management,44 
+17,utilization,45,62 
+17,science dissemination & uptake,46,48,52 
+17,career outcomes,50 
+17,hub capacity,60 
+17,return on investment,66 
+17,translation products,68 
+17,improvement gain,69,70,71 
+17,translation,74 
+17,translation policy,78 
+17,cts network capacity,81 
+18,career development,2,19,26,32,50,51,54,67 
+18,collaboration,7,9,22,34,36 
+18,d&i,37 
+18,dei,6,8,13,28,61,72 
+18,engagement,12,43 
+18,informatics,17,29 
+18,innovation,68,69,70 
+18,metric,1,11,14,16,24,27,30,33,38,40,42,44,45,46,47,48,49,52,53,55,56,57,58,59,62,64,65,71,74,76,77,78,79,80,81 
+18,optimization,3,5,75 
+18,pilots,4,10,25,66 
+18,quality control,15,39,60,63,73 
+18,stewardship,20,21,23,31,35 
+18,tracking progress,18 
+18,translational,41 
+19,active multi-center trials,30 
+19,advocacy analytics,7,78,81 
+19,clinical research strategies,20 
+19,clinical trial activation duration,64 
+19,clinical trial process metrics,73 
+19,community members trained,57 
+19,consult analytics,5,45 
+19,cost per participant,21 
+19,ctsa collaborations,9,34,36 
+19,ctsa community engagement outcomes,43 
+19,ctsa datasets,17 
+19,ctsa outcomes,68,70,74 
+19,ctsa outputs,14 
+19,ctsa personnel analytics,49,72,76 
+19,ctsa project analytics,79 
+19,ctsa project descriptions,15,16,27,58 
+19,ctsa recruitment metrics,80 
+19,ctsa research project deferrals,63 
+19,ctsa resource analytics,55 
+19,ctsa translated resources,28 
+19,ctsi quality improvement metrics,71 
+19,data quality metrics,60 
+19,dei analytics,13,61 
+19,dei outputs,6 
+19,dei strategies,8 
+19,economic benefits,69 
+19,ehr data integration metrics,75 
+19,faculty advancement,19,50 
+19,fda approvals,42 
+19,hub barriers,65 
+19,human subjects in ctsa supported trials,59 
+19,infrastructure resources,35 
+19,institutional commitment,3 
+19,ip outputs,1,37,40 
+19,irb application duration,44 
+19,media highlights,46 
+19,mentor metrics,26 
+19,new programs,33 
+19,pilot analytics,10,53,66 
+19,pilot outputs,4 
+19,project translational advancement,41 
+19,publication analytics,11,24,25,48,52,77 
+19,researcher analytics,56,62 
+19,researchers served,47 
+19,retrospective case studies,29 
+19,return on investment,23 
+19,rppr outcomes,38 
+19,scientific interdisciplinarity metrics,22 
+19,service quality qualitative indicators,31 
+19,success stories,18 
+19,team science readiness,54 
+19,training metrics,32,51,67 
+19,training resources,2 
+19,translational science awareness,12 
+19,website analytics,39 
+20,clinical,15,21,30,35,56,64,73,79 
+20,collaboration,9,34 
+20,commercialization,1 
+20,community engagement,7,12,16,36,43,57 
+20,crisis,11,81 
+20,dissemination,39,46,55 
+20,diversity,6,8,13,28,61,72 
+20,evaluation,18,23,29,38,60,71 
+20,implementation,33 
+20,informatics,17,75 
+20,innovation,40 
+20,pilots,4,10,66 
+20,recruitment and retention,20,59,80 
+20,regulatory,42,44 
+20,research productivity,14,24,25,48,52,53,74,77 
+20,services,5,27,31,45,47,58,62 
+20,team science,22,54 
+20,training,2,32,51,67 
+20,translation,3,41,63,65 
+20,tsbm impacts,68,69,70,78 
+20,workforce development,19,26,49,50,76 
+21,outcome - goal 1,1,4,33,37,38,40,77 
+21,outcome - goal 2,7,9,34,35,36 
+21,outcome - goal 3,58,61 
+21,outcome - goal 4,20,59,74 
+21,outcome - goal 5,11,81 
+21,outcome - goal 6/7,14,17,19,25,42,47,50,66 
+21,outcome - goal 8,12,22,32,39,55,57 
+21,outcome - meta,18,23,24,46,48,52,68,69,70,78 
+21,process - goal 1,27,30,41,45,53,63,64,79,80 
+21,process - goal 2,3,16,54 
+21,process - goal 3,8 
+21,process - goal 4,15,21,31,43,44,49,60,71,73 
+21,process - goal 6,56,76 
+21,process - goal 6/7,2,10,26,51,62,67 
+21,process - goal 8,65,75 
+21,process - meta,5,6,13,28,29,72 
+22,collaboration,7,9,30,34,36,55,56,57,75 
+22,dei,6,8,10,13,16,28,43,59,61,72 
+22,dissemination,11,12,14,17,18,39,46,48,65,77 
+22,fundingresource support,3,4,33,35,45,47,49,79 
+22,innovationscience,20,24,27,29,37,38,40,42,54,58,60 
+22,outcomeimpact,1,19,23,25,50,51,52,53,62,66,68,69,70,74,78,80 
+22,quality safety efficiency,5,15,21,31,41,44,63,64,71,73,76,81 
+22,training and education,2,22,26,32,67 
+23,collaboration,7,9,22,30,34,54 
+23,communication,12,39,46,65 
+23,community,16,36,43,57,70 
+23,diversity,6,8,13,28,47,58,61,72 
+23,efficiency,21,23,38,44,49,63,64,71,73,75,76,80 
+23,impact,15,18,41,50,55,59,68,69,78 
+23,impact: rapid response,11,81 
+23,innovation,20,33,37,40,42,74 
+23,institutional investiment,3,19,56 
+23,pilots,4,10,25,27,53,66 
+23,research products,1,17,24,48,52,60,77 
+23,services,5,14,29,31,35,45,62,79 
+23,training,2,26,32,51,67 
+24,accessibility,35,45,58 
+24,awards,1,4,10 
+24,collaborations,7,9,12,17,34,55,75 
+24,community,16,36,57,70 
+24,cost efficiency,21,23,44,71,76 
+24,descriptive,22,27,30,42,56 
+24,dissemination,18,24,25,29,37,46,48,52,77 
+24,diversity,8,13,28,72 
+24,efficiency,5,11,53,60,64,80,81 
+24,innovation,20,33,40,74 
+24,institutional change,3,6,19,47,65 
+24,longitudinal,14,59,66,69 
+24,policy,78 
+24,process,15,31,38,39,49,63,68,73 
+24,workforce development,2,26,32,41,43,50,51,54,61,62,67,79 
+25,ce,16,36 
+25,collaborations,3,34 
+25,communications,12,39,46 
+25,cts,30,35,64,73 
+25,dei,6,8,10,13,28,61,67,72 
+25,innovation & commercialization,1,40,42 
+25,internal tracking,2,5,27,45,76 
+25,p&t,19,50 
+25,participant enrollment,21 
+25,participant recruitment,20 
+25,pilot grants,4,9,25,53,66 
+25,program evaluation,15,17,23,24,26,29,31,32,33,37,38,41,43,44,47,48,49,51,55,56,59,60,62,63,65,71,74,75,79,80,81 
+25,publications,11,14,52,77 
+25,team science,22,54 
+25,translational impact,7,18,57,58,68,69,70,78 
+26,collaboration,7,9,22,30,34,35,36,54,55 
+26,community,16,43,57 
+26,cqi,15,31,60,63,71,73 
+26,dissemination,39,46,48,52 
+26,diversity,6,8,10,13,28,47,58,61,67,72 
+26,engagement,59 
+26,evaluation,41 
+26,innovation,20 
+26,outcome,14,18,19,23,29,40,53 
+26,output,1,3,4,11,17,24,25,27,33,37,38,42,45,62,66,68,69,70,74,77,78,81 
+26,process,5,21,44,64,65,75,76,79,80 
+26,training,2 
+26,workforce,12,26,32,49,50,51,56 
+27,activities,2,30,67 
+27,clinical,11,64 
+27,collaboration,7,9,22,34,36 
+27,community outreach,16,27,43,57 
+27,discovery,20 
+27,dissemination,39 
+27,diversity,6,8,10,13,28,61 
+27,grant,53 
+27,hub,45,58,66,77 
+27,impact,1,18,19,24,25,33,40,42,48,50,52,55,63,69,74,78 
+27,informatics,17,75 
+27,infrastructure,35,41,44,65,73,81 
+27,inputs,3 
+27,investigators,62 
+27,outcomes,4,14,29,38,46,47,51,56,59,68,80 
+27,performance,60 
+27,personnel,49 
+27,process,5,15 
+27,quality improvement,31,71 
+27,research,76 
+27,roi,21,23 
+27,scholarship,54 
+27,scientific,37,79 
+27,staff,72 
+27,training,26,32 
+27,translational,12,70 
+28,barriers,65 
+28,career,49,50,76 
+28,case studies,18,29 
+28,clinical trials,20,56,59,64 
+28,collaboration,7,9,34,36,55 
+28,common metric,44,51,80 
+28,community engagement,16,43,57 
+28,consultations,5,45 
+28,data,17,60,75 
+28,diversity,6,8,13,28,58,61,72 
+28,evaluation,24 
+28,financial,3,21 
+28,impact,1,63,74 
+28,innovation,33,37,40 
+28,multi center,30,35 
+28,pilots,10,25,53,66 
+28,progress reporting,38 
+28,publications,48,52,77 
+28,publicity,39,46 
+28,quality and efficiency,15,73 
+28,rapid response,11,71,81 
+28,regulatory,42 
+28,roi,4,23 
+28,services,14,31,47,62 
+28,team science,19,22,54 
+28,training,2,12,26,32,67 
+28,translational continuum,41,79 
+28,translational science,27 
+28,tsbm,68,69,70,78 
+29,alt metrics-social marketing,7,12,39,46,48 
+29,careers: outcomes data,19,50 
+29,careers: process data,54,61,76 
+29,clinical research: process data,20,56,80 
+29,clinical trials: process data,13,21,30,35,59,64,73,79 
+29,collaboration: process data,3,22,34,36 
+29,hub level: outcomes data,1,6,24,33,37,40,41,42,52,68,69,70,77,78 
+29,hub level: process data,23,27,28,38,47,49,62,71,72 
+29,national ctsa: outcomes data,11,55,74 
+29,national ctsa: process data,9,15,81 
+29,pilot awards: outcomes data,4,25,53,66 
+29,pilot awards: process data,10,58 
+29,qualitative data,8,18,29,43,65 
+29,services: outcomes data,14,17,60,63,75 
+29,services: process data,5,16,31,44,45,57 
+29,training: outcomes data,32,51 
+29,training: process data,2,26,67 
+30,collaboration,3,7,9,17,22,30,33,34,36,63,64,75 
+30,community,16,43,70 
+30,consultation,5,45 
+30,cost,21 
+30,diversity,6,8,13,28,35,47,56,58,61,72 
+30,evaluation,24 
+30,impact,1,14,18,20,23,37,38,39,42,44,46,48,52,55,62,68,69,74,80 
+30,pilots,4,10,25,53,66 
+30,promotion,19,50 
+30,quality,65,71,73 
+30,retrospective,29 
+30,satisfaction,26,31,49,60 
+30,training,2,27,51,57,67 
+30,translational,12,15,32,40,41,54,59,76,77,78,79,81 
+30,urgent,11 
+31,collaboration,3,7,9,34,36 
+31,communication,12,18,39,46 
+31,community engagment,16,43 
+31,deia,6,8,13,28,61,72 
+31,impact,1,11,14,17,19,20,22,23,37,40,42,48,50,52,55,68,69,70,74,77,78 
+31,mentorship,26 
+31,operations,33,35,41,45,49,65,75,76,79,81 
+31,pilot grant,4,10,25,53,66 
+31,quality improvement,5,15,24,31,38,44,60,63,64,71,73,80 
+31,research,21,27,29,30,47,54,56,58,59,62 
+31,training,2,32,57 
+31,workforce development,51,67 
+32,collaboration,7,9,30,34,35,54,55 
+32,community engagement,16,36,43,57 
+32,equity,6,8,10,13,47,61,72 
+32,informatics,17,60,75 
+32,innovation,1,33,37,40 
+32,institutional support,3,19,44 
+32,overcoming barriers,11,20,59,63,64,65,71,80,81 
+32,public awareness,12,39,46,48 
+32,quality & efficiency,5,15,21,31,38,45,62,73 
+32,research production,52,58,77 
+32,research scope,22,27,28,29 
+32,roi,4,14,18,23,25,53,66,74 
+32,training,2,26,32,67 
+32,translational advancement,24,41,42,68,69,70,78,79 
+32,workforce,49,50,51,56,76 
+33,awareness,12 
+33,bad item (confusing; double-barreled),3,14 
+33,career,19,50,51,56 
+33,communications,18,39,46 
+33,dei,6,8,13,28,61 
+33,domains,15 
+33,healthcare?,20 
+33,impact,1,23,33,37,40,42,68,69,70,74,75,78 
+33,methods,29,60 
+33,partnerships,7,9,16,34,36,43,57 
+33,process evaluation,5,21,31,35,38,44,45,47,49,53,59,62,63,64,65,71,72,73,76,80 
+33,scientific impact,48,52,55 
+33,scientific outputs,4,10,11,17,24,25,27,30,41,58,66,77,79,81 
+33,team science,22,54 
+33,training,2,26,32,67 
+34,difficult to get data and report,24,34,41,48,54,55,60,63,68,69,70,78,80 
+34,easy to get data and report,1,2,4,14,16,25,27,29,39,42,44,45,51,52,56,57,58,59,62,66,67 
+34,somewhat difficult to get data and report,5,6,7,8,9,11,19,20,21,22,32,38,40,61,71,72,74,76,77,81 
+34,somewhat easy to get data and report,3,10,13,15,17,18,23,26,28,30,31,33,35,36,37,43,46,47,49,50,53,64,65,73,75,79 
+34,very difficult to get data and report,12 
+35,collaboration,3,9,34 
+35,community,7,16,36,43,46,47,57 
+35,diversity,6,8,13,28,58,61,72 
+35,financial,21,23 
+35,impact,11,14,18,24,25,29,48,52,53,60,68,69,70,74,77,78 
+35,innovation,1,33,37,40,81 
+35,pilots,4,10,66 
+35,research services & support,5,30,31,35,38,39,44,45,55,56,59,62,63,64,65,71,73,75,80 
+35,team science,22,54 
+35,translation,12,15,17,20,27,41,42,79 
+35,workforce development,2,19,26,32,49,50,51,67,76 
+36,career development,2,19,32,50,51,67,76 
+36,clinical research efficiency,21 
+36,clinical research quality,15,20,30,44,55,56,59,60,64,65,71,73,74,75,80 
+36,collaboration,18 
+36,collaboration internal,22,34 
+36,community collaboration,7,36,43,57,70 
+36,difficult,53 
+36,diversity,6,8,13,28,61,72 
+36,hub reach,5,16,26,27,31,35,45,47,58,62,63,77,81 
+36,informatics,17 
+36,institutional commitment,3 
+36,intellectual property,1 
+36,irrelevant,39,49 
+36,methods,29 
+36,national collaboration,9 
+36,outputs,14,23,37,38,42,52 
+36,pilots,4,10,25,66 
+36,publications,11 
+36,translational science awareness,12,24,33,40,41,46,48,54,68,69,78,79 
+37,collaborations,7,9,34,36,54,55 
+37,communication,12,39,46 
+37,diversity,8,13,28,47,57,61,67,72 
+37,education,2,32 
+37,evaluation,15,18,29,31,38,43,48,51,60,71,74,81 
+37,financial,21,23 
+37,operational metrics,5,6,16,19,30,44,49,58,59,63,64,65,73,75,76,80 
+37,productivity,1,14,17,25,37,40,42,52,66,77,78 
+37,support,3,4,10,20,26,33,35,45,50,56,62 
+37,translational research,11 
+37,translational science,22,24,27,41,53,68,69,70,79 
+38,adaptive capacity,11,33,38,65,81 
+38,collaboration,3,7,9,22,34,36,39,43,55,56 
+38,demographics,8,10,13,28,47,49,61,67,72,77 
+38,education,2,12,26,32,54,57 
+38,evaluation,23,24,48,52 
+38,policy,6,19 
+38,product,1,4,14,17,18,29,37,40,46,50,51,66,68,69,70,74,78 
+38,regulatory,15,42,44,60,64,71,73 
+38,research participation,20,21,59,75,80 
+38,research studies,25,27,30,41,53,58,62,63,79 
+38,service,5,16,31,35,45,76 
+39,bibliometrics,11,24,48,52,77,78 
+39,clinical research,15,20,21,56,59,64,71,73,79,80 
+39,collaboration,3,7,9,22,30,34,36,54 
+39,communications,12,18,46,81 
+39,community,16,43,57 
+39,dei,6,8,13,28,61,72 
+39,informatics,17,35,39,41,75 
+39,institutional change,19 
+39,outcomes,1,23,29,37,38,40,42,60,68,69,70,74 
+39,pilots,4,10,25,53,66 
+39,services,5,14,27,31,33,44,45,47,49,55,58,62,63,65,76 
+39,training,2,26,32,50,51,67 
+40,capacity,2,4,14,15,27,35,41,53,55,58,75,79 
+40,collaboration,3,7,9,34 
+40,communications,39,46,48 
+40,deployment,17,29,30,65 
+40,diversity; inclusion; equity,6,8,10,13,22,28,61,67,72 
+40,effectiveness,5,18,21,23,24,25,26,31,32,38,49,50,51,60,63,64,68,69,70,73,76,78,80 
+40,productivity,1,33,37,40,42,44,45,47,52,56,59,62,66,74,77 
+40,responsiveness,11,20,54,71,81 
+40,stakeholder engagement,12,16,19,36,43,57 
+41,administration,3,5,19,31,35,44,45,49,56,71 
+41,clinical,20,30,41,59,68,79 
+41,collaboration,9,16,17,22,33,34,37,38,43,47,55,57,58,75,81 
+41,communication,7,12,18,39,54,78 
+41,dissemination,11,24,25,40,42,46,48,52,74,77 
+41,diversity,6,8,10,13,27,28,61,67,72 
+41,effectiveness,15,50,51,53,60,62,63,64,65,66,69,70,73,76,80 
+41,money,1,23 
+41,pilot grants,4 
+41,success,14 
+41,workforce education,2,21,26,29,32,36 
+42,basic metrics,1,2,5,15,16,24,25,26,27,29,30,31,32,39,41,42,44,45,49,51,52,53,59,62,63,64,66,79 
+42,collaborations,7,9,22,34,36,43 
+42,deia,6,8,10,13,28,47,58,61,67,72,77 
+42,quality,18,40,60,73,74 
+42,reach,46,48,50,55,56,57 
+42,readiness,54,80 
+42,responsiveness,11,38,71,81 
+42,roi,3,4,12,14,21,23 
+42,systemic change,19,20,33,35,37,65,76 
+42,technology,17,75 
+42,tsbm,68,69,70,78 
+43,accrual,59,80 
+43,clinical,30,42,56,63 
+43,collaboration,9,34,36 
+43,community,16,43,57 
+43,consultations,5,31,45,62 
+43,cqi,15,24,38,60,65,71 
+43,dei,6,8,13,28,47,61,72 
+43,impact,18,29,33,40,48,52,68,69,70,78 
+43,informatics,17,75 
+43,infrastructure,3,20,35,44,64,73 
+43,kl2,26,50,51,67 
+43,pilots,4,10,25,53,58,66 
+43,products,1,14,37,74,77 
+43,reach,7,39,46,55 
+43,roi,21,23 
+43,team science,22,54 
+43,trainings,2,32 
+43,translational,12,27,41,79 
+43,urgent need,11,81 
+43,workforce,19,49,76 
+44,products,1,11,14,17,24,27,29,42,48,52,74,77,79 
+44,education,2,32 
+44,connections,3,7,9,30,51,56 
+44,funding,4,10,25,66 
+44,service,5,31,44,45,47,53,62,63,64,80,81 
+44,dei,6,8,13,28 
+44,awareness,12,15 
+44,engagement,16,36,43,57 
+44,dissemination,18,39,46,68,69,70,78 
+44,organizational change,19,35,38,49,61,65,71,72,75,76 
+44,innovation,20,33,37,40,41 
+44,efficiency,21,23,60,73 
+44,team science,22,34,54 
+44,mentoring,26,67 
+44,training,50 
+44,reach,55,58,59 
+45,clinical trials,13,15,20,21,30,35,59,63,64,73,74,79,80 
+45,collaboration,7,9,22,34,36,54 
+45,community engagement,16,43,57 
+45,diversity,6,8,28,61 
+45,impact,18,19,44,55 
+45,outcomes,1,14,17,37,40,42,46,47,68,69,70,78 
+45,pilots,4,10,25,27,53,66 
+45,program,23,24,33,38,39,49,50,56,58,60,65,71,72,75,76,81 
+45,publications,11,48,52,77 
+45,services,5,29,31,45,62 
+45,training,2,26,32,51,67 
+45,translational science,3,12,41 
+46,academic scholarship,14,24 
+46,community engagement,16,36,57 
+46,continuous quality improvement (cqi),5 
+46,cost effectiveness,21 
+46,cqi,15,31,38,44,60,63 
+46,crisis readiness,11,81 
+46,dei,6,8,10,28,61,67,72 
+46,engagement with public,39,43,46,48,59 
+46,financial benefit,23 
+46,health equity,13,58 
+46,information equity,17 
+46,innovation,1,20,33,37,40,74 
+46,institutional support,3 
+46,inter-ctsa collaboration,9 
+46,interdisciplinarity,22 
+46,measuring scholarship,52,53,77 
+46,process,45,47,49,62 
+46,public health collaborations,7 
+46,research breadth,27,34,55,56 
+46,research efficiency,64,65,71,73,75,80 
+46,successful translation,4,41,42 
+46,ts readiness,12,30,35,54 
+46,ts success,18,25,29,66,68,69,70,78,79 
+46,workforce development,2,26,32,51,76 
+46,workforce innovation,19 
+46,workforce success,50 
+47,academic productivity,48,50,52,53,58,77 
+47,catalyzed research,4,11,14,25,27,66 
+47,collaboration,7,9 
+47,common metrics,44,59,80 
+47,ctsa hub reach,39,46,47,55 
+47,customer service,5,31,45,62 
+47,data safety and quality,60,73,75 
+47,dei,6,8,10,13,28,61,67,72 
+47,dissemination of best practices,65 
+47,education,2,12 
+47,education/competencies,32 
+47,evaluation of outcomes and impact,41,51,63,68,69,70,78 
+47,evaluation tool,29 
+47,evlauation of innovation,37 
+47,health impact,15 
+47,hub contribution,16,17,18,19,20,33,35,64,74 
+47,innovation,1,40,42 
+47,mentoring/networking,26 
+47,miscellaneous,38,54,76 
+47,organizational evaluation,49 
+47,potential roi change,21,23 
+47,response to funders,71 
+47,responsiveness,81 
+47,scientific rigor,24 
+47,stakeholder engagement,36,43,57 
+47,team science,3,22,30,34 
+47,translational science engagement,56,79 
+48,barriers,65 
+48,bibliometrics,52 
+48,career development,50,51,67 
+48,case studies,29 
+48,clinical and medical benefits,68 
+48,clinical research,56 
+48,clinical trials,30,64,73,79 
+48,collaboration,34 
+48,community,16,36,43,57 
+48,community and public health benefits,70 
+48,consultation,5,45 
+48,continuous quality improvement,71 
+48,cost,21 
+48,cross-hub collaborations,9 
+48,ctsa resources,55 
+48,data,17,75 
+48,data quality,60 
+48,dei,6,28,47,61,72 
+48,economic benefits,69 
+48,fda approvals,42 
+48,gender and racial diversity,8 
+48,infrastructure,35 
+48,innovations,37,40,74 
+48,institutional commitment,3 
+48,interdisciplinarity,22 
+48,investigators,62 
+48,irb approval time,44 
+48,media,46 
+48,mentorship,26 
+48,multi-focus initiatives,15 
+48,novel care,20 
+48,patents,1 
+48,patients,59 
+48,personnel,49 
+48,pilots,4,10,25,53,66 
+48,policy and legislative beneifts,78 
+48,programs,33 
+48,promotion and tenure,19 
+48,publications,11,14,77 
+48,quality,31 
+48,recruitment,80 
+48,research projects,27,41,58,63 
+48,return on investment,23 
+48,rppr,38 
+48,state and local interactions,7 
+48,success stories,18 
+48,systematic review and meta evaluation,24 
+48,team science,54 
+48,trainings,2,32 
+48,translational science,12 
+48,underrepresented populations,13 
+48,urgent public health needs,81 
+48,website,39,48 
+48,workforce,76 
+49,collaboration,9,22,34,36 
+49,communications,12,39,46 
+49,community support,16,20,57 
+49,dei metrics,6,10,13,47,58,61,67,72,77 
+49,dei needs,8,28,43 
+49,evaluation,38,71,79 
+49,hiring,49,76 
+49,impact,14,15,18,19,21,23,24,25,31,33,37,40,41,42,48,51,53,55,56,62,66,68,69,70,74,78 
+49,informatics,17,52,60,75 
+49,innovation,1,4 
+49,institutional support,3 
+49,public health,7,11,81 
+49,research methods,29 
+49,research support,5,27,30,35,44,45,59,63,64,65,73,80 
+49,team science,54 
+49,training,2,26,32,50 
+50,admin,19 
+50,admin - hr,49,76 
+50,admin - infrastructure,35 
+50,admin - new programs,33 
+50,admin products from clinical research,56 
+50,attention metrics,48 
+50,clinical research,15 
+50,clinical research - outcomes,74 
+50,collaboration,3,7,9,30 
+50,common metric,51,67,80 
+50,community engagement,16,57 
+50,cross-collaboration metrics,22 
+50,ctsa adaptive capacity,81 
+50,ctsa resources to nih,55 
+50,data quality,60 
+50,dei data,8,47,61,72 
+50,dei outcomes,58,77 
+50,dei outomes,6 
+50,dei recruitment data,13 
+50,ehr data,75 
+50,evaluation,24 
+50,fda approvals,42 
+50,funding,4,21 
+50,health care competition,20 
+50,impact,1,18 
+50,impact - bibliometrics,52 
+50,impact - careers,50 
+50,impact - rppr,38 
+50,inclusion for investigators,28 
+50,informatics datasets,17 
+50,innovations,37,40 
+50,investigators,11,62 
+50,media with ctsa staff,46 
+50,mentor satisfaction,26 
+50,pilot data,10,66 
+50,pilot data - publications,25 
+50,products from collaboration,34 
+50,products from community engagement,36 
+50,products from consults,45 
+50,products from grants,14 
+50,products from training,32 
+50,qualitative data - barriers,65 
+50,qualitative data - community experiences,43 
+50,qualitative data - services,31 
+50,quality - clinical trial process,73 
+50,rcqi - process change,71 
+50,recruitment,59 
+50,research projects,27 
+50,research projects - quality measure,63 
+50,retrospective case studies,29 
+50,roi,23 
+50,team science,54 
+50,time,5,44,53,64 
+50,training,2 
+50,ts knowledge,12 
+50,ts spectrum,41,79 
+50,tsbm - clinical and medical,68 
+50,tsbm - community and public health,70 
+50,tsbm - economic,69 
+50,tsbm - policy and legislative,78 
+50,website,39 
+51,awards,4,10,58,66 
+51,communication,18,37,39,46 
+51,continous quality improvement,15,21,23,38,44,53,56,59,60,63,64,65,68,71,73,74,76,79,80 
+51,dei,6,8,12,13,28,61,72 
+51,partnerships,3,7,9,34,36,43,54,70 
+51,scientific innovation,1,20,22,29,30,33,40,41,69,81 
+51,scientific productivity,11,14,19,24,25,27,48,52,77 
+51,scientific/health policy,78 
+51,service,5,16,17,31,35,42,45,47,49,55,62,75 
+51,workforce development,2,26,32,50,51,57,67 
+52,administration,76 
+52,barriers,65 
+52,career development,19,50 
+52,clinical trial success,15,20,21,30,35,56,59,64,73,74,80 
+52,collaboration,7,9,22,34 
+52,community engagement,16,36,39,43,46 
+52,cts research,3,12,27,58,79 
+52,data sharing,17 
+52,dei,6,8,13,28,61,72 
+52,dissemination,55 
+52,effective mentorship,26 
+52,evaluation,18,24,29 
+52,pilot success,4,10,25,53,66 
+52,quality improvement,38,49,60,71,75,81 
+52,regulatory,44 
+52,research impact,1,11,14,23,33,37,40,41,42,48,52,63,77 
+52,service use,5,31,45,47,62 
+52,team science,54 
+52,tsbm impact,68,69,70,78 
+52,workforce development,2,32,51,57,67 
+53,clinical research,13,20,21,30,42,56,59,64,74,79,80 
+53,collaborations,7,9,34,36 
+53,community engagement,43,57 
+53,consortium response,81 
+53,diversity,6,8,28,61,72 
+53,evaluation,15,18,23,24,29,41,68,69,70,78 
+53,hub services,5,16,31,45,47,62 
+53,human resources,19,49,76 
+53,informatics,17,60,75 
+53,innovations,33,40 
+53,institutional support,3,27,35 
+53,media,39,46,48 
+53,outcomes,1,14,37,55 
+53,pilot studies,4,10,25,53,58,66 
+53,publications,11,52,77 
+53,qa/qi,38,44,63,65,71,73 
+53,team science,22,54 
+53,training,2,26,32,50,51,67 
+53,translational science,12 
+54,altmetric,48 
+54,bibliometrics,52 
+54,clinical research,15,59,63,73 
+54,collaborations,55 
+54,community engagement,16,36,43,57,70 
+54,consortium collaboration,9 
+54,cost,21,69 
+54,ctsa consultation,5 
+54,dei,6,8 
+54,ehr,75 
+54,evaluation,14,60,65,74,77 
+54,fda,42 
+54,health crises,11,81 
+54,informatics,17 
+54,institutional collaborations,3,34 
+54,interdisciplinary education,22 
+54,irb,44,64,80 
+54,language,28 
+54,media,39,46 
+54,mentors,26 
+54,meta evaluation,24 
+54,multi center,30,35 
+54,novel care,20,40 
+54,patents,1 
+54,personnel,49,72,76 
+54,pilot grants,4,10,25,53,66 
+54,policy,78 
+54,programs,33,37,68 
+54,rcqi,71 
+54,research projects,27,58 
+54,retrospective case studies,29 
+54,roi,23 
+54,rppr,38 
+54,services,31,45 
+54,state collaboration,7 
+54,success stories,18 
+54,team science,54 
+54,training,2,32 
+54,translational science,12,41,79 
+54,urm,13,61 
+54,workforce development,19,47,50,51,56,62,67 
+55,continuous quality improvement,15,31,38,63,65,71,73 
+55,equity,8,10,13,28,58,61,72 
+55,impact dissemination,18,29,37,55 
+55,infrastructure resources,3,16,21,35,49 
+55,innovation,1,33,40,42,74 
+55,institutional policy,6,19 
+55,partnerships,7,9,36 
+55,research advancement,30,56,59,80 
+55,scholarship outcomes,14,24,25,46,48,52,53,66,77 
+55,scientific outputs,4,11,17,60,75 
+55,service efficiency,5,44,64,76,81 
+55,stakeholder awareness,12,39 
+55,team science,22,34,54 
+55,translational outcomes,43,68,69,70,78 
+55,translational spectrum,20,27,41,79 
+55,utilization,45,47,62 
+55,workforce development,2,23,26,32,50,51,57,67 
+56,accessibility,28 
+56,bibliometrics,25,52,77 
+56,clinical research,56,58 
+56,clinical trials,21,30,35,59,73,79,80 
+56,collaboration,9 
+56,communications,18,29,37,46 
+56,community,16,36,43 
+56,continuous quality improvement,15,31,38,71 
+56,crisis,11,81 
+56,data,17,24,60,75 
+56,diversity,6,8,13,61,72 
+56,evaluation,47,48,62,65,68,69,70,78 
+56,funding,4,10,14,53,66 
+56,government,7 
+56,human resources,49,76 
+56,impact,23 
+56,infrastructure,3,5,20,27,33,34,45,55 
+56,innovation,40,74 
+56,intellectual property,1,42 
+56,regulatory,44,63,64 
+56,team science,19,22,50,54 
+56,training,2,26,32,51,57,67 
+56,translational science,12,41 
+56,web analytics,39 
+57,advancement of science,1,4,11,13,20,24,27,29,40,41,42,58,60,66,74,79,81 
+57,collaboration/partnerships,7,9,22,30,34,36,43 
+57,cost effectiveness,21,23 
+57,dissemination,18,25,37,39,46,48,52,55,77 
+57,efficiency,5,15,44,59,63,64,71,80 
+57,improved health/health care,68,69,70 
+57,increased knowledge,12,32,54 
+57,policy change,6,19,78 
+57,quality improvement,38,73 
+57,supportive infrastructure,3,14,16,17,28,31,33,35,45,47,62,65,75 
+57,workforce development,2,8,10,26,49,50,51,53,56,57,61,67,72,76 
+58,barriers,65 
+58,benefits,68,69,70,78 
+58,clinical research,4,15,20,21,30,35,56,59,64,73,76,79 
+58,collaboration,3,7,9,22,34,36 
+58,communications,18,39,46,48 
+58,community engagement,16,43 
+58,ctsa resources,55 
+58,deia,6,8,10,13,28,61,72 
+58,hub services,5,14,31,45,47,62 
+58,hub supported research,27,41,58,63 
+58,informatics,17,60,75 
+58,innovation,1,37,38,40,42,74 
+58,methodology,24,29 
+58,new programs,33 
+58,personnel,19,49 
+58,quality improvement,71 
+58,rapid response,11,81 
+58,success,23,52,53,77 
+58,team science,54 
+58,terminology,12 
+58,training,2,26,32,50,57 
+59,administrative,49,52 
+59,clinical research,15,20,21,29,30,35,42,44,59,63,64,73,74,76,79,80 
+59,collaboration,9,34 
+59,community,7,16,36,43,57 
+59,customer service,5,31,45 
+59,deia,6,8,10,13,28,47,61,65,72 
+59,emerging diseases,11 
+59,evaluation,60 
+59,impact,23,24,27,39,46,48,55,62,77,81 
+59,informatics,17,75 
+59,innovation,1,18,32,33,37,40 
+59,institutional support,3 
+59,knowledge,12 
+59,pilots,4,25,53,58,66 
+59,strategic planning,38,41,68,69,70,71,78 
+59,team science,54 
+59,workforce development,2,14,19,22,26,50,51,56,67 
+60,administrative management,23 
+60,clinical research programs,15,20,27 
+60,clinical trials - evaluation,73 
+60,clinical trials - management,21,30,35,59,64,76,79 
+60,clinical trials - representation,13 
+60,collaboration - ctsa consortium,9 
+60,collaboration - external,7,36 
+60,collaboration - internal and intra-institutional,3,34 
+60,data discovery and sharing - hub resources,17 
+60,data discovery and sharing - reproducability,24 
+60,deia measures,6,8,28,61,72 
+60,evaluation - quality improvement,5,31,38,44,53,63,65,71 
+60,faculty development - career,19 
+60,impact - career development,50,51 
+60,impact - community health,16,43,57,70,75,81 
+60,impact - hub operations,49 
+60,impact - hub output,42,55,56,58,66,67,68,69,74,78,80 
+60,impact - hub services,45,47,62 
+60,impact - patents and trademarks,1 
+60,impact - pilot awards,4,10 
+60,impact- publications,11,14,25,52,77 
+60,mentor development,26 
+60,multidisciplinary team science,22,54 
+60,new programs - hub initiated,33 
+60,training - hub sponsored,2,32 
+60,translational research methodologies,29,41,60 
+60,translational science - communication and promotion,12,18,37,39,40,46,48 
+61,actionable learning,38 
+61,adaptive capacity and preparedness,81 
+61,advancement of knowledge,25 
+61,advancing research,4,14,15,33,56,58 
+61,awareness of translational science,12 
+61,care improvement,20 
+61,collaboration,3,7,9,30,34,36 
+61,community engagement,16,57 
+61,continuous improvement,65,71 
+61,cost effectiveness,21,23 
+61,data integration,75 
+61,data quality,60 
+61,dei,6,8,10,13,28,47,61,72 
+61,diverse methodology,29 
+61,economic benefits,69 
+61,efficiency of recruitment and enrollment,80 
+61,health benefits,70 
+61,health policy,78 
+61,innovation,37,40 
+61,invention,1 
+61,medical benefits,68 
+61,participant reqruitment,59 
+61,public awareness,39,46 
+61,public opinion,43 
+61,regulatory approval,42 
+61,reseach efficiency,64 
+61,research diversity,41 
+61,research efficiency,44 
+61,research impact,11,52,74 
+61,research impact and dei,77 
+61,research influence,48,53,55,66 
+61,research infrastructure,35 
+61,research quality,24,63,73 
+61,research reach,27 
+61,research resources,17 
+61,service efficiency,5 
+61,service quality,31,62 
+61,support magnitude/reach,45 
+61,team science,22,54 
+61,translational impact,18 
+61,translational progress,79 
+61,workforce development,2,19,26,32,50,51,67 
+61,workforce retention,49 
+61,workforce sustainability,76 
+62,broadly engaged team science,16,19,22,34,54,57 
+62,crisis support,11,81 
+62,ctr capacity,27,30,35,56,58,79 
+62,ctr/cts outcomes,1,14,24,48,52,74,77 
+62,diversity; equity; inclusion; and justice,6,8,13,28,61,72 
+62,hub collaborators,3,7,9,36 
+62,hub continuous improvement,38,49,65,71 
+62,impact,20,37,40,42,43,46,55,68,69,70,78 
+62,impact method,18,23,29,41 
+62,informatics solutions,17,60,75 
+62,pilot outcomes,4,25,53,66 
+62,research process improvement,15,21,44,59,63,64,73,76,80 
+62,utilization,5,10,31,33,39,45,47,62 
+62,workforce development,2,12,26,32,67 
+62,workforce development impact,50,51 
+63,community engagement collaborations,36,43,57 
+63,community engagement recruitment progress,13,59,75 
+63,community engagement resource progress,16 
+63,cross-hub collaboration,9 
+63,ctr approval progress,44,63,64 
+63,ctr dei impact,77 
+63,ctr diffusion,12 
+63,ctr dissemination,18,39,46,48 
+63,ctr impact,14,20,24,52,70 
+63,ctr network progress,7,30,34,35,55,78 
+63,ctr products,1,37,40,42,68 
+63,ctr program progress,17,27,33,41,56,79 
+63,ctr roi,21,23,69 
+63,ctr scholar progress,19,22,54,62 
+63,dei investigator support,6,28,61 
+63,dei needs assessment,8 
+63,dei program progress,47,58 
+63,implementation quality,38,49,65,71 
+63,institutional support,3 
+63,mentorship effectiveness,26 
+63,pilot dei progress,10 
+63,pilot extramural progress,4,25,53,66 
+63,research quality,11,15,29,60,73,74,80 
+63,research qualty,81 
+63,service quality,5,31,45 
+63,wfd dei outcomes,51 
+63,wfd dei program progress,67,72 
+63,wfd output,2,32,50,76 
+64,a,6,8,10,13,27,28,47,58,61 
+64,b,3,7,9,22,30,34,36,54 
+64,c,2,26,29,32,57,67 
+64,d,11,12,16,37,39,43,45,46,48,59,81 
+64,e,19,35,72,78 
+64,f,24,31,38,41,49,50,51,56,60,62,65,71,73,75,80 
+64,g,1,4,14,17,18,20,25,33,40,42,52,53,55,66,68,69,70,74,77,79 
+64,h,5,15,21,23,44,63,64,76 
+65,advancement,4 
+65,affect,16 
+65,alliance,30 
+65,assessment,38 
+65,asset,47 
+65,awareness,39 
+65,bench 2 bedside,41 
+65,career goals,19 
+65,case studies,18 
+65,change,49 
+65,communication,28 
+65,community,7 
+65,community collaboration,6 
+65,comparability,77 
+65,competition,20 
+65,confirmation,66 
+65,connectivity,17 
+65,contribution,35 
+65,cost-effective,69 
+65,creativity,40 
+65,disparate,27 
+65,diversity,67 
+65,education,2 
+65,efficiency,44 
+65,ensemble,22 
+65,essential,43 
+65,expansion,33 
+65,future,32 
+65,good selection,25 
+65,government,78 
+65,growth,74 
+65,happy,70 
+65,helping people,5 
+65,hope,51 
+65,impact,68 
+65,improvement,15 
+65,inclusion,10 
+65,inevitable,75 
+65,innovators,56 
+65,investigate,63 
+65,investment for research,26 
+65,involvement,59 
+65,learning,29 
+65,milestone,53 
+65,mitigations,65 
+65,national collaboration,9 
+65,opportunity,62 
+65,ownership,1 
+65,participation,13 
+65,partnerships,3 
+65,people,36 
+65,potential barrier,21 
+65,preparation,81 
+65,preparedness,11 
+65,pre-work,54 
+65,progress,42 
+65,publicity,46 
+65,queue,79 
+65,readiness,64 
+65,recognition,37,50 
+65,reliability,80 
+65,scoring,48 
+65,selection,23 
+65,sharing,55 
+65,standards,60 
+65,stories,8 
+65,succuss,14 
+65,targeted,58 
+65,teaching,57 
+65,teamwork,34 
+65,tracking,52 
+65,trust,31 
+65,understanding,12 
+65,validation,24 
+65,variety,45 
+65,verification,73 
+65,viewpoints,72 
+65,weak,61 
+65,workflow,71 
+65,workforce,76 
+66,accessibility,28 
+66,achievement,4,10,14,25,40,42,66 
+66,advancement,19,74 
+66,change,6 
+66,collaboration,3,9,34 
+66,community,35,43 
+66,disciplined,73 
+66,dissemination,37,55 
+66,diversity,8,13,22,27,61,67,72 
+66,education,32 
+66,efficiency,5,11,53,54,64,80,81 
+66,engagement,39 
+66,enhancement,38 
+66,experimental,20 
+66,growth,33 
+66,impact,24,50,52,68,77,78 
+66,improvement,71 
+66,innovation,1 
+66,investment,21 
+66,longevity,51 
+66,mult-faceted,15 
+66,open science,17 
+66,outreach,7,16,36,57,58,70 
+66,productivity,44 
+66,profit,23,69 
+66,progress,41,75 
+66,publicity,46,48 
+66,recruitment,49,76 
+66,research,30,59,60,62,63,79 
+66,researchers,56 
+66,resourceful,29 
+66,results,18 
+66,risk reduction,65 
+66,services,45 
+66,success,31 
+66,support,47 
+66,training,2,26 
+66,understanding,12 
+67,achievement,4,10,25,40 
+67,barrier,65 
+67,career,19,49 
+67,clinical,13,15,20,21,35,56,59,64,73,79,80 
+67,collaboration,3,7,9,34,36 
+67,communication,28,39,46 
+67,community,16,43,57 
+67,continuous improvement,38,71 
+67,data sharing,17 
+67,diversity,6,8,61,67,72 
+67,efficiency,5,53 
+67,fda approval,42 
+67,growth,33 
+67,impact,18,24,37,50,51,55,68,69,70,74,78 
+67,informatics,60,75 
+67,irb,44 
+67,mentor,26 
+67,patents,1 
+67,pilot,66 
+67,profit,23 
+67,publication,11,48,52,77 
+67,recruitment,76 
+67,research,27,29,30,58,62,63 
+67,services,14,31,45 
+67,support,47 
+67,team science,22,54 
+67,training,2,32 
+67,translational,41,81 
+67,understanding,12 
+68,barrier,65 
+68,career,19,49 
+68,clinical,13,15,20,21,30,35,56,59,64,73,74,76,79,80 
+68,collaboration,3,7,9,34,36 
+68,communication,28,39,46 
+68,community,16,43,57 
+68,continous improvement,38,71 
+68,diversity,6,8,61,67,72 
+68,fda approval,42 
+68,impact,18,24,29,37,50,55,68,69,70,78 
+68,infomatics,17,60,75 
+68,innovation,40 
+68,irb,44 
+68,mentor,26 
+68,patents,1 
+68,pilot,4,10,25,53,66 
+68,publication,11,48,52,77 
+68,research,27,47,58,62,63 
+68,roi,23 
+68,services,5,14,31,45 
+68,team science,22,54 
+68,trainings,2,32,33,51 
+68,translational,12,41,81 
+69,accrual,59,80 
+69,collaboration,3,7,9,22,34,36,54 
+69,cost,21,23 
+69,deij,6,8,10,13,28,61,72 
+69,effectiveness,26,32,42,63,71 
+69,efficiency,5,11,44,53,64,76,81 
+69,impact,1,18,19 
+69,innovation,20,29,33,37,39,40,74 
+69,productivity,24,30,38,45,47,58,62 
+69,qauality,73 
+69,quality,15,17,31,43,60,65 
+69,structure,35,49,56,75 
+69,training,2,50,51,57,67 
+69,translation,4,12,14,16,25,27,41,46,48,52,55,66,68,69,70,77,78,79 
+70,clinical research,15,20,21,30,35,44,59,64,73,74,75,76,79,80 
+70,collaborations,9,22,34,54 
+70,communication,12,46 
+70,community,7,16,36,43,57 
+70,dei,6,8,13,28,61,72 
+70,outcomes,1,3,5,11,14,17,18,19,23,24,27,29,31,33,37,38,39,40,41,42,45,47,48,49,52,53,55,56,58,60,62,63,65,68,69,70,71,77,78,81 
+70,pilots,4,10,25,66 
+70,training,2,26,32,50,51,67 
+71,# deferrals,63 
+71,# pubs,77 
+71,% urp in workforce,61,72 
+71,accrual,80 
+71,altmetric score,48 
+71,bibliometrics,52 
+71,career promotion,19,50 
+71,ce # people trained,57 
+71,ce languages,28 
+71,ce perceptions,43 
+71,ce services + tools,16 
+71,clinical trials-quality,73 
+71,collaborations,3,34,36 
+71,common metrics,51,67 
+71,communications,12,39,46 
+71,cost per participant enrolled,21 
+71,crisis response,11,81 
+71,ctsa support and services,45 
+71,ctsa supported research studies,58 
+71,ctsa-state; local; ph,7 
+71,data quality,60 
+71,dei,6 
+71,fda approvals,42 
+71,health services research,15 
+71,her,75 
+71,hr metrics,76 
+71,hub faculty,56 
+71,incubation period,53 
+71,informatics,17 
+71,innovation awards,40 
+71,innovations,37 
+71,interdisciplinarity,22 
+71,irb duration,44 
+71,knowledge/skill outcomes,32 
+71,multicenter trials,30 
+71,multi-ctsa collaborations,9 
+71,multisite infrastructure,35 
+71,new personnel,49 
+71,new programs/components,33 
+71,nih institutes supported by ctsa,55 
+71,novel care,20 
+71,number of investigators,47 
+71,number of new and repeat investigators in a time period,62 
+71,outcomes,74 
+71,patents,1 
+71,patients enrolled in trials,59 
+71,pilot awardees,10 
+71,pilot grants,4 
+71,pilot grants w/ 1+ pubs,25 
+71,pilots with 1+ new grants,66 
+71,qualitative-barriers,65 
+71,qualitative-diversity,8 
+71,quality,31 
+71,rcqi,71 
+71,retro case studies,29 
+71,reviews/meta analysis,24 
+71,roi,23 
+71,rppr,38 
+71,satisfaction,26 
+71,scientific productivity,14 
+71,success stories,18 
+71,t0-t1 studies,79 
+71,t0-t4 research,27 
+71,t0-t4 tracking,41 
+71,team sciences,54 
+71,time to activation,64 
+71,time to complete,5 
+71,training,2 
+71,tsbm community impact,70 
+71,tsbm demonstrated impact,68 
+71,tsbm economic impact,69 
+71,tsbm-policy impact,78 
+71,urps in clinical trials,13 
+72,collaborative engagement; research institution,9,30,54 
+72,collaborative engagement; researcher,22,34 
+72,community engagement/involvement,16,43,57 
+72,conceptual understanding,12 
+72,cost,21,23 
+72,ctsa hub process (continuous improvement / internal evaluation),5,31,35,38,45,49,59,65,71,76,79 
+72,ctsa hub reach,39,47,56,62 
+72,data quality / availability,17,60,75 
+72,diversity; equity; inclusion; belonging,6,8,10,13,27,28,61,72 
+72,education/training/career development,2,26,50,51,67 
+72,efficiency,11 
+72,evaluation/impact,18,19,20,29,32,37,48,55,68,69,70,74,77,78,81 
+72,external/public engagement,7,36,46 
+72,growth/direction,33 
+72,institutional investment,3 
+72,ip,1 
+72,project progress / advancement,4,14,25,41,44,53,63,64,66,80 
+72,project/products,40,42,58 
+72,publications,52 
+72,research quality assurance,73 
+72,specific project aims,15,24 
+73,clinical,20 
+73,collaboration,3,30 
+73,collaboration/impact,34 
+73,collaboration/outreach,36 
+73,communication,18,39,48 
+73,dissemination/impact,70 
+73,education,2,12,32,33 
+73,education/collaboration/outreach,57 
+73,education/collaboration/team science,22 
+73,education/mentoirng,26 
+73,education/team science,54 
+73,impact,1,10,14,17,19,25,27,40,47,53,56,59,62,67 
+73,impact/ health policy,78 
+73,impact/collaboration,9,42,55,75 
+73,impact/cost-benefits,23 
+73,impact/dei,6,13,72 
+73,impact/dissemination,37,52,68 
+73,impact/dissemination/dei,77 
+73,impact/economics,50,69 
+73,impact/education,51 
+73,impact/institutional satisfaction,49 
+73,impact/lives impacted,41 
+73,impact/national consortium,81 
+73,impact/operational,38 
+73,impact/public,43 
+73,impact/research,74 
+73,impact/research/career,66 
+73,impact/research/clinical,4,79 
+73,impact/t3,58,61 
+73,institutional resources/research,35 
+73,institutional services,76 
+73,quality assurance,60,63,73 
+73,research,7,8,11,15,21,24,29 
+73,research on services,65 
+73,service/outreach,16 
+73,services,5,28,31,44,45,64,80 
+73,services/response time,71 
+73,none 1,46 
+74,outcome - goal 1,1,4,33,37,38,40,77 
+74,outcome - goal 2,7,9,34,35,36 
+74,outcome - goal 3,58,61 
+74,outcome - goal 4,20,59,74 
+74,outcome - goal 5,11,81 
+74,outcome - goal 6,14,17,19,25,42,47,50,66 
+74,outcome - goal 8,12,22,32,39,55,57 
+74,outcome - meta,18,23,24,46,48,52,68,69,70,78 
+74,process - goal 1,27,30,41,45,53,63,64,79,80 
+74,process - goal 2,3,16,54 
+74,process - goal 3,8 
+74,process - goal 4,15,21,31,43,44,49,60,71,73 
+74,process - goal 6,2,10,26,51,56,62,67,76 
+74,process - goal 8,65,75 
+74,process - meta,5,6,13,28,29,72 
