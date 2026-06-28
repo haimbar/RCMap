@@ -40,7 +40,31 @@ knitr::opts_chunk$set(echo = TRUE)
 What's New
 ---------------
 
-**Version 0.3.3 (current)**
+**Version 0.3.5 (current)**
+
+- **Clearer error for within-pile duplicate cards.** When the same card appears
+  more than once in a single pile in `SortedCards.csv`, RCMap now stops with a
+  message naming the sorter, pile, and duplicate card ID(s) instead of crashing
+  with a cryptic internal error.
+- **Clearer error for non-existent card IDs.** When `SortedCards.csv`
+  references a card ID not in `Statements.csv`, the error now names the sorter
+  and pile for each offending entry.
+- **Blank trailing rows in `Ratings.csv` silently ignored.** Rows with a
+  missing `StatementID` (a common Excel export artifact) are now dropped
+  automatically before validation.
+- **Fixed cohort indicator crash with partial demographic coverage.** When only
+  a subset of raters had demographic data, an internal matrix size mismatch
+  caused a crash on project load. This is now handled correctly.
+- **Version number shown in menu header.** `RCMapMenu()` now displays the
+  installed package version in its opening line.
+
+**Version 0.3.4**
+
+- **Fixed off-by-one in `statementReport()`.** Jaccard-index arrays were read
+  at the wrong index, causing crashes or incorrect output for any cluster count
+  other than one.
+
+**Version 0.3.3**
 
 - **Console screen clearing fixed for terminal sessions.** The menu header
   function now writes ANSI escape codes (`\033[2J\033[H`) in addition to the
@@ -125,7 +149,7 @@ and to cite the latest version of the package with BibTeX, use citation("RCMap")
     title = {RCMap: Group Concept Mapping},
     author = {Haim Bar},
     year = {2026},
-    note = {R package version 0.3.3},
+    note = {R package version 0.3.5},
 }
 ```
 

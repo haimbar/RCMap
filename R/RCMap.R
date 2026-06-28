@@ -76,7 +76,8 @@ getAdjMatrices <- function(piledat, cardNames, sorters_dict, showWarnings=TRUE) 
     gt1 <- which(apply(adj.mat, 1, max) > 1)
     #if(length(gt1) > 0) { cat(sorters[i], "\n", gt1,"\n\n", issues,"\n") }
     if (length(gt1) > 0) # this should not be allowed:
-      issues <- issues %+% red("Sorter ",sorters[i], " put cards ", gt1, "in multiple piles\n")
+      issues <- issues %+% red(sprintf("Sorter %s put card(s) %s in multiple piles\n",
+                                       sorters[i], paste(cardNames[gt1, 1], collapse=",")))
     mat.list[[i]] <- adj.mat
   }
   cat(issues)
@@ -450,8 +451,14 @@ read_piles <- function(filename, ncards, enc = "UTF-8", sep=",") {
     cardsInPile <- na.omit(as.numeric(cardDat[i, -c(1,2)]))
     if (length(cardsInPile) == 0)
       next
-    cardNum <- unique(sort(as.numeric(cardsInPile)))
-    pileLabel <- rep(pileLabel, length(cardsInPile))
+    dups <- unique(cardsInPile[duplicated(cardsInPile)])
+    if (length(dups) > 0)
+      return(list(issues=sprintf(
+        "read_piles: SortedCards.csv: Sorter %s, pile '%s' lists card(s) %s more than once. Each card can appear at most once per pile.",
+        cardDat[i, 1], cardDat[i, 2], paste(dups, collapse=", ")),
+        cardDat = NULL))
+    cardNum <- sort(as.numeric(cardsInPile))
+    pileLabel <- rep(pileLabel, length(cardNum))
     pileLabels <- rbind(pileLabels, data.frame(pileLabel, cardNum=cardNum))
   }
   #  cardDat[ ,1] <- gsub("\\D", "", cardDat[ ,1])
@@ -495,6 +502,7 @@ read_ratings <- function(filename, statements, ratingscale=5, enc = "UTF-8", sep
                              "must have at least three columns.\n",
                              troubleshooting["ratingsfilesep"]),
                 ratings = NULL))
+  ratings <- ratings[!is.na(ratings[, 2]), ]  # drop blank trailing rows (Excel export artifact)
   notinstatements <- which(ratings[,2] %in% statements == FALSE)
   if (length(notinstatements) > 0)
     return(list(issues=paste("read_ratings:", filename,
@@ -615,19 +623,27 @@ read_demographics <- function(filename, ratings, enc = "UTF-8", sep=",") {
     colnames(dframe) <- colnames(demographics.dat)[-c(1,skipcols)]
   }
   for (colnum in 1:ncol(dframe)) {
+    non_na <- which(!is.na(dframe[,colnum]))
     if (inherits(dframe[,colnum], "factor")) {
-      # na.action=na.pass keeps rows with NA; fill resulting NAs with 0
-      # so missing raters don't belong to any subgroup
-      tmp <- model.matrix(~ dframe[,colnum] - 1, na.action = na.pass)
-      tmp[is.na(tmp)] <- 0
-      colnames(tmp) <- sprintf("%s_%s", colnames(dframe)[colnum],
-                               levels(dframe[,colnum]))
+      # Build indicator matrix at full nrow(dframe) size; missing raters get 0
+      # (model.matrix drops NA rows even with na.pass, so we pad manually)
+      lvls <- levels(dframe[,colnum])
+      tmp <- matrix(0, nrow=nrow(dframe), ncol=length(lvls))
+      colnames(tmp) <- sprintf("%s_%s", colnames(dframe)[colnum], lvls)
+      if (length(non_na) > 0) {
+        for (k in seq_along(lvls)) {
+          tmp[non_na[dframe[non_na, colnum] == lvls[k]], k] <- 1
+        }
+      }
       cohorts <- data.frame(cohorts, tmp)
     } else { # type=numeric is assumed
-      tmp <- model.matrix(~ (dframe[,colnum] > median(dframe[,colnum], na.rm=TRUE)) - 1,
-                          na.action = na.pass)
-      tmp[is.na(tmp)] <- 0
+      tmp <- matrix(0, nrow=nrow(dframe), ncol=2)
       colnames(tmp) <- paste0(colnames(dframe)[colnum], c("_H","_L"))
+      if (length(non_na) > 0) {
+        med <- median(dframe[non_na, colnum], na.rm=TRUE)
+        tmp[non_na[dframe[non_na, colnum] >  med], 1] <- 1
+        tmp[non_na[dframe[non_na, colnum] <= med], 2] <- 1
+      }
       cohorts <- data.frame(cohorts, tmp)
     }
   }
@@ -905,12 +921,17 @@ initCMap <- function(dataDir, enc="UTF-8", sep=",") {
   if (!all(is.na(cards_used))) {
     invalid_cards <- setdiff(cards_used, cardNames$StatementID)
     if (length(invalid_cards) > 0) {
-      # find sample rows in SortedCards that reference invalid cards
-      bad_row_idx <- which(apply(cardDat[, 3:ncol(cardDat), drop=FALSE], 1, function(r) any(na.omit(suppressWarnings(as.numeric(r))) %in% invalid_cards)))
-      sample_rows <- head(bad_row_idx, 5)
-      samples <- sapply(sample_rows, function(i) paste(na.omit(as.character(cardDat[i, 3:ncol(cardDat)])), collapse=","))
-      stop(sprintf("initCMap: SortedCards.csv references card ID(s) not present in Statements.csv: %s. Example offending rows (up to 5): %s (row numbers: %s). Run print_input_checklist() to review expected formats.",
-                   paste(head(invalid_cards,5), collapse=","), paste(samples, collapse=" | "), paste(sample_rows, collapse=",")))
+      details <- character(0)
+      for (ic in invalid_cards) {
+        bad_rows <- which(apply(cardDat[, 3:ncol(cardDat), drop=FALSE], 1,
+                                function(r) ic %in% na.omit(suppressWarnings(as.numeric(r)))))
+        for (br in head(bad_rows, 3))
+          details <- c(details, sprintf("Sorter %s, pile '%s'", cardDat[br,1], cardDat[br,2]))
+      }
+      stop(sprintf(
+        "initCMap: SortedCards.csv references card ID(s) not in Statements.csv: %s.\n  %s",
+        paste(head(invalid_cards, 5), collapse=", "),
+        paste(unique(details), collapse="\n  ")))
     }
   }
 
@@ -1811,7 +1832,8 @@ topLine <- function() {
       cat("\014")           # form-feed: also clears RStudio console pane
     }
   }
-  cat(blue(underline(bold("\nRCMap command-line interface.\n"))))
+  cat(blue(underline(bold(sprintf("\nRCMap v%s command-line interface.\n",
+                                  packageVersion("RCMap"))))))
 }
 
 #' Convert a menu selection index to its text label.

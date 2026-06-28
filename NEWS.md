@@ -1,3 +1,36 @@
+# RCMap 0.3.5
+
+## Bug fixes and improvements
+
+- **Clearer error for within-pile duplicate cards.** `read_piles()` now detects
+  when the same card appears more than once in a single pile and stops with a
+  message naming the sorter, pile, and duplicate card ID(s), instead of crashing
+  with a cryptic `arguments imply differing number of rows` error.
+
+- **Clearer error for non-existent card IDs.** When `SortedCards.csv`
+  references a card ID not present in `Statements.csv`, the error now names the
+  sorter and pile for each offending card, making it easier to locate and correct
+  the data entry mistake.
+
+- **Blank trailing rows in `Ratings.csv` silently ignored.** Rows with a
+  missing `StatementID` (a common Excel export artifact) are now dropped before
+  validation rather than causing a rejection error.
+
+- **Fixed cohort indicator row-count mismatch in `read_demographics()`.** When
+  only a subset of raters had demographic data, `model.matrix()` silently dropped
+  NA rows, producing a matrix shorter than `nrow(ratings)` and crashing with
+  `arguments imply differing number of rows`. Indicator columns are now built
+  explicitly at the correct size.
+
+- **Fixed multi-pile warning crash in `getAdjMatrices()`.** When a sorter
+  placed a card in more than one pile, passing the multi-element `gt1` vector
+  directly to `red()` triggered a crayon `%+%` length-mismatch error. The
+  warning now uses `sprintf()` and reports actual Statement IDs rather than
+  matrix row indices.
+
+- **Version number shown in menu header.** `RCMapMenu()` now displays the
+  installed package version in its opening line.
+
 # RCMap 0.3.4
 
 ## Bug fixes
