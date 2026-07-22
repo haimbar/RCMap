@@ -1683,7 +1683,44 @@ $(document).ready(function() {
 </script>
 <div id="whats-new" class="section level2">
 <h2>What’s New</h2>
-<p><strong>Version 0.3.3 (current)</strong></p>
+<p><strong>Version 0.3.6 (current)</strong></p>
+<ul>
+<li><strong>Fixed inflated legend values in the Cluster Rating (Map)
+plot.</strong> The legend for cluster-center marker sizes could show a
+top value higher than the actual rating scale (e.g. 6 on a 1-5 scale)
+instead of matching the scale’s true maximum, as it does in the Cluster
+Rating (Bar chart) plot.</li>
+</ul>
+<p><strong>Version 0.3.5</strong></p>
+<ul>
+<li><strong>Clearer error for within-pile duplicate cards.</strong> When
+the same card appears more than once in a single pile in
+<code>SortedCards.csv</code>, RCMap now stops with a message naming the
+sorter, pile, and duplicate card ID(s) instead of crashing with a
+cryptic internal error.</li>
+<li><strong>Clearer error for non-existent card IDs.</strong> When
+<code>SortedCards.csv</code> references a card ID not in
+<code>Statements.csv</code>, the error now names the sorter and pile for
+each offending entry.</li>
+<li><strong>Blank trailing rows in <code>Ratings.csv</code> silently
+ignored.</strong> Rows with a missing <code>StatementID</code> (a common
+Excel export artifact) are now dropped automatically before
+validation.</li>
+<li><strong>Fixed cohort indicator crash with partial demographic
+coverage.</strong> When only a subset of raters had demographic data, an
+internal matrix size mismatch caused a crash on project load. This is
+now handled correctly.</li>
+<li><strong>Version number shown in menu header.</strong>
+<code>RCMapMenu()</code> now displays the installed package version in
+its opening line.</li>
+</ul>
+<p><strong>Version 0.3.4</strong></p>
+<ul>
+<li><strong>Fixed off-by-one in <code>statementReport()</code>.</strong>
+Jaccard-index arrays were read at the wrong index, causing crashes or
+incorrect output for any cluster count other than one.</li>
+</ul>
+<p><strong>Version 0.3.3</strong></p>
 <ul>
 <li><strong>Console screen clearing fixed for terminal
 sessions.</strong> The menu header function now writes ANSI escape codes
@@ -1831,7 +1868,7 @@ latest version of the package with BibTeX, use citation(“RCMap”)</p>
     title = {RCMap: Group Concept Mapping},
     author = {Haim Bar},
     year = {2026},
-    note = {R package version 0.3.3},
+    note = {R package version 0.3.6},
 }</code></pre>
 </div>
 <div id="installing-and-starting-rcmap" class="section level2">
