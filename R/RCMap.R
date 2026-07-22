@@ -1268,10 +1268,8 @@ showClusterPlot <- function(type="rays", metric=NULL) {
       #sz <- 1+2*(sz-1)/(ratingscale-1) # 1+2*(sz-1)/4
       #sz <- round(sz, digits = 1) # to be between 1 (for 1) and 2 (for 5)
       sz <- 3*round(sz/cmapdat$ratingscale, digits = 1)
-      #lgd <- seq(1, 3, by=0.5)
-      #lgdkey <- (lgd-1)*(ratingscale/5)+1
-      lgd <- 3*seq(0, 4/5, length=5)
-      lgdkey <- lgd*cmapdat$ratingscale/2
+      lgd <- 3*seq(1/5, 1, length=5)
+      lgdkey <- lgd*cmapdat$ratingscale/3
     }
 
     colpoints <- cols[groups]

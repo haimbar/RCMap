@@ -1,3 +1,17 @@
+# RCMap 0.3.6
+
+## Bug fixes
+
+- **Fixed inflated legend values in the Cluster Rating (Map) plot.**
+  `showClusterPlot()` sized cluster-center markers using
+  `sz <- 3*round(mean_rating/ratingscale, 1)`, but the legend label
+  formula still used a stale `/2` divisor left over from an earlier,
+  differently-scaled version of `sz`. This made the legend's top value
+  read as `1.2 * ratingscale` (e.g. 6 on a 1-5 scale) instead of
+  `ratingscale`, which didn't match the Cluster Rating (Bar chart) plot
+  or the actual data. The legend now correctly tops out at
+  `ratingscale` for any configured scale.
+
 # RCMap 0.3.5
 
 ## Bug fixes and improvements

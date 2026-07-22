@@ -1,7 +1,7 @@
 Package: RCMap
 Type: Package
 Title: Group Concept Mapping
-Version: 0.3.5
+Version: 0.3.6
 Author: Haim Bar
 Maintainer: Haim Bar <haim.bar@uconn.edu>
 Description: An open-source implementation of group concept mapping in R.
@@ -13,7 +13,7 @@ Description: An open-source implementation of group concept mapping in R.
     through an automatically generated project configuration file (config.txt).
 License: GPL-2
 Encoding: UTF-8
-Date: 2026-06-28
+Date: 2026-07-21
 LazyData: true
 RoxygenNote: 7.3.2
 URL: https://haimbar.github.io/RCMap/

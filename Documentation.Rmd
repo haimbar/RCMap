@@ -40,7 +40,14 @@ knitr::opts_chunk$set(echo = TRUE)
 What's New
 ---------------
 
-**Version 0.3.5 (current)**
+**Version 0.3.6 (current)**
+
+- **Fixed inflated legend values in the Cluster Rating (Map) plot.** The
+  legend for cluster-center marker sizes could show a top value higher than
+  the actual rating scale (e.g. 6 on a 1-5 scale) instead of matching the
+  scale's true maximum, as it does in the Cluster Rating (Bar chart) plot.
+
+**Version 0.3.5**
 
 - **Clearer error for within-pile duplicate cards.** When the same card appears
   more than once in a single pile in `SortedCards.csv`, RCMap now stops with a
@@ -149,7 +156,7 @@ and to cite the latest version of the package with BibTeX, use citation("RCMap")
     title = {RCMap: Group Concept Mapping},
     author = {Haim Bar},
     year = {2026},
-    note = {R package version 0.3.5},
+    note = {R package version 0.3.6},
 }
 ```
 

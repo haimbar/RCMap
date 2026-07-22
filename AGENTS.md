@@ -23,7 +23,7 @@ menu-driven interface that walks users through the entire pipeline without them
 needing to write any R code. All analysis parameters are exposed through an
 auto-generated `config.txt` file in the project folder.
 
-**Current version:** 0.3.4
+**Current version:** 0.3.6
 **Package URL:** https://haimbar.github.io/RCMap/
 **Issue tracker:** https://github.com/haimbar/RCMap/issues
 
